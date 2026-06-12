@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#1a3a6b">
+<title>Policia Local · Santa Coloma de Gramenet</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+:root {
+  --blue:   #1a3a6b;
+  --blue2:  #2d5a9e;
+  --gold:   #e8a800;
+  --green:  #27ae60;
+  --red:    #c0392b;
+  --bg:     #eef1f6;
+  --card:   #fff;
+  --border: #d8e2f0;
+  --text:   #1a1a2e;
+  --muted:  #6b7a99;
+}
+
+html, body {
+  min-height: 100%;
+  font-family: Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* ── HEADER ── */
+#header {
+  background: var(--blue);
+  padding: 20px 20px 24px;
+  text-align: center;
+  position: relative;
+}
+#header::after {
+  content: '';
+  display: block;
+  position: absolute;
+  bottom: -16px; left: 0; right: 0;
+  height: 32px;
+  background: var(--blue);
+  clip-path: ellipse(55% 100% at 50% 0%);
+}
+.header-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin-bottom: 10px;
+}
+.header-logo img {
+  height: 52px;
+  width: auto;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,.3));
+}
+.header-logo .shield-placeholder {
+  width: 52px; height: 52px;
+  background: rgba(255,255,255,.15);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 26px;
+}
+.header-title h1 {
+  color: #fff;
+  font-size: 17px;
+  line-height: 1.3;
+  letter-spacing: .2px;
+}
+.header-title p {
+  color: #c8d8f0;
+  font-size: 11px;
+  margin-top: 3px;
+}
+.header-badge {
+  display: inline-block;
+  background: var(--gold);
+  color: #111;
+  font-size: 10px;
+  font-weight: bold;
+  padding: 3px 10px;
+  border-radius: 20px;
+  margin-top: 8px;
+  letter-spacing: .3px;
+}
+
+/* ── MAIN ── */
+#main {
+  max-width: 480px;
+  margin: 32px auto 40px;
+  padding: 0 16px;
+}
+
+/* ── SECTION TITLE ── */
+.section-label {
+  font-size: 11px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--muted);
+  margin: 24px 0 10px 4px;
+}
+
+/* ── MODULE CARD ── */
+.module-card {
+  background: var(--card);
+  border: 1.5px solid var(--border);
+  border-radius: 14px;
+  padding: 18px 18px 16px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+  transition: box-shadow .15s, transform .1s, border-color .15s;
+  position: relative;
+  overflow: hidden;
+}
+.module-card::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 4px;
+  border-radius: 14px 0 0 14px;
+}
+.module-card.blue::before   { background: var(--blue); }
+.module-card.green::before  { background: var(--green); }
+.module-card.gold::before   { background: var(--gold); }
+.module-card.grey::before   { background: #aaa; }
+
+.module-card:active {
+  transform: scale(.98);
+  box-shadow: none;
+}
+@media (hover: hover) {
+  .module-card:hover {
+    box-shadow: 0 6px 20px rgba(26,58,107,.14);
+    border-color: var(--blue);
+    transform: translateY(-2px);
+  }
+}
+
+.module-card.disabled {
+  opacity: .55;
+  cursor: default;
+  pointer-events: none;
+}
+
+.module-icon {
+  width: 52px; height: 52px;
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 26px;
+  flex-shrink: 0;
+}
+.module-icon.blue  { background: #e8f0fb; }
+.module-icon.green { background: #e8f9f0; }
+.module-icon.gold  { background: #fef9e7; }
+.module-icon.grey  { background: #f0f0f0; }
+
+.module-info { flex: 1; min-width: 0; }
+.module-info h2 {
+  font-size: 15px;
+  font-weight: bold;
+  color: var(--text);
+  line-height: 1.3;
+  margin-bottom: 3px;
+}
+.module-info p {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.4;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.module-badge {
+  font-size: 10px;
+  font-weight: bold;
+  padding: 2px 8px;
+  border-radius: 10px;
+  margin-top: 5px;
+  display: inline-block;
+}
+.badge-live    { background: #e8f9f0; color: #166534; }
+.badge-wip     { background: #fef3c7; color: #92400e; }
+.badge-new     { background: #e8f0fb; color: #1e40af; }
+
+.module-arrow {
+  font-size: 20px;
+  color: #c8d4e8;
+  flex-shrink: 0;
+  transition: color .15s;
+}
+.module-card:hover .module-arrow { color: var(--blue); }
+
+/* ── FOOTER ── */
+#footer {
+  text-align: center;
+  padding: 20px 16px 40px;
+  font-size: 11px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+#footer strong { color: var(--blue); }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div id="header">
+  <div class="header-logo">
+    <div class="shield-placeholder">🛡️</div>
+    <div class="header-title">
+      <h1>Policia Local<br>Santa Coloma de Gramenet</h1>
+      <p>Sistema de gestió digital</p>
+    </div>
+  </div>
+  <span class="header-badge">OAC · Oficina d'Atenció al Ciutadà</span>
+</div>
+
+<!-- MAIN -->
+<div id="main">
+
+  <div class="section-label">Eines operatives</div>
+
+  <!-- ACTES -->
+  <a class="module-card blue" href="actes/index.html">
+    <div class="module-icon blue">📋</div>
+    <div class="module-info">
+      <h2>Actes Digitals</h2>
+      <p>Actes de manifestació, detenció i genèriques</p>
+      <span class="module-badge badge-live">● Operatiu</span>
+    </div>
+    <span class="module-arrow">›</span>
+  </a>
+
+  <!-- CONSULTOR SANCIONS -->
+  <a class="module-card green" href="sancions/consultor_sancions.html">
+    <div class="module-icon green">⚖️</div>
+    <div class="module-info">
+      <h2>Consultor de Sancions</h2>
+      <p>854 infraccions · RGC, LSV, OM, VMP, CP</p>
+      <span class="module-badge badge-new">● Nou</span>
+    </div>
+    <span class="module-arrow">›</span>
+  </a>
+
+  <div class="section-label">Documentació</div>
+
+  <!-- OAC DOCS -->
+  <div class="module-card grey disabled">
+    <div class="module-icon grey">📂</div>
+    <div class="module-info">
+      <h2>OAC Docs</h2>
+      <p>PNT, Notes informatives i documentació interna</p>
+      <span class="module-badge badge-wip">⏳ En construcció</span>
+    </div>
+    <span class="module-arrow">›</span>
+  </div>
+
+</div><!-- #main -->
+
+<div id="footer">
+  <strong>Policia Local · Santa Coloma de Gramenet</strong><br>
+  Versió 2025 · Ús intern
+</div>
+
+</body>
+</html>
