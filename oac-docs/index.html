@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="theme-color" content="#1a3a6b">
+<title>OAC Docs – Policia Local SCG</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+body { font-family: Arial, sans-serif; background: #d0d4db; color: #111; min-height: 100vh; }
+
+/* ── TOOLBAR BLAVA ── */
+#toolbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  background: #1a3a6b;
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 16px;
+  box-shadow: 0 2px 10px rgba(0,0,0,.4);
+}
+.brand { display: flex; align-items: center; gap: 10px; }
+.brand img { height: 34px; }
+.brand-text h1 { color: #fff; font-size: 13px; line-height: 1.3; }
+.brand-text p  { color: #c8d8f0; font-size: 10px; }
+#toolbar .spacer { flex: 1; }
+.tb-btn {
+  padding: 7px 13px; border: none; border-radius: 5px;
+  background: #4a7ab5; color: #fff; font-size: 12px;
+  font-weight: bold; cursor: pointer; text-decoration: none;
+  display: inline-flex; align-items: center; gap: 5px;
+  white-space: nowrap;
+}
+.tb-btn:active { background: #3a6aa5; }
+.tb-btn.gold { background: #c8920a; }
+.tb-btn.gold:active { background: #a87508; }
+
+/* ── TOOLBAR GRISA ── */
+#toolbar2 {
+  position: fixed; top: 54px; left: 0; right: 0; z-index: 199;
+  background: #4a5568;
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 16px;
+  box-shadow: 0 2px 6px rgba(0,0,0,.3);
+  flex-wrap: wrap;
+}
+#search-wrap {
+  flex: 1; min-width: 180px;
+  display: flex; align-items: center; gap: 6px;
+  background: #fff; border-radius: 6px;
+  padding: 6px 10px;
+}
+#search-input {
+  flex: 1; border: none; outline: none;
+  font-size: 13px; background: transparent;
+}
+#btn-clear-search {
+  background: none; border: none; cursor: pointer;
+  color: #888; font-size: 16px; line-height: 1;
+  display: none;
+}
+#btn-search {
+  padding: 6px 14px; border: none; border-radius: 5px;
+  background: #1a3a6b; color: #fff; font-size: 12px;
+  font-weight: bold; cursor: pointer; white-space: nowrap;
+}
+#btn-search:active { background: #122b52; }
+
+/* Chips filtre */
+.chips-row {
+  display: flex; gap: 6px; flex-wrap: wrap;
+  width: 100%; margin-top: 4px;
+}
+.chip {
+  padding: 4px 11px; border-radius: 20px;
+  border: 1.5px solid #8899bb; background: transparent;
+  color: #e2e8f0; font-size: 11px; font-weight: bold;
+  cursor: pointer; white-space: nowrap;
+  transition: background .12s, border-color .12s;
+}
+.chip:hover { background: rgba(255,255,255,.1); }
+.chip.active { background: #1a3a6b; border-color: #6699dd; color: #fff; }
+.chip.pnt.active   { background: #2563eb; border-color: #93c5fd; }
+.chip.ni.active    { background: #16a34a; border-color: #86efac; }
+
+/* ── MAIN ── */
+#main { max-width: 760px; margin: 116px auto 50px; padding: 0 14px; }
+
+/* Estat inicial */
+#empty-start {
+  text-align: center; padding: 50px 20px;
+  color: #5a6a8a;
+}
+#empty-start .big-icon { font-size: 52px; margin-bottom: 14px; }
+#empty-start h2 { font-size: 17px; color: #1a3a6b; margin-bottom: 8px; }
+#empty-start p { font-size: 13px; line-height: 1.6; }
+
+.quick-chips { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 20px; }
+.quick-chip {
+  padding: 7px 16px; border-radius: 20px;
+  background: #e8effc; border: 1.5px solid #c0d0e8;
+  color: #1a3a6b; font-size: 12px; font-weight: bold;
+  cursor: pointer;
+  transition: background .12s;
+}
+.quick-chip:hover { background: #d0e0f8; }
+
+/* Resultats */
+#results { display: none; }
+.results-header {
+  font-size: 11px; color: #6b7a99; font-weight: bold;
+  text-transform: uppercase; letter-spacing: .8px;
+  margin-bottom: 10px; padding-left: 2px;
+}
+
+/* Card document */
+.doc-card {
+  background: #fff; border: 1.5px solid #dde4f0;
+  border-radius: 10px; margin-bottom: 10px;
+  overflow: hidden;
+  transition: box-shadow .15s, border-color .15s;
+}
+.doc-card:hover { box-shadow: 0 4px 16px rgba(26,58,107,.14); border-color: #1a3a6b; }
+
+.doc-header {
+  display: flex; align-items: center; gap: 12px;
+  padding: 13px 14px; cursor: pointer;
+}
+.doc-badge {
+  font-size: 10px; font-weight: bold;
+  padding: 3px 9px; border-radius: 4px;
+  flex-shrink: 0;
+}
+.badge-pnt { background: #dbeafe; color: #1e40af; }
+.badge-ni  { background: #dcfce7; color: #166534; }
+
+.doc-info { flex: 1; min-width: 0; }
+.doc-title { font-size: 13px; font-weight: bold; color: #1a1a2e; line-height: 1.35; }
+.doc-meta  { font-size: 11px; color: #8899aa; margin-top: 2px; }
+
+.doc-arrow { font-size: 18px; color: #c0cce0; flex-shrink: 0; transition: transform .2s; }
+.doc-card.open .doc-arrow { transform: rotate(90deg); }
+
+/* Contingut expandit */
+.doc-body {
+  display: none;
+  border-top: 1px solid #eef0f8;
+  padding: 14px 14px 16px;
+  background: #f9fafd;
+}
+.doc-card.open .doc-body { display: block; }
+
+.doc-fields { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 12px; }
+.doc-field {
+  background: #fff; border: 1px solid #dde4f0;
+  border-radius: 7px; padding: 8px 12px; min-width: 140px;
+}
+.doc-field .label { font-size: 10px; color: #8899aa; font-weight: bold; text-transform: uppercase; letter-spacing: .5px; }
+.doc-field .value { font-size: 12px; color: #1a1a2e; margin-top: 2px; font-weight: bold; }
+
+.doc-resum {
+  background: #fff; border: 1px solid #dde4f0;
+  border-radius: 7px; padding: 10px 12px; margin-bottom: 12px;
+}
+.doc-resum .label { font-size: 10px; color: #8899aa; font-weight: bold; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 4px; }
+.doc-resum p { font-size: 12px; color: #333; line-height: 1.55; }
+
+.doc-keywords { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 12px; }
+.kw-tag {
+  background: #e8effc; color: #1a3a6b;
+  font-size: 10px; font-weight: bold;
+  padding: 3px 9px; border-radius: 12px;
+}
+
+.doc-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.btn-pdf {
+  padding: 8px 18px; border: none; border-radius: 6px;
+  background: #1a3a6b; color: #fff; font-size: 12px;
+  font-weight: bold; cursor: pointer; text-decoration: none;
+  display: inline-flex; align-items: center; gap: 6px;
+}
+.btn-pdf:active { background: #122b52; }
+
+/* No resultats */
+#no-results {
+  text-align: center; padding: 40px 20px;
+  color: #6b7a99; display: none;
+}
+#no-results .icon { font-size: 36px; margin-bottom: 10px; }
+
+/* ── MODAL ADMIN ── */
+#overlay {
+  display: none; position: fixed;
+  inset: 0; background: rgba(0,0,0,.55);
+  z-index: 500; align-items: center; justify-content: center;
+}
+#overlay.show { display: flex; }
+
+#modal {
+  background: #fff; border-radius: 14px;
+  padding: 28px 26px; max-width: 380px; width: 90%;
+  box-shadow: 0 12px 40px rgba(0,0,0,.3);
+}
+#modal h2 { font-size: 17px; color: #1a3a6b; margin-bottom: 6px; }
+#modal p  { font-size: 12px; color: #6b7a99; margin-bottom: 18px; line-height: 1.5; }
+
+#pin-display {
+  display: flex; gap: 10px; justify-content: center; margin-bottom: 20px;
+}
+.pin-dot {
+  width: 16px; height: 16px; border-radius: 50%;
+  background: #dde4f0; border: 2px solid #c0cce0;
+  transition: background .1s;
+}
+.pin-dot.filled { background: #1a3a6b; border-color: #1a3a6b; }
+
+#pin-keypad {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 10px; margin-bottom: 14px;
+}
+.key {
+  padding: 14px; font-size: 18px; font-weight: bold;
+  border: 1.5px solid #dde4f0; border-radius: 8px;
+  background: #f5f7fc; cursor: pointer; text-align: center;
+  transition: background .1s;
+}
+.key:active { background: #e0e8f8; }
+.key.del    { font-size: 14px; color: #c0392b; }
+.key.zero   { grid-column: 2; }
+
+#pin-error {
+  color: #c0392b; font-size: 12px; font-weight: bold;
+  text-align: center; min-height: 18px; margin-bottom: 8px;
+}
+
+#btn-cancel-pin {
+  width: 100%; padding: 10px; border: none; border-radius: 7px;
+  background: #eef1f6; color: #6b7a99; font-size: 13px;
+  font-weight: bold; cursor: pointer;
+}
+
+/* ── PANELL ADMIN ── */
+#admin-panel { display: none; }
+#admin-toolbar {
+  background: #7c3aed; /* viola distintiu */
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 16px;
+  position: fixed; top: 54px; left: 0; right: 0; z-index: 198;
+}
+#admin-toolbar span { color: #fff; font-size: 13px; font-weight: bold; flex: 1; }
+#btn-close-admin {
+  padding: 6px 14px; border: none; border-radius: 5px;
+  background: rgba(255,255,255,.2); color: #fff;
+  font-size: 12px; font-weight: bold; cursor: pointer;
+}
+
+/* ── FORMULARI ADMIN ── */
+#admin-form-wrap {
+  max-width: 760px; margin: 0 auto; padding: 0 14px 50px;
+  margin-top: 116px; /* toolbar + admin-toolbar */
+  display: none;
+}
+.form-section {
+  background: #fff; border: 1.5px solid #dde4f0;
+  border-radius: 10px; padding: 18px; margin-bottom: 14px;
+}
+.form-section h3 { font-size: 13px; color: #1a3a6b; font-weight: bold; margin-bottom: 14px; border-bottom: 1px solid #eef0f8; padding-bottom: 8px; }
+.form-row { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; }
+.form-group { display: flex; flex-direction: column; gap: 5px; flex: 1; min-width: 150px; }
+.form-group label { font-size: 11px; color: #6b7a99; font-weight: bold; text-transform: uppercase; letter-spacing: .5px; }
+.form-group input, .form-group select, .form-group textarea {
+  padding: 8px 10px; border: 1.5px solid #dde4f0;
+  border-radius: 7px; font-size: 13px; font-family: Arial, sans-serif;
+  outline: none; color: #1a1a2e;
+  transition: border-color .15s;
+}
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+  border-color: #1a3a6b;
+}
+.form-group textarea { resize: vertical; min-height: 70px; }
+
+.form-group input[type="file"] {
+  padding: 6px; font-size: 12px;
+  background: #f9fafd;
+}
+
+.btn-submit {
+  width: 100%; padding: 13px; border: none; border-radius: 8px;
+  background: #1a3a6b; color: #fff; font-size: 14px;
+  font-weight: bold; cursor: pointer;
+  transition: background .15s;
+}
+.btn-submit:active { background: #122b52; }
+.btn-submit:disabled { background: #8899bb; cursor: default; }
+
+/* feedback */
+#form-feedback {
+  padding: 12px 16px; border-radius: 8px;
+  font-size: 13px; font-weight: bold;
+  text-align: center; margin-top: 10px;
+  display: none;
+}
+#form-feedback.ok  { background: #dcfce7; color: #166534; }
+#form-feedback.err { background: #fee2e2; color: #991b1b; }
+
+/* Llista gestió */
+#admin-list-wrap {
+  max-width: 760px; margin: 0 auto; padding: 0 14px 50px;
+  margin-top: 116px;
+  display: none;
+}
+.admin-doc-row {
+  background: #fff; border: 1.5px solid #dde4f0;
+  border-radius: 8px; padding: 12px 14px; margin-bottom: 8px;
+  display: flex; align-items: center; gap: 10px;
+}
+.admin-doc-row .info { flex: 1; }
+.admin-doc-row .info .ttl { font-size: 13px; font-weight: bold; }
+.admin-doc-row .info .sub { font-size: 11px; color: #8899aa; }
+.btn-del {
+  padding: 6px 12px; border: none; border-radius: 5px;
+  background: #fee2e2; color: #991b1b; font-size: 11px;
+  font-weight: bold; cursor: pointer;
+}
+.btn-del:active { background: #fecaca; }
+
+@media (max-width: 480px) {
+  #main { margin-top: 124px; }
+  .doc-fields { gap: 6px; }
+  .doc-field { min-width: 120px; }
+}
+@media print {
+  #toolbar, #toolbar2 { display: none; }
+  #main { margin-top: 0; }
+}
+</style>
+</head>
+<body>
+
+<!-- TOOLBAR BLAVA -->
+<div id="toolbar">
+  <div class="brand">
+    <div style="width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">🛡️</div>
+    <div class="brand-text">
+      <h1>Policia Local · Santa Coloma de Gramenet</h1>
+      <p>OAC Docs — Documentació interna</p>
+    </div>
+  </div>
+  <div class="spacer"></div>
+  <button class="tb-btn gold" id="btn-open-admin">🔒 Admin</button>
+  <a class="tb-btn" href="../index.html">← Inici</a>
+</div>
+
+<!-- TOOLBAR GRISA (cerca + filtres) -->
+<div id="toolbar2">
+  <div id="search-wrap">
+    <span style="color:#888;font-size:14px;">🔍</span>
+    <input id="search-input" type="text" placeholder="Cerca per tema, paraula clau, número..." autocomplete="off">
+    <button id="btn-clear-search" title="Netejar">✕</button>
+  </div>
+  <button id="btn-search">Cerca</button>
+  <div class="chips-row" id="chips-row">
+    <button class="chip" data-tipus="tots">Tot</button>
+    <button class="chip pnt" data-tipus="PNT">PNT</button>
+    <button class="chip ni"  data-tipus="NI">NI</button>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div id="main">
+
+  <!-- Pantalla inicial -->
+  <div id="empty-start">
+    <div class="big-icon">📂</div>
+    <h2>Biblioteca de documentació OAC</h2>
+    <p>Protocols Normalitzats de Treball (PNT) i Notes Informatives (NI)<br>de la Unitat OAC-Atestats de la Policia Local de SCG.</p>
+    <div class="quick-chips">
+      <div class="quick-chip" onclick="quickSearch('alcoholèmia')">Alcoholèmia</div>
+      <div class="quick-chip" onclick="quickSearch('T-32')">Acta T-32</div>
+      <div class="quick-chip" onclick="quickSearch('contenedors')">Contenedors</div>
+      <div class="quick-chip" onclick="quickSearch('internet estafa')">Estafa internet</div>
+      <div class="quick-chip" onclick="quickSearch('permís conduir')">Permís conduir</div>
+      <div class="quick-chip" onclick="quickSearch('detenció')">Detenció</div>
+    </div>
+  </div>
+
+  <!-- Resultats -->
+  <div id="results">
+    <div class="results-header" id="results-count"></div>
+    <div id="results-list"></div>
+  </div>
+
+  <!-- Sense resultats -->
+  <div id="no-results">
+    <div class="icon">🔎</div>
+    <p>Cap document coincideix amb la cerca.<br>Prova amb altres paraules clau.</p>
+  </div>
+
+</div>
+
+<!-- MODAL PIN -->
+<div id="overlay">
+  <div id="modal">
+    <h2>🔒 Accés d'administrador</h2>
+    <p>Introduïu el PIN per accedir a la gestió de documents.</p>
+    <div id="pin-display">
+      <div class="pin-dot" id="d0"></div>
+      <div class="pin-dot" id="d1"></div>
+      <div class="pin-dot" id="d2"></div>
+      <div class="pin-dot" id="d3"></div>
+    </div>
+    <div id="pin-error"></div>
+    <div id="pin-keypad">
+      <button class="key" data-k="1">1</button>
+      <button class="key" data-k="2">2</button>
+      <button class="key" data-k="3">3</button>
+      <button class="key" data-k="4">4</button>
+      <button class="key" data-k="5">5</button>
+      <button class="key" data-k="6">6</button>
+      <button class="key" data-k="7">7</button>
+      <button class="key" data-k="8">8</button>
+      <button class="key" data-k="9">9</button>
+      <button class="key del" data-k="del">⌫</button>
+      <button class="key zero" data-k="0">0</button>
+    </div>
+    <button id="btn-cancel-pin">Cancel·lar</button>
+  </div>
+</div>
+
+<!-- PANELL ADMIN (ocult fins que s'entra el PIN) -->
+<div id="admin-panel">
+  <div id="admin-toolbar">
+    <span>🔓 Mode administrador</span>
+    <button id="btn-new-doc" style="padding:6px 14px;border:none;border-radius:5px;background:rgba(255,255,255,.2);color:#fff;font-size:12px;font-weight:bold;cursor:pointer;margin-right:6px;">+ Nou document</button>
+    <button id="btn-manage-docs" style="padding:6px 14px;border:none;border-radius:5px;background:rgba(255,255,255,.2);color:#fff;font-size:12px;font-weight:bold;cursor:pointer;margin-right:6px;">📋 Gestionar</button>
+    <button id="btn-close-admin">Tancar sessió</button>
+  </div>
+
+  <!-- Formulari afegir document -->
+  <div id="admin-form-wrap">
+    <div class="form-section">
+      <h3>Identificació del document</h3>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Tipus *</label>
+          <select id="f-tipus">
+            <option value="PNT">PNT — Procediment Normalitzat de Treball</option>
+            <option value="NI">NI — Nota Informativa</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Número *</label>
+          <input id="f-numero" type="text" placeholder="p.ex. 07-01/2025">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group" style="flex:2">
+          <label>Títol *</label>
+          <input id="f-titol" type="text" placeholder="Títol descriptiu del document">
+        </div>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h3>Metadades de cerca</h3>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Data del document *</label>
+          <input id="f-data" type="date">
+        </div>
+        <div class="form-group">
+          <label>Classificació</label>
+          <select id="f-classificacio">
+            <option value="Difusió Limitada">Difusió Limitada</option>
+            <option value="Difusió Interna">Difusió Interna</option>
+            <option value="Pública">Pública</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Destinatari / Àmbit</label>
+          <input id="f-desti" type="text" placeholder="p.ex. OAC-AT, Totes les dotacions...">
+        </div>
+        <div class="form-group">
+          <label>Autor / Unitat</label>
+          <input id="f-autor" type="text" placeholder="p.ex. Sgt. German Sola García">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group" style="flex:2">
+          <label>Paraules clau * <span style="font-weight:normal;color:#aaa">(separades per comes)</span></label>
+          <input id="f-keywords" type="text" placeholder="p.ex. alcoholèmia, T-32, acta, trànsit, 379 CP">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group" style="flex:2">
+          <label>Resum * <span style="font-weight:normal;color:#aaa">(2-3 frases clau per a la cerca)</span></label>
+          <textarea id="f-resum" placeholder="Descriu de manera concisa el contingut i els casos d'ús d'aquest document..."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h3>Fitxer PDF</h3>
+      <div class="form-row">
+        <div class="form-group" style="flex:2">
+          <label>Ruta o nom del fitxer PDF *</label>
+          <input id="f-fitxer" type="text" placeholder="p.ex. docs/PNT_07-2025_T32.pdf">
+          <span style="font-size:11px;color:#8899aa;margin-top:3px;">Introduïu el nom del fitxer PDF tal com s'ha pujat al servidor.</span>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn-submit" id="btn-submit-doc">💾 Desar document a la biblioteca</button>
+    <div id="form-feedback"></div>
+  </div>
+
+  <!-- Llista gestió -->
+  <div id="admin-list-wrap">
+    <div class="form-section">
+      <h3>Documents a la biblioteca</h3>
+      <div id="admin-doc-list"></div>
+    </div>
+  </div>
+
+</div><!-- #admin-panel -->
+
+<!-- Fuse.js CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/7.0.0/fuse.min.js"></script>
+
+<script>
+// ══════════════════════════════════════════════════════
+//  BASE DE DADES DE DOCUMENTS
+//  Afegiu aquí els documents manualment o via l'extractor
+// ══════════════════════════════════════════════════════
+let DOCS = [
+  {
+    id: "PNT-07-01-2025",
+    tipus: "PNT",
+    numero: "07-01/2025",
+    titol: "Actuació policial en delictes contra la seguretat viària, alcoholèmia i conducció sense permís de conduir. Incorporació de l'acta T-32 i la seva tramitació.",
+    data: "2025-02-01",
+    classificacio: "Difusió Limitada",
+    desti: "Totes les dotacions · OAC-Atestats",
+    autor: "Sgt. German Sola García / Cap OAC",
+    paraules_clau: ["T-32", "T-32-A", "T-32-C", "alcoholèmia", "conducció sense permís", "permís conduir", "379 CP", "383 CP", "384 CP", "acta trànsit", "OAC-AT", "judici ràpid", "ICAB", "pèrdua punts", "NIP", "atestats", "seguretat viària"],
+    resum: "Incorporació del model d'acta T-32 (variants A i C) per tramitar delictes contra la seguretat viària: alcoholèmia, negativa a les proves i conducció sense permís. Inclou procediment complet per a l'OAC-Atestats: introducció al NIP, agenda judicial, citació ICAB i confecció de la caràtula de l'atestat.",
+    fitxer: "docs/PNT_07-2025_INCORPORACIÓ_T32.pdf"
+  },
+  {
+    id: "NI-05-01-2022",
+    tipus: "NI",
+    numero: "05/01-2022",
+    titol: "Actuació per quema de contenedors",
+    data: "2022-01-20",
+    classificacio: "Difusió Limitada",
+    desti: "OAC-AT · Dotacions Seguretat Ciutadana · Sala 092",
+    autor: "Sgt. German Sola García / Cap OAC",
+    paraules_clau: ["contenedors", "quema", "incendi", "danys", "CLD", "CESPA", "delicte danys", "OAC-AT", "empresa contenedors", "diligència inici", "minuta policial", "4917", "4918", "Mossos", "Sala 092"],
+    resum: "Protocol d'actuació davant incidents de quema de contenedors a la via pública. Inclou tipologia i valor econòmic dels contenedors (CLD i CESPA), actuació de les dotacions i la Sala 092, casuística penal (danys, incendi provocat) i tramitació completa de les diligències per part de l'OAC-AT.",
+    fitxer: "docs/NI_QUEMA_CONTENEDORES.pdf"
+  },
+  {
+    id: "NI-03-01-2025",
+    tipus: "NI",
+    numero: "03-01/2025",
+    titol: "Unificació de criteris en denúncies per estafa bancària via internet",
+    data: "2025-04-07",
+    classificacio: "Difusió Interna",
+    desti: "Comandaments i personal OAC-AT",
+    autor: "Sgt. German Sola García / Cap OAC",
+    paraules_clau: ["estafa", "internet", "estafa bancària", "phishing", "frau en línia", "regió policial virtual", "Mossos", "àmbit internet", "targetes", "art. 249 CP", "POE comerç", "usurpació identitat", "atacs informàtics"],
+    resum: "Criteris unificats per a la instrucció de procediments policials per delictes d'estafa a l'àmbit d'internet, arran de la creació de la Regió Policial Virtual dels Mossos d'Esquadra. Estableix quan s'ha d'emprar l'àmbit 'Internet' i quan 'POE Comerç i Empresa', amb els subtipus corresponents.",
+    fitxer: "docs/NI_ESTAFAS_INTERNET.pdf"
+  }
+];
+
+// Clau localStorage per persistir documents afegits via admin
+const STORAGE_KEY = 'oac_docs_extra';
+function loadExtra() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      const extra = JSON.parse(raw);
+      extra.forEach(d => { if (!DOCS.find(x => x.id === d.id)) DOCS.push(d); });
+    }
+  } catch(e) {}
+}
+function saveExtra() {
+  // Guardem només els que NO eren a la llista inicial (afegits via admin)
+  const initIds = ["PNT-07-01-2025","NI-05-01-2022","NI-03-01-2025"];
+  const extra = DOCS.filter(d => !initIds.includes(d.id));
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(extra)); } catch(e) {}
+}
+loadExtra();
+
+// ══════════════════════════════════════════════════════
+//  FUSE.JS — cerca fuzzy
+// ══════════════════════════════════════════════════════
+function buildFuse(docs) {
+  return new Fuse(docs, {
+    keys: [
+      { name: 'titol',         weight: 0.35 },
+      { name: 'paraules_clau', weight: 0.30 },
+      { name: 'resum',         weight: 0.20 },
+      { name: 'numero',        weight: 0.10 },
+      { name: 'autor',         weight: 0.05 }
+    ],
+    threshold: 0.38,
+    includeScore: true,
+    useExtendedSearch: false
+  });
+}
+let fuse = buildFuse(DOCS);
+
+// ══════════════════════════════════════════════════════
+//  ESTAT
+// ══════════════════════════════════════════════════════
+let currentTipus = 'tots';
+let currentQuery = '';
+
+// ══════════════════════════════════════════════════════
+//  RENDERITZAR RESULTATS
+// ══════════════════════════════════════════════════════
+function renderDocs(docs) {
+  const list = document.getElementById('results-list');
+  const count = document.getElementById('results-count');
+  const results = document.getElementById('results');
+  const noResults = document.getElementById('no-results');
+  const emptyStart = document.getElementById('empty-start');
+
+  emptyStart.style.display = 'none';
+  list.innerHTML = '';
+
+  if (docs.length === 0) {
+    results.style.display = 'none';
+    noResults.style.display = 'block';
+    return;
+  }
+
+  noResults.style.display = 'none';
+  results.style.display = 'block';
+  count.textContent = docs.length === 1 ? '1 document trobat' : `${docs.length} documents trobats`;
+
+  docs.forEach(doc => {
+    const dataTxt = doc.data ? new Date(doc.data + 'T12:00:00').toLocaleDateString('ca-ES', { day:'2-digit', month:'long', year:'numeric' }) : '—';
+    const badgeCls = doc.tipus === 'PNT' ? 'badge-pnt' : 'badge-ni';
+    const kwHtml = (doc.paraules_clau || []).slice(0, 8).map(k => `<span class="kw-tag">${k}</span>`).join('');
+    const fitxerUrl = doc.fitxer ? doc.fitxer : null;
+
+    const card = document.createElement('div');
+    card.className = 'doc-card';
+    card.dataset.id = doc.id;
+    card.innerHTML = `
+      <div class="doc-header" onclick="toggleCard(this.parentElement)">
+        <span class="doc-badge ${badgeCls}">${doc.tipus} ${doc.numero}</span>
+        <div class="doc-info">
+          <div class="doc-title">${doc.titol}</div>
+          <div class="doc-meta">${dataTxt} · ${doc.classificacio}</div>
+        </div>
+        <span class="doc-arrow">›</span>
+      </div>
+      <div class="doc-body">
+        <div class="doc-fields">
+          <div class="doc-field"><div class="label">Tipus</div><div class="value">${doc.tipus}</div></div>
+          <div class="doc-field"><div class="label">Número</div><div class="value">${doc.numero}</div></div>
+          <div class="doc-field"><div class="label">Data</div><div class="value">${dataTxt}</div></div>
+          <div class="doc-field"><div class="label">Classificació</div><div class="value">${doc.classificacio}</div></div>
+          ${doc.desti ? `<div class="doc-field"><div class="label">Destinatari</div><div class="value">${doc.desti}</div></div>` : ''}
+          ${doc.autor ? `<div class="doc-field"><div class="label">Autor</div><div class="value">${doc.autor}</div></div>` : ''}
+        </div>
+        ${doc.resum ? `<div class="doc-resum"><div class="label">Resum</div><p>${doc.resum}</p></div>` : ''}
+        ${kwHtml ? `<div class="doc-keywords">${kwHtml}</div>` : ''}
+        <div class="doc-actions">
+          ${fitxerUrl ? `<a class="btn-pdf" href="${fitxerUrl}" target="_blank">📄 Obrir PDF</a>` : '<span style="font-size:12px;color:#aaa">PDF no disponible</span>'}
+        </div>
+      </div>`;
+    list.appendChild(card);
+  });
+}
+
+function toggleCard(card) {
+  card.classList.toggle('open');
+}
+
+// ══════════════════════════════════════════════════════
+//  CERCA
+// ══════════════════════════════════════════════════════
+function doSearch() {
+  const q = document.getElementById('search-input').value.trim();
+  currentQuery = q;
+
+  // Filtrar per tipus
+  let pool = currentTipus === 'tots' ? DOCS : DOCS.filter(d => d.tipus === currentTipus);
+
+  let results;
+  if (!q) {
+    results = pool;
+  } else {
+    const fuseLocal = buildFuse(pool);
+    results = fuseLocal.search(q).map(r => r.item);
+  }
+
+  document.getElementById('btn-clear-search').style.display = q ? 'block' : 'none';
+  renderDocs(results);
+}
+
+function quickSearch(q) {
+  document.getElementById('search-input').value = q;
+  doSearch();
+}
+
+// Chips filtre
+document.querySelectorAll('.chip').forEach(chip => {
+  chip.addEventListener('click', () => {
+    document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+    currentTipus = chip.dataset.tipus;
+    doSearch();
+  });
+});
+// Activar "Tot" per defecte
+document.querySelector('.chip[data-tipus="tots"]').classList.add('active');
+
+document.getElementById('btn-search').addEventListener('click', doSearch);
+document.getElementById('search-input').addEventListener('keydown', e => { if (e.key === 'Enter') doSearch(); });
+document.getElementById('btn-clear-search').addEventListener('click', () => {
+  document.getElementById('search-input').value = '';
+  document.getElementById('btn-clear-search').style.display = 'none';
+  currentQuery = '';
+  document.getElementById('results').style.display = 'none';
+  document.getElementById('no-results').style.display = 'none';
+  document.getElementById('empty-start').style.display = 'block';
+});
+
+// ══════════════════════════════════════════════════════
+//  PIN ADMIN
+// ══════════════════════════════════════════════════════
+const PIN_CORRECT = '4710';
+let pinBuf = '';
+let adminOpen = false;
+
+function updatePinDisplay() {
+  for (let i = 0; i < 4; i++) {
+    const dot = document.getElementById('d' + i);
+    dot.classList.toggle('filled', i < pinBuf.length);
+  }
+}
+
+function shakeModal() {
+  const m = document.getElementById('modal');
+  m.style.animation = 'none';
+  setTimeout(() => { m.style.animation = ''; }, 10);
+  m.style.transform = 'translateX(-8px)';
+  setTimeout(() => { m.style.transform = ''; }, 50);
+  setTimeout(() => { m.style.transform = 'translateX(8px)'; }, 100);
+  setTimeout(() => { m.style.transform = ''; }, 150);
+}
+
+document.getElementById('btn-open-admin').addEventListener('click', () => {
+  if (adminOpen) return;
+  pinBuf = '';
+  updatePinDisplay();
+  document.getElementById('pin-error').textContent = '';
+  document.getElementById('overlay').classList.add('show');
+});
+document.getElementById('btn-cancel-pin').addEventListener('click', () => {
+  document.getElementById('overlay').classList.remove('show');
+  pinBuf = '';
+  updatePinDisplay();
+});
+
+document.querySelectorAll('.key').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const k = btn.dataset.k;
+    if (k === 'del') {
+      pinBuf = pinBuf.slice(0, -1);
+      document.getElementById('pin-error').textContent = '';
+    } else if (pinBuf.length < 4) {
+      pinBuf += k;
+    }
+    updatePinDisplay();
+    if (pinBuf.length === 4) {
+      if (pinBuf === PIN_CORRECT) {
+        document.getElementById('overlay').classList.remove('show');
+        openAdmin();
+      } else {
+        document.getElementById('pin-error').textContent = 'PIN incorrecte. Torneu a provar.';
+        shakeModal();
+        setTimeout(() => { pinBuf = ''; updatePinDisplay(); }, 600);
+      }
+    }
+  });
+});
+
+// ══════════════════════════════════════════════════════
+//  MODE ADMIN
+// ══════════════════════════════════════════════════════
+let adminView = 'none'; // 'form' | 'list' | 'none'
+
+function openAdmin() {
+  adminOpen = true;
+  document.getElementById('admin-panel').style.display = 'block';
+  document.getElementById('admin-toolbar').style.top = '54px';
+  document.getElementById('main').style.marginTop = '160px';
+  showAdminView('none');
+  document.getElementById('btn-open-admin').textContent = '🔓 Admin obert';
+  document.getElementById('btn-open-admin').style.background = '#7c3aed';
+}
+
+function closeAdmin() {
+  adminOpen = false;
+  document.getElementById('admin-panel').style.display = 'none';
+  document.getElementById('main').style.marginTop = '116px';
+  document.getElementById('btn-open-admin').textContent = '🔒 Admin';
+  document.getElementById('btn-open-admin').style.background = '#c8920a';
+  showAdminView('none');
+}
+
+function showAdminView(view) {
+  adminView = view;
+  document.getElementById('admin-form-wrap').style.display = view === 'form' ? 'block' : 'none';
+  document.getElementById('admin-list-wrap').style.display = view === 'list' ? 'block' : 'none';
+  if (view === 'list') renderAdminList();
+  // Ajustar margin del main
+  const extraH = (view === 'none') ? 0 : 0;
+  document.getElementById('main').style.display = (view === 'none') ? 'block' : 'none';
+}
+
+document.getElementById('btn-close-admin').addEventListener('click', closeAdmin);
+document.getElementById('btn-new-doc').addEventListener('click', () => {
+  showAdminView(adminView === 'form' ? 'none' : 'form');
+});
+document.getElementById('btn-manage-docs').addEventListener('click', () => {
+  showAdminView(adminView === 'list' ? 'none' : 'list');
+});
+
+// ──────────────────────────────────────────────
+//  DESAR DOCUMENT (admin)
+// ──────────────────────────────────────────────
+document.getElementById('btn-submit-doc').addEventListener('click', () => {
+  const tipus   = document.getElementById('f-tipus').value.trim();
+  const numero  = document.getElementById('f-numero').value.trim();
+  const titol   = document.getElementById('f-titol').value.trim();
+  const data    = document.getElementById('f-data').value;
+  const classif = document.getElementById('f-classificacio').value;
+  const desti   = document.getElementById('f-desti').value.trim();
+  const autor   = document.getElementById('f-autor').value.trim();
+  const kwRaw   = document.getElementById('f-keywords').value.trim();
+  const resum   = document.getElementById('f-resum').value.trim();
+  const fitxer  = document.getElementById('f-fitxer').value.trim();
+
+  const fb = document.getElementById('form-feedback');
+
+  if (!tipus || !numero || !titol || !data || !kwRaw || !resum || !fitxer) {
+    fb.className = 'err';
+    fb.textContent = '⚠️ Ompliu tots els camps obligatoris (*)';
+    fb.style.display = 'block';
+    return;
+  }
+
+  const kws = kwRaw.split(',').map(k => k.trim()).filter(Boolean);
+  const id  = tipus + '-' + numero.replace(/[^a-zA-Z0-9]/g, '-') + '-' + Date.now();
+
+  const doc = { id, tipus, numero, titol, data, classificacio: classif, desti, autor, paraules_clau: kws, resum, fitxer };
+  DOCS.push(doc);
+  fuse = buildFuse(DOCS);
+  saveExtra();
+
+  fb.className = 'ok';
+  fb.textContent = '✅ Document desat correctament a la biblioteca.';
+  fb.style.display = 'block';
+
+  // Reset formulari
+  ['f-numero','f-titol','f-data','f-desti','f-autor','f-keywords','f-resum','f-fitxer'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+
+  setTimeout(() => { fb.style.display = 'none'; }, 3500);
+});
+
+// ──────────────────────────────────────────────
+//  LLISTA GESTIÓ (admin)
+// ──────────────────────────────────────────────
+function renderAdminList() {
+  const list = document.getElementById('admin-doc-list');
+  list.innerHTML = '';
+  if (DOCS.length === 0) {
+    list.innerHTML = '<p style="color:#aaa;font-size:13px;">Cap document.</p>';
+    return;
+  }
+  DOCS.forEach(doc => {
+    const row = document.createElement('div');
+    row.className = 'admin-doc-row';
+    row.innerHTML = `
+      <div class="info">
+        <div class="ttl">${doc.tipus} ${doc.numero} — ${doc.titol}</div>
+        <div class="sub">${doc.data || ''} · ${doc.fitxer}</div>
+      </div>
+      <button class="btn-del" data-id="${doc.id}">🗑️ Eliminar</button>`;
+    list.appendChild(row);
+  });
+  list.querySelectorAll('.btn-del').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (confirm('Eliminar aquest document de la biblioteca?')) {
+        DOCS = DOCS.filter(d => d.id !== btn.dataset.id);
+        fuse = buildFuse(DOCS);
+        saveExtra();
+        renderAdminList();
+      }
+    });
+  });
+}
+
+// Inicial: toolbar "Tot" actiu, pantalla benvinguda
+document.getElementById('empty-start').style.display = 'block';
+document.getElementById('results').style.display = 'none';
+document.getElementById('no-results').style.display = 'none';
+</script>
+</body>
+</html>
