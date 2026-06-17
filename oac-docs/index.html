@@ -5,402 +5,297 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <meta name="theme-color" content="#1a3a6b">
 <title>OAC Docs – Policia Local SCG</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/7.0.0/fuse.min.js"></script>
 <style>
-* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-body { font-family: Arial, sans-serif; background: #d0d4db; color: #111; min-height: 100vh; }
+:root{--blue:#1a3a6b;--blue2:#2d5a9e;--bg:#f0f2f5;--card:#fff;--border:#dde4f0;--text:#1a1a2e;--muted:#777;}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;font-family:Arial,sans-serif;color:var(--text);}
+body{background:var(--bg);display:flex;flex-direction:column;}
 
-/* ── TOOLBAR BLAVA ── */
-#toolbar {
-  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
-  background: #1a3a6b;
-  display: flex; align-items: center; gap: 10px;
-  padding: 10px 16px;
-  box-shadow: 0 2px 10px rgba(0,0,0,.4);
-}
-.brand { display: flex; align-items: center; gap: 10px; }
-.brand img { height: 34px; }
-.brand-text h1 { color: #fff; font-size: 13px; line-height: 1.3; }
-.brand-text p  { color: #c8d8f0; font-size: 10px; }
-#toolbar .spacer { flex: 1; }
-.tb-btn {
-  padding: 7px 13px; border: none; border-radius: 5px;
-  background: #4a7ab5; color: #fff; font-size: 12px;
-  font-weight: bold; cursor: pointer; text-decoration: none;
-  display: inline-flex; align-items: center; gap: 5px;
-  white-space: nowrap;
-}
-.tb-btn:active { background: #3a6aa5; }
-.tb-btn.gold { background: #c8920a; }
-.tb-btn.gold:active { background: #a87508; }
+/* HEADER — idèntic a sancions */
+#header{background:var(--blue);padding:10px 16px 8px;flex-shrink:0;box-shadow:0 2px 8px rgba(0,0,0,.3);display:flex;align-items:center;gap:12px;}
+#header-text{flex:1;}
+#header h1{color:#fff;font-size:14px;line-height:1.3;}
+#header p{color:#c8d8f0;font-size:10px;margin-top:2px;}
+#btn-inici{padding:7px 13px;border:none;border-radius:5px;background:#4a7ab5;color:#fff;font-size:12px;font-weight:bold;cursor:pointer;text-decoration:none;white-space:nowrap;flex-shrink:0;}
+#btn-inici:active{background:#3a6aa5;}
 
-/* ── TOOLBAR GRISA ── */
-#toolbar2 {
-  position: fixed; top: 54px; left: 0; right: 0; z-index: 199;
-  background: #4a5568;
-  display: flex; align-items: center; gap: 8px;
-  padding: 8px 16px;
-  box-shadow: 0 2px 6px rgba(0,0,0,.3);
-  flex-wrap: wrap;
-}
-#search-wrap {
-  flex: 1; min-width: 180px;
-  display: flex; align-items: center; gap: 6px;
-  background: #fff; border-radius: 6px;
-  padding: 6px 10px;
-}
-#search-input {
-  flex: 1; border: none; outline: none;
-  font-size: 13px; background: transparent;
-}
-#btn-clear-search {
-  background: none; border: none; cursor: pointer;
-  color: #888; font-size: 16px; line-height: 1;
-  display: none;
-}
-#btn-search {
-  padding: 6px 14px; border: none; border-radius: 5px;
-  background: #1a3a6b; color: #fff; font-size: 12px;
-  font-weight: bold; cursor: pointer; white-space: nowrap;
-}
-#btn-search:active { background: #122b52; }
+/* SEARCH WRAP — sticky, igual que sancions */
+#search-wrap{background:#fff;padding:10px 14px 8px;flex-shrink:0;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:90;box-shadow:0 2px 6px rgba(0,0,0,.06);}
+.sbox{display:flex;align-items:center;gap:8px;}
+#search-input{flex:1;padding:11px 14px;border:2px solid var(--border);border-radius:8px;font-size:16px;font-family:Arial,sans-serif;color:var(--text);transition:border-color .15s;}
+#search-input:focus{outline:none;border-color:var(--blue);}
+#search-input::placeholder{color:#aaa;}
+#btn-clear{flex-shrink:0;width:36px;height:36px;border:none;border-radius:50%;background:#eee;color:#555;font-size:16px;font-weight:bold;cursor:pointer;display:none;align-items:center;justify-content:center;}
+#btn-clear.vis{display:flex;}
+#btn-clear:active{background:#ddd;}
+#btn-search{flex-shrink:0;padding:0 16px;height:42px;border:none;border-radius:8px;background:var(--blue);color:#fff;font-size:13px;font-weight:bold;cursor:pointer;white-space:nowrap;}
+#btn-search:active{background:#14305a;}
 
-/* Chips filtre */
-.chips-row {
-  display: flex; gap: 6px; flex-wrap: wrap;
-  width: 100%; margin-top: 4px;
-}
-.chip {
-  padding: 4px 11px; border-radius: 20px;
-  border: 1.5px solid #8899bb; background: transparent;
-  color: #e2e8f0; font-size: 11px; font-weight: bold;
-  cursor: pointer; white-space: nowrap;
-  transition: background .12s, border-color .12s;
-}
-.chip:hover { background: rgba(255,255,255,.1); }
-.chip.active { background: #1a3a6b; border-color: #6699dd; color: #fff; }
-.chip.pnt.active   { background: #2563eb; border-color: #93c5fd; }
-.chip.ni.active    { background: #16a34a; border-color: #86efac; }
+/* FILTRES */
+#filters{display:flex;flex-wrap:wrap;gap:6px;padding:8px 0 4px;}
+.chip{flex-shrink:0;padding:5px 12px;border:1.5px solid var(--border);border-radius:20px;font-size:12px;font-weight:bold;cursor:pointer;color:var(--muted);background:#fff;white-space:nowrap;transition:all .15s;-webkit-user-select:none;user-select:none;}
+.chip:active{transform:scale(.96);}
+.chip.on{background:var(--blue);border-color:var(--blue);color:#fff;}
+.chip-pnt.on{background:#2563eb;border-color:#2563eb;}
+.chip-ni.on{background:#16a34a;border-color:#16a34a;}
 
-/* ── MAIN ── */
-#main { max-width: 760px; margin: 116px auto 50px; padding: 0 14px; }
+/* STATS BAR */
+#stats-bar{padding:5px 14px;font-size:11px;color:var(--muted);background:#f8f9fa;border-bottom:1px solid #eee;flex-shrink:0;display:flex;align-items:center;justify-content:space-between;min-height:28px;}
+#btn-reset{padding:3px 10px;font-size:11px;font-weight:bold;background:#e8f0fb;color:var(--blue);border:1.5px solid var(--blue);border-radius:12px;cursor:pointer;display:none;}
+#btn-reset.vis{display:block;}
+#btn-reset:active{background:#c8d8f0;}
 
-/* Estat inicial */
-#empty-start {
-  text-align: center; padding: 50px 20px;
-  color: #5a6a8a;
-}
-#empty-start .big-icon { font-size: 52px; margin-bottom: 14px; }
-#empty-start h2 { font-size: 17px; color: #1a3a6b; margin-bottom: 8px; }
-#empty-start p { font-size: 13px; line-height: 1.6; }
+/* RESULTATS */
+#results{flex:1;overflow-y:auto;padding:10px 12px 20px;-webkit-overflow-scrolling:touch;}
 
-.quick-chips { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 20px; }
-.quick-chip {
-  padding: 7px 16px; border-radius: 20px;
-  background: #e8effc; border: 1.5px solid #c0d0e8;
-  color: #1a3a6b; font-size: 12px; font-weight: bold;
-  cursor: pointer;
-  transition: background .12s;
-}
-.quick-chip:hover { background: #d0e0f8; }
-
-/* Resultats */
-#results { display: none; }
-.results-header {
-  font-size: 11px; color: #6b7a99; font-weight: bold;
-  text-transform: uppercase; letter-spacing: .8px;
-  margin-bottom: 10px; padding-left: 2px;
-}
-
-/* Card document */
-.doc-card {
-  background: #fff; border: 1.5px solid #dde4f0;
-  border-radius: 10px; margin-bottom: 10px;
-  overflow: hidden;
-  transition: box-shadow .15s, border-color .15s;
-}
-.doc-card:hover { box-shadow: 0 4px 16px rgba(26,58,107,.14); border-color: #1a3a6b; }
-
-.doc-header {
-  display: flex; align-items: center; gap: 12px;
-  padding: 13px 14px; cursor: pointer;
-}
-.doc-badge {
-  font-size: 10px; font-weight: bold;
-  padding: 3px 9px; border-radius: 4px;
-  flex-shrink: 0;
-}
-.badge-pnt { background: #dbeafe; color: #1e40af; }
-.badge-ni  { background: #dcfce7; color: #166534; }
-
-.doc-info { flex: 1; min-width: 0; }
-.doc-title { font-size: 13px; font-weight: bold; color: #1a1a2e; line-height: 1.35; }
-.doc-meta  { font-size: 11px; color: #8899aa; margin-top: 2px; }
-
-.doc-arrow { font-size: 18px; color: #c0cce0; flex-shrink: 0; transition: transform .2s; }
-.doc-card.open .doc-arrow { transform: rotate(90deg); }
-
-/* Contingut expandit */
-.doc-body {
-  display: none;
-  border-top: 1px solid #eef0f8;
-  padding: 14px 14px 16px;
-  background: #f9fafd;
-}
-.doc-card.open .doc-body { display: block; }
-
-.doc-fields { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 12px; }
-.doc-field {
-  background: #fff; border: 1px solid #dde4f0;
-  border-radius: 7px; padding: 8px 12px; min-width: 140px;
-}
-.doc-field .label { font-size: 10px; color: #8899aa; font-weight: bold; text-transform: uppercase; letter-spacing: .5px; }
-.doc-field .value { font-size: 12px; color: #1a1a2e; margin-top: 2px; font-weight: bold; }
-
-.doc-resum {
-  background: #fff; border: 1px solid #dde4f0;
-  border-radius: 7px; padding: 10px 12px; margin-bottom: 12px;
-}
-.doc-resum .label { font-size: 10px; color: #8899aa; font-weight: bold; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 4px; }
-.doc-resum p { font-size: 12px; color: #333; line-height: 1.55; }
-
-.doc-keywords { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 12px; }
-.kw-tag {
-  background: #e8effc; color: #1a3a6b;
-  font-size: 10px; font-weight: bold;
-  padding: 3px 9px; border-radius: 12px;
-}
-
-.doc-actions { display: flex; gap: 8px; flex-wrap: wrap; }
-.btn-pdf {
-  padding: 8px 18px; border: none; border-radius: 6px;
-  background: #1a3a6b; color: #fff; font-size: 12px;
-  font-weight: bold; cursor: pointer; text-decoration: none;
-  display: inline-flex; align-items: center; gap: 6px;
-}
-.btn-pdf:active { background: #122b52; }
+/* Pantalla inicial */
+#empty-start{text-align:center;padding:40px 16px;color:var(--muted);}
+#empty-start .big-icon{font-size:48px;margin-bottom:12px;}
+#empty-start h2{font-size:16px;color:var(--blue);margin-bottom:8px;}
+#empty-start p{font-size:13px;line-height:1.6;}
+.quick-chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:16px;}
+.quick-chip{background:#e8effc;border:1.5px solid #c0d0e8;color:var(--blue);border-radius:16px;padding:6px 14px;font-size:12px;font-weight:bold;cursor:pointer;border-width:0;}
+.quick-chip:active{background:#c8d8f0;}
 
 /* No resultats */
-#no-results {
-  text-align: center; padding: 40px 20px;
-  color: #6b7a99; display: none;
-}
-#no-results .icon { font-size: 36px; margin-bottom: 10px; }
+#no-results{text-align:center;padding:50px 20px;color:var(--muted);display:none;}
+#no-results .icon{font-size:44px;margin-bottom:10px;}
 
-/* ── MODAL ADMIN ── */
-#overlay {
-  display: none; position: fixed;
-  inset: 0; background: rgba(0,0,0,.55);
-  z-index: 500; align-items: center; justify-content: center;
-}
-#overlay.show { display: flex; }
+/* CARD document */
+.card{background:var(--card);border:1.5px solid var(--border);border-radius:10px;margin-bottom:8px;overflow:hidden;transition:box-shadow .15s,border-color .15s;}
+.card:hover{box-shadow:0 4px 16px rgba(26,58,107,.14);border-color:var(--blue);}
+.card-header{display:flex;align-items:center;gap:10px;padding:12px 14px;cursor:pointer;}
+.doc-badge{font-size:10px;font-weight:bold;padding:3px 9px;border-radius:4px;flex-shrink:0;}
+.badge-pnt{background:#dbeafe;color:#1e40af;}
+.badge-ni{background:#dcfce7;color:#166534;}
+.card-info{flex:1;min-width:0;}
+.card-title{font-size:13px;font-weight:bold;color:var(--text);line-height:1.35;}
+.card-meta{font-size:11px;color:#8899aa;margin-top:2px;}
+.card-arrow{font-size:18px;color:#c0cce0;flex-shrink:0;transition:transform .2s;}
+.card.open .card-arrow{transform:rotate(90deg);}
 
-#modal {
-  background: #fff; border-radius: 14px;
-  padding: 28px 26px; max-width: 380px; width: 90%;
-  box-shadow: 0 12px 40px rgba(0,0,0,.3);
-}
-#modal h2 { font-size: 17px; color: #1a3a6b; margin-bottom: 6px; }
-#modal p  { font-size: 12px; color: #6b7a99; margin-bottom: 18px; line-height: 1.5; }
+/* Cos expandit */
+.card-body{display:none;border-top:1px solid #eef0f8;padding:14px;background:#f9fafd;}
+.card.open .card-body{display:block;}
+.doc-fields{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px;}
+.doc-field{background:#fff;border:1px solid var(--border);border-radius:7px;padding:7px 11px;min-width:130px;}
+.doc-field .lbl{font-size:10px;color:#8899aa;font-weight:bold;text-transform:uppercase;letter-spacing:.5px;}
+.doc-field .val{font-size:12px;color:var(--text);margin-top:2px;font-weight:bold;}
+.doc-resum{background:#fff;border:1px solid var(--border);border-radius:7px;padding:10px 12px;margin-bottom:10px;}
+.doc-resum .lbl{font-size:10px;color:#8899aa;font-weight:bold;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;}
+.doc-resum p{font-size:12px;color:#333;line-height:1.55;}
+.kws{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px;}
+.kw{background:#e8effc;color:var(--blue);font-size:10px;font-weight:bold;padding:3px 9px;border-radius:12px;}
+.btn-pdf{padding:8px 18px;border:none;border-radius:6px;background:var(--blue);color:#fff;font-size:12px;font-weight:bold;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:6px;}
+.btn-pdf:active{background:#122b52;}
 
-#pin-display {
-  display: flex; gap: 10px; justify-content: center; margin-bottom: 20px;
-}
-.pin-dot {
-  width: 16px; height: 16px; border-radius: 50%;
-  background: #dde4f0; border: 2px solid #c0cce0;
-  transition: background .1s;
-}
-.pin-dot.filled { background: #1a3a6b; border-color: #1a3a6b; }
+/* MODAL PIN */
+#overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:500;align-items:center;justify-content:center;}
+#overlay.show{display:flex;}
+#modal{background:#fff;border-radius:14px;padding:28px 26px;max-width:360px;width:90%;box-shadow:0 12px 40px rgba(0,0,0,.3);}
+#modal h2{font-size:17px;color:var(--blue);margin-bottom:6px;}
+#modal p{font-size:12px;color:#6b7a99;margin-bottom:18px;line-height:1.5;}
+#pin-display{display:flex;gap:10px;justify-content:center;margin-bottom:16px;}
+.pin-dot{width:16px;height:16px;border-radius:50%;background:#dde4f0;border:2px solid #c0cce0;transition:background .1s;}
+.pin-dot.filled{background:var(--blue);border-color:var(--blue);}
+#pin-error{color:#c0392b;font-size:12px;font-weight:bold;text-align:center;min-height:18px;margin-bottom:8px;}
+#pin-keypad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px;}
+.key{padding:14px;font-size:18px;font-weight:bold;border:1.5px solid #dde4f0;border-radius:8px;background:#f5f7fc;cursor:pointer;text-align:center;transition:background .1s;}
+.key:active{background:#e0e8f8;}
+.key.del{font-size:14px;color:#c0392b;}
+.key.zero{grid-column:2;}
+#btn-cancel-pin{width:100%;padding:10px;border:none;border-radius:7px;background:#eef1f6;color:#6b7a99;font-size:13px;font-weight:bold;cursor:pointer;}
 
-#pin-keypad {
-  display: grid; grid-template-columns: repeat(3, 1fr);
-  gap: 10px; margin-bottom: 14px;
-}
-.key {
-  padding: 14px; font-size: 18px; font-weight: bold;
-  border: 1.5px solid #dde4f0; border-radius: 8px;
-  background: #f5f7fc; cursor: pointer; text-align: center;
-  transition: background .1s;
-}
-.key:active { background: #e0e8f8; }
-.key.del    { font-size: 14px; color: #c0392b; }
-.key.zero   { grid-column: 2; }
+/* ADMIN toolbar */
+#admin-bar{display:none;background:#7c3aed;padding:8px 14px;flex-shrink:0;flex-direction:row;align-items:center;gap:8px;}
+#admin-bar.show{display:flex;}
+#admin-bar span{color:#fff;font-size:13px;font-weight:bold;flex:1;}
+.admin-btn{padding:6px 13px;border:none;border-radius:5px;background:rgba(255,255,255,.2);color:#fff;font-size:12px;font-weight:bold;cursor:pointer;}
+.admin-btn:active{background:rgba(255,255,255,.35);}
 
-#pin-error {
-  color: #c0392b; font-size: 12px; font-weight: bold;
-  text-align: center; min-height: 18px; margin-bottom: 8px;
-}
-
-#btn-cancel-pin {
-  width: 100%; padding: 10px; border: none; border-radius: 7px;
-  background: #eef1f6; color: #6b7a99; font-size: 13px;
-  font-weight: bold; cursor: pointer;
-}
-
-/* ── PANELL ADMIN ── */
-#admin-panel { display: none; }
-#admin-toolbar {
-  background: #7c3aed; /* viola distintiu */
-  display: flex; align-items: center; gap: 10px;
-  padding: 10px 16px;
-  position: fixed; top: 54px; left: 0; right: 0; z-index: 198;
-}
-#admin-toolbar span { color: #fff; font-size: 13px; font-weight: bold; flex: 1; }
-#btn-close-admin {
-  padding: 6px 14px; border: none; border-radius: 5px;
-  background: rgba(255,255,255,.2); color: #fff;
-  font-size: 12px; font-weight: bold; cursor: pointer;
-}
-
-/* ── FORMULARI ADMIN ── */
-#admin-form-wrap {
-  max-width: 760px; margin: 0 auto; padding: 0 14px 50px;
-  margin-top: 116px; /* toolbar + admin-toolbar */
-  display: none;
-}
-.form-section {
-  background: #fff; border: 1.5px solid #dde4f0;
-  border-radius: 10px; padding: 18px; margin-bottom: 14px;
-}
-.form-section h3 { font-size: 13px; color: #1a3a6b; font-weight: bold; margin-bottom: 14px; border-bottom: 1px solid #eef0f8; padding-bottom: 8px; }
-.form-row { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; }
-.form-group { display: flex; flex-direction: column; gap: 5px; flex: 1; min-width: 150px; }
-.form-group label { font-size: 11px; color: #6b7a99; font-weight: bold; text-transform: uppercase; letter-spacing: .5px; }
-.form-group input, .form-group select, .form-group textarea {
-  padding: 8px 10px; border: 1.5px solid #dde4f0;
-  border-radius: 7px; font-size: 13px; font-family: Arial, sans-serif;
-  outline: none; color: #1a1a2e;
-  transition: border-color .15s;
-}
-.form-group input:focus, .form-group select:focus, .form-group textarea:focus {
-  border-color: #1a3a6b;
-}
-.form-group textarea { resize: vertical; min-height: 70px; }
-
-.form-group input[type="file"] {
-  padding: 6px; font-size: 12px;
-  background: #f9fafd;
-}
-
-.btn-submit {
-  width: 100%; padding: 13px; border: none; border-radius: 8px;
-  background: #1a3a6b; color: #fff; font-size: 14px;
-  font-weight: bold; cursor: pointer;
-  transition: background .15s;
-}
-.btn-submit:active { background: #122b52; }
-.btn-submit:disabled { background: #8899bb; cursor: default; }
-
-/* feedback */
-#form-feedback {
-  padding: 12px 16px; border-radius: 8px;
-  font-size: 13px; font-weight: bold;
-  text-align: center; margin-top: 10px;
-  display: none;
-}
-#form-feedback.ok  { background: #dcfce7; color: #166534; }
-#form-feedback.err { background: #fee2e2; color: #991b1b; }
-
-/* Llista gestió */
-#admin-list-wrap {
-  max-width: 760px; margin: 0 auto; padding: 0 14px 50px;
-  margin-top: 116px;
-  display: none;
-}
-.admin-doc-row {
-  background: #fff; border: 1.5px solid #dde4f0;
-  border-radius: 8px; padding: 12px 14px; margin-bottom: 8px;
-  display: flex; align-items: center; gap: 10px;
-}
-.admin-doc-row .info { flex: 1; }
-.admin-doc-row .info .ttl { font-size: 13px; font-weight: bold; }
-.admin-doc-row .info .sub { font-size: 11px; color: #8899aa; }
-.btn-del {
-  padding: 6px 12px; border: none; border-radius: 5px;
-  background: #fee2e2; color: #991b1b; font-size: 11px;
-  font-weight: bold; cursor: pointer;
-}
-.btn-del:active { background: #fecaca; }
-
-@media (max-width: 480px) {
-  #main { margin-top: 124px; }
-  .doc-fields { gap: 6px; }
-  .doc-field { min-width: 120px; }
-}
-@media print {
-  #toolbar, #toolbar2 { display: none; }
-  #main { margin-top: 0; }
-}
+/* PANELL ADMIN */
+#admin-wrap{padding:12px;display:none;flex:1;overflow-y:auto;}
+#admin-wrap.show{display:block;}
+.form-section{background:#fff;border:1.5px solid var(--border);border-radius:10px;padding:16px;margin-bottom:12px;}
+.form-section h3{font-size:13px;color:var(--blue);font-weight:bold;margin-bottom:12px;border-bottom:1px solid #eef0f8;padding-bottom:7px;}
+.form-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px;}
+.fg{display:flex;flex-direction:column;gap:4px;flex:1;min-width:140px;}
+.fg label{font-size:11px;color:#6b7a99;font-weight:bold;text-transform:uppercase;letter-spacing:.5px;}
+.fg input,.fg select,.fg textarea{padding:8px 10px;border:1.5px solid var(--border);border-radius:7px;font-size:13px;font-family:Arial,sans-serif;outline:none;color:var(--text);}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--blue);}
+.fg textarea{resize:vertical;min-height:65px;}
+.btn-submit{width:100%;padding:12px;border:none;border-radius:8px;background:var(--blue);color:#fff;font-size:14px;font-weight:bold;cursor:pointer;}
+.btn-submit:active{background:#122b52;}
+#form-feedback{padding:11px;border-radius:7px;font-size:13px;font-weight:bold;text-align:center;margin-top:10px;display:none;}
+#form-feedback.ok{background:#dcfce7;color:#166534;}
+#form-feedback.err{background:#fee2e2;color:#991b1b;}
+.admin-row{background:#fff;border:1.5px solid var(--border);border-radius:8px;padding:11px 13px;margin-bottom:7px;display:flex;align-items:center;gap:10px;}
+.admin-row .info{flex:1;}
+.admin-row .ttl{font-size:13px;font-weight:bold;}
+.admin-row .sub{font-size:11px;color:#8899aa;}
+.btn-del{padding:6px 12px;border:none;border-radius:5px;background:#fee2e2;color:#991b1b;font-size:11px;font-weight:bold;cursor:pointer;}
 </style>
 </head>
 <body>
 
-<!-- TOOLBAR BLAVA -->
-<div id="toolbar">
-  <div class="brand">
-    <div style="width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">🛡️</div>
-    <div class="brand-text">
-      <h1>Policia Local · Santa Coloma de Gramenet</h1>
-      <p>OAC Docs — Documentació interna</p>
-    </div>
+<!-- HEADER — igual que sancions -->
+<div id="header">
+  <div id="header-text">
+    <h1>📂 OAC Docs</h1>
+    <p>Policia Local · Santa Coloma de Gramenet · PNT i Notes Informatives</p>
   </div>
-  <div class="spacer"></div>
-  <button class="tb-btn gold" id="btn-open-admin">🔒 Admin</button>
-  <a class="tb-btn" href="../index.html">← Inici</a>
+  <button class="admin-btn" id="btn-open-admin" style="background:#c8920a;margin-right:4px;">🔒 Admin</button>
+  <a id="btn-inici" href="../index.html">← Inici</a>
 </div>
 
-<!-- TOOLBAR GRISA (cerca + filtres) -->
-<div id="toolbar2">
-  <div id="search-wrap">
-    <span style="color:#888;font-size:14px;">🔍</span>
-    <input id="search-input" type="text" placeholder="Cerca per tema, paraula clau, número..." autocomplete="off">
-    <button id="btn-clear-search" title="Netejar">✕</button>
+<!-- BARRA ADMIN (apareix sota el header quan s'activa) -->
+<div id="admin-bar">
+  <span>🔓 Mode administrador</span>
+  <button class="admin-btn" id="btn-new-doc">+ Nou doc</button>
+  <button class="admin-btn" id="btn-manage-docs">📋 Gestionar</button>
+  <button class="admin-btn" id="btn-close-admin">Tancar</button>
+</div>
+
+<!-- SEARCH WRAP — sticky, igual que sancions -->
+<div id="search-wrap">
+  <div class="sbox">
+    <input type="text" id="search-input"
+      placeholder="Cerca per tema, paraula clau, número..."
+      autocomplete="off" autocorrect="off" autocapitalize="off"
+      spellcheck="false" inputmode="search"
+      onkeydown="if(event.key==='Enter'){doSearch();this.blur();}">
+    <button id="btn-clear" onclick="clearSearch()" aria-label="Netejar">✕</button>
+    <button id="btn-search" onclick="doSearch()">Cerca</button>
   </div>
-  <button id="btn-search">Cerca</button>
-  <div class="chips-row" id="chips-row">
-    <button class="chip" data-tipus="tots">Tot</button>
-    <button class="chip pnt" data-tipus="PNT">PNT</button>
-    <button class="chip ni"  data-tipus="NI">NI</button>
+  <div id="filters">
+    <span class="chip on"      data-tipus="tots">Tot</span>
+    <span class="chip chip-pnt" data-tipus="PNT">PNT</span>
+    <span class="chip chip-ni"  data-tipus="NI">NI</span>
   </div>
 </div>
 
-<!-- MAIN -->
-<div id="main">
+<!-- STATS BAR -->
+<div id="stats-bar">
+  <span id="stats-txt"></span>
+  <button id="btn-reset" onclick="resetAll()">✕ Netejar tot</button>
+</div>
 
-  <!-- Pantalla inicial -->
+<!-- RESULTATS / PANTALLA INICIAL -->
+<div id="results">
+
   <div id="empty-start">
     <div class="big-icon">📂</div>
     <h2>Biblioteca de documentació OAC</h2>
-    <p>Protocols Normalitzats de Treball (PNT) i Notes Informatives (NI)<br>de la Unitat OAC-Atestats de la Policia Local de SCG.</p>
+    <p>Protocols Normalitzats de Treball i Notes Informatives<br>de la Unitat OAC-Atestats.</p>
     <div class="quick-chips">
-      <div class="quick-chip" onclick="quickSearch('alcoholèmia')">Alcoholèmia</div>
-      <div class="quick-chip" onclick="quickSearch('T-32')">Acta T-32</div>
-      <div class="quick-chip" onclick="quickSearch('contenedors')">Contenedors</div>
-      <div class="quick-chip" onclick="quickSearch('internet estafa')">Estafa internet</div>
-      <div class="quick-chip" onclick="quickSearch('permís conduir')">Permís conduir</div>
-      <div class="quick-chip" onclick="quickSearch('detenció')">Detenció</div>
+      <button class="quick-chip" onclick="quickSearch('alcoholèmia')">Alcoholèmia</button>
+      <button class="quick-chip" onclick="quickSearch('T-32')">Acta T-32</button>
+      <button class="quick-chip" onclick="quickSearch('contenedors')">Contenedors</button>
+      <button class="quick-chip" onclick="quickSearch('estafa internet')">Estafa internet</button>
+      <button class="quick-chip" onclick="quickSearch('permís conduir')">Permís conduir</button>
+      <button class="quick-chip" onclick="quickSearch('detenció')">Detenció</button>
     </div>
   </div>
 
-  <!-- Resultats -->
-  <div id="results">
-    <div class="results-header" id="results-count"></div>
-    <div id="results-list"></div>
-  </div>
-
-  <!-- Sense resultats -->
   <div id="no-results">
     <div class="icon">🔎</div>
     <p>Cap document coincideix amb la cerca.<br>Prova amb altres paraules clau.</p>
   </div>
 
+  <div id="cards-list"></div>
+
+</div>
+
+<!-- PANELL ADMIN -->
+<div id="admin-wrap">
+  <!-- Formulari nou document -->
+  <div id="form-wrap" style="display:none;">
+    <div class="form-section">
+      <h3>Identificació</h3>
+      <div class="form-row">
+        <div class="fg">
+          <label>Tipus *</label>
+          <select id="f-tipus">
+            <option value="PNT">PNT — Procediment Normalitzat</option>
+            <option value="NI">NI — Nota Informativa</option>
+          </select>
+        </div>
+        <div class="fg">
+          <label>Número *</label>
+          <input id="f-numero" type="text" placeholder="07-01/2025">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="fg">
+          <label>Títol *</label>
+          <input id="f-titol" type="text" placeholder="Títol descriptiu">
+        </div>
+      </div>
+    </div>
+    <div class="form-section">
+      <h3>Metadades de cerca</h3>
+      <div class="form-row">
+        <div class="fg">
+          <label>Data *</label>
+          <input id="f-data" type="date">
+        </div>
+        <div class="fg">
+          <label>Classificació</label>
+          <select id="f-classif">
+            <option>Difusió Limitada</option>
+            <option>Difusió Interna</option>
+            <option>Pública</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="fg">
+          <label>Destinatari</label>
+          <input id="f-desti" type="text" placeholder="OAC-AT, Totes les dotacions...">
+        </div>
+        <div class="fg">
+          <label>Autor</label>
+          <input id="f-autor" type="text" placeholder="Sgt. German Sola García">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="fg">
+          <label>Paraules clau * <small style="font-weight:normal;color:#aaa">(comes)</small></label>
+          <input id="f-kw" type="text" placeholder="alcoholèmia, T-32, trànsit, 379 CP">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="fg">
+          <label>Resum * <small style="font-weight:normal;color:#aaa">(2-3 frases)</small></label>
+          <textarea id="f-resum" placeholder="Descripció breu del contingut i casos d'ús..."></textarea>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="fg">
+          <label>Fitxer PDF * <small style="font-weight:normal;color:#aaa">(ruta relativa)</small></label>
+          <input id="f-fitxer" type="text" placeholder="docs/NOM_FITXER.pdf">
+        </div>
+      </div>
+    </div>
+    <button class="btn-submit" onclick="saveDoc()">💾 Desar document</button>
+    <div id="form-feedback"></div>
+  </div>
+
+  <!-- Llista gestió -->
+  <div id="list-wrap" style="display:none;">
+    <div class="form-section">
+      <h3>Documents a la biblioteca</h3>
+      <div id="admin-list"></div>
+    </div>
+  </div>
 </div>
 
 <!-- MODAL PIN -->
 <div id="overlay">
   <div id="modal">
     <h2>🔒 Accés d'administrador</h2>
-    <p>Introduïu el PIN per accedir a la gestió de documents.</p>
+    <p>Introduïu el PIN per gestionar documents.</p>
     <div id="pin-display">
       <div class="pin-dot" id="d0"></div>
       <div class="pin-dot" id="d1"></div>
@@ -425,496 +320,290 @@ body { font-family: Arial, sans-serif; background: #d0d4db; color: #111; min-hei
   </div>
 </div>
 
-<!-- PANELL ADMIN (ocult fins que s'entra el PIN) -->
-<div id="admin-panel">
-  <div id="admin-toolbar">
-    <span>🔓 Mode administrador</span>
-    <button id="btn-new-doc" style="padding:6px 14px;border:none;border-radius:5px;background:rgba(255,255,255,.2);color:#fff;font-size:12px;font-weight:bold;cursor:pointer;margin-right:6px;">+ Nou document</button>
-    <button id="btn-manage-docs" style="padding:6px 14px;border:none;border-radius:5px;background:rgba(255,255,255,.2);color:#fff;font-size:12px;font-weight:bold;cursor:pointer;margin-right:6px;">📋 Gestionar</button>
-    <button id="btn-close-admin">Tancar sessió</button>
-  </div>
-
-  <!-- Formulari afegir document -->
-  <div id="admin-form-wrap">
-    <div class="form-section">
-      <h3>Identificació del document</h3>
-      <div class="form-row">
-        <div class="form-group">
-          <label>Tipus *</label>
-          <select id="f-tipus">
-            <option value="PNT">PNT — Procediment Normalitzat de Treball</option>
-            <option value="NI">NI — Nota Informativa</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Número *</label>
-          <input id="f-numero" type="text" placeholder="p.ex. 07-01/2025">
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group" style="flex:2">
-          <label>Títol *</label>
-          <input id="f-titol" type="text" placeholder="Títol descriptiu del document">
-        </div>
-      </div>
-    </div>
-
-    <div class="form-section">
-      <h3>Metadades de cerca</h3>
-      <div class="form-row">
-        <div class="form-group">
-          <label>Data del document *</label>
-          <input id="f-data" type="date">
-        </div>
-        <div class="form-group">
-          <label>Classificació</label>
-          <select id="f-classificacio">
-            <option value="Difusió Limitada">Difusió Limitada</option>
-            <option value="Difusió Interna">Difusió Interna</option>
-            <option value="Pública">Pública</option>
-          </select>
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label>Destinatari / Àmbit</label>
-          <input id="f-desti" type="text" placeholder="p.ex. OAC-AT, Totes les dotacions...">
-        </div>
-        <div class="form-group">
-          <label>Autor / Unitat</label>
-          <input id="f-autor" type="text" placeholder="p.ex. Sgt. German Sola García">
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group" style="flex:2">
-          <label>Paraules clau * <span style="font-weight:normal;color:#aaa">(separades per comes)</span></label>
-          <input id="f-keywords" type="text" placeholder="p.ex. alcoholèmia, T-32, acta, trànsit, 379 CP">
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group" style="flex:2">
-          <label>Resum * <span style="font-weight:normal;color:#aaa">(2-3 frases clau per a la cerca)</span></label>
-          <textarea id="f-resum" placeholder="Descriu de manera concisa el contingut i els casos d'ús d'aquest document..."></textarea>
-        </div>
-      </div>
-    </div>
-
-    <div class="form-section">
-      <h3>Fitxer PDF</h3>
-      <div class="form-row">
-        <div class="form-group" style="flex:2">
-          <label>Ruta o nom del fitxer PDF *</label>
-          <input id="f-fitxer" type="text" placeholder="p.ex. docs/PNT_07-2025_T32.pdf">
-          <span style="font-size:11px;color:#8899aa;margin-top:3px;">Introduïu el nom del fitxer PDF tal com s'ha pujat al servidor.</span>
-        </div>
-      </div>
-    </div>
-
-    <button class="btn-submit" id="btn-submit-doc">💾 Desar document a la biblioteca</button>
-    <div id="form-feedback"></div>
-  </div>
-
-  <!-- Llista gestió -->
-  <div id="admin-list-wrap">
-    <div class="form-section">
-      <h3>Documents a la biblioteca</h3>
-      <div id="admin-doc-list"></div>
-    </div>
-  </div>
-
-</div><!-- #admin-panel -->
-
-<!-- Fuse.js CDN -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/7.0.0/fuse.min.js"></script>
-
 <script>
-// ══════════════════════════════════════════════════════
-//  BASE DE DADES DE DOCUMENTS
-//  Afegiu aquí els documents manualment o via l'extractor
-// ══════════════════════════════════════════════════════
+// ── BASE DE DADES ──────────────────────────────────────
 let DOCS = [
   {
-    id: "PNT-07-01-2025",
-    tipus: "PNT",
-    numero: "07-01/2025",
-    titol: "Actuació policial en delictes contra la seguretat viària, alcoholèmia i conducció sense permís de conduir. Incorporació de l'acta T-32 i la seva tramitació.",
-    data: "2025-02-01",
-    classificacio: "Difusió Limitada",
-    desti: "Totes les dotacions · OAC-Atestats",
-    autor: "Sgt. German Sola García / Cap OAC",
-    paraules_clau: ["T-32", "T-32-A", "T-32-C", "alcoholèmia", "conducció sense permís", "permís conduir", "379 CP", "383 CP", "384 CP", "acta trànsit", "OAC-AT", "judici ràpid", "ICAB", "pèrdua punts", "NIP", "atestats", "seguretat viària"],
-    resum: "Incorporació del model d'acta T-32 (variants A i C) per tramitar delictes contra la seguretat viària: alcoholèmia, negativa a les proves i conducció sense permís. Inclou procediment complet per a l'OAC-Atestats: introducció al NIP, agenda judicial, citació ICAB i confecció de la caràtula de l'atestat.",
-    fitxer: "docs/PNT_07-2025_INCORPORACIÓ_T32.pdf"
+    id:"PNT-07-01-2025",tipus:"PNT",numero:"07-01/2025",
+    titol:"Actuació policial en delictes contra la seguretat viària, alcoholèmia i conducció sense permís de conduir. Incorporació de l'acta T-32 i la seva tramitació.",
+    data:"2025-02-01",classificacio:"Difusió Limitada",
+    desti:"Totes les dotacions · OAC-Atestats",
+    autor:"Sgt. German Sola García / Cap OAC",
+    paraules_clau:["T-32","T-32-A","T-32-C","alcoholèmia","conducció sense permís","permís conduir","379 CP","383 CP","384 CP","acta trànsit","OAC-AT","judici ràpid","ICAB","pèrdua punts","NIP","atestats","seguretat viària"],
+    resum:"Incorporació del model d'acta T-32 (variants A i C) per tramitar delictes contra la seguretat viària: alcoholèmia, negativa a les proves i conducció sense permís. Inclou procediment complet per a l'OAC-Atestats: introducció al NIP, agenda judicial, citació ICAB i confecció de la caràtula de l'atestat.",
+    fitxer:"docs/PNT_07-2025_INCORPORACIÓ_T32.pdf"
   },
   {
-    id: "NI-05-01-2022",
-    tipus: "NI",
-    numero: "05/01-2022",
-    titol: "Actuació per quema de contenedors",
-    data: "2022-01-20",
-    classificacio: "Difusió Limitada",
-    desti: "OAC-AT · Dotacions Seguretat Ciutadana · Sala 092",
-    autor: "Sgt. German Sola García / Cap OAC",
-    paraules_clau: ["contenedors", "quema", "incendi", "danys", "CLD", "CESPA", "delicte danys", "OAC-AT", "empresa contenedors", "diligència inici", "minuta policial", "4917", "4918", "Mossos", "Sala 092"],
-    resum: "Protocol d'actuació davant incidents de quema de contenedors a la via pública. Inclou tipologia i valor econòmic dels contenedors (CLD i CESPA), actuació de les dotacions i la Sala 092, casuística penal (danys, incendi provocat) i tramitació completa de les diligències per part de l'OAC-AT.",
-    fitxer: "docs/NI_QUEMA_CONTENEDORES.pdf"
+    id:"NI-05-01-2022",tipus:"NI",numero:"05/01-2022",
+    titol:"Actuació per quema de contenedors",
+    data:"2022-01-20",classificacio:"Difusió Limitada",
+    desti:"OAC-AT · Dotacions Seguretat Ciutadana · Sala 092",
+    autor:"Sgt. German Sola García / Cap OAC",
+    paraules_clau:["contenedors","quema","incendi","danys","CLD","CESPA","delicte danys","OAC-AT","Sala 092","diligència inici","4917","4918","Mossos"],
+    resum:"Protocol d'actuació davant incidents de quema de contenedors a la via pública. Inclou tipologia i valor econòmic dels contenedors (CLD i CESPA), actuació de les dotacions i la Sala 092, casuística penal i tramitació de diligències per part de l'OAC-AT.",
+    fitxer:"docs/NI_QUEMA_CONTENEDORES.pdf"
   },
   {
-    id: "NI-03-01-2025",
-    tipus: "NI",
-    numero: "03-01/2025",
-    titol: "Unificació de criteris en denúncies per estafa bancària via internet",
-    data: "2025-04-07",
-    classificacio: "Difusió Interna",
-    desti: "Comandaments i personal OAC-AT",
-    autor: "Sgt. German Sola García / Cap OAC",
-    paraules_clau: ["estafa", "internet", "estafa bancària", "phishing", "frau en línia", "regió policial virtual", "Mossos", "àmbit internet", "targetes", "art. 249 CP", "POE comerç", "usurpació identitat", "atacs informàtics"],
-    resum: "Criteris unificats per a la instrucció de procediments policials per delictes d'estafa a l'àmbit d'internet, arran de la creació de la Regió Policial Virtual dels Mossos d'Esquadra. Estableix quan s'ha d'emprar l'àmbit 'Internet' i quan 'POE Comerç i Empresa', amb els subtipus corresponents.",
-    fitxer: "docs/NI_ESTAFAS_INTERNET.pdf"
+    id:"NI-03-01-2025",tipus:"NI",numero:"03-01/2025",
+    titol:"Unificació de criteris en denúncies per estafa bancària via internet",
+    data:"2025-04-07",classificacio:"Difusió Interna",
+    desti:"Comandaments i personal OAC-AT",
+    autor:"Sgt. German Sola García / Cap OAC",
+    paraules_clau:["estafa","internet","estafa bancària","phishing","frau en línia","regió policial virtual","Mossos","àmbit internet","targetes","art. 249 CP","usurpació identitat","atacs informàtics"],
+    resum:"Criteris unificats per a la instrucció de procediments per delictes d'estafa a internet, arran de la creació de la Regió Policial Virtual dels Mossos. Estableix quan s'ha d'emprar l'àmbit 'Internet' i quan 'POE Comerç i Empresa'.",
+    fitxer:"docs/NI_ESTAFAS_INTERNET.pdf"
   }
 ];
 
-// Clau localStorage per persistir documents afegits via admin
+const INIT_IDS = DOCS.map(d=>d.id);
+const PIN = '4710';
 const STORAGE_KEY = 'oac_docs_extra';
-function loadExtra() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) {
-      const extra = JSON.parse(raw);
-      extra.forEach(d => { if (!DOCS.find(x => x.id === d.id)) DOCS.push(d); });
-    }
-  } catch(e) {}
+
+function loadExtra(){
+  try{const r=localStorage.getItem(STORAGE_KEY);if(r)JSON.parse(r).forEach(d=>{if(!DOCS.find(x=>x.id===d.id))DOCS.push(d);});}catch(e){}
 }
-function saveExtra() {
-  // Guardem només els que NO eren a la llista inicial (afegits via admin)
-  const initIds = ["PNT-07-01-2025","NI-05-01-2022","NI-03-01-2025"];
-  const extra = DOCS.filter(d => !initIds.includes(d.id));
-  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(extra)); } catch(e) {}
+function saveExtra(){
+  try{localStorage.setItem(STORAGE_KEY,JSON.stringify(DOCS.filter(d=>!INIT_IDS.includes(d.id))));}catch(e){}
 }
 loadExtra();
 
-// ══════════════════════════════════════════════════════
-//  FUSE.JS — cerca fuzzy
-// ══════════════════════════════════════════════════════
-function buildFuse(docs) {
-  return new Fuse(docs, {
-    keys: [
-      { name: 'titol',         weight: 0.35 },
-      { name: 'paraules_clau', weight: 0.30 },
-      { name: 'resum',         weight: 0.20 },
-      { name: 'numero',        weight: 0.10 },
-      { name: 'autor',         weight: 0.05 }
-    ],
-    threshold: 0.38,
-    includeScore: true,
-    useExtendedSearch: false
+// ── FUSE ──────────────────────────────────────────────
+function mkFuse(pool){
+  return new Fuse(pool,{
+    keys:[{name:'titol',weight:.35},{name:'paraules_clau',weight:.30},{name:'resum',weight:.20},{name:'numero',weight:.10},{name:'autor',weight:.05}],
+    threshold:.38,includeScore:true
   });
 }
-let fuse = buildFuse(DOCS);
 
-// ══════════════════════════════════════════════════════
-//  ESTAT
-// ══════════════════════════════════════════════════════
-let currentTipus = 'tots';
-let currentQuery = '';
+// ── ESTAT ─────────────────────────────────────────────
+let currentTipus='tots', currentQ='', adminOpen=false, adminView='none';
 
-// ══════════════════════════════════════════════════════
-//  RENDERITZAR RESULTATS
-// ══════════════════════════════════════════════════════
-function renderDocs(docs) {
-  const list = document.getElementById('results-list');
-  const count = document.getElementById('results-count');
-  const results = document.getElementById('results');
-  const noResults = document.getElementById('no-results');
-  const emptyStart = document.getElementById('empty-start');
+// ── RENDER ────────────────────────────────────────────
+function fmtData(d){
+  if(!d)return'—';
+  return new Date(d+'T12:00:00').toLocaleDateString('ca-ES',{day:'2-digit',month:'long',year:'numeric'});
+}
 
-  emptyStart.style.display = 'none';
-  list.innerHTML = '';
+function renderCards(docs){
+  const list=document.getElementById('cards-list');
+  const empty=document.getElementById('empty-start');
+  const noRes=document.getElementById('no-results');
+  const statsTxt=document.getElementById('stats-txt');
+  const btnReset=document.getElementById('btn-reset');
+  list.innerHTML='';
 
-  if (docs.length === 0) {
-    results.style.display = 'none';
-    noResults.style.display = 'block';
-    return;
-  }
+  const searching = currentQ||currentTipus!=='tots';
+  empty.style.display = searching?'none':'block';
+  noRes.style.display  = 'none';
 
-  noResults.style.display = 'none';
-  results.style.display = 'block';
-  count.textContent = docs.length === 1 ? '1 document trobat' : `${docs.length} documents trobats`;
+  if(searching && docs.length===0){noRes.style.display='block';statsTxt.textContent='Cap resultat';btnReset.classList.add('vis');return;}
+  if(!searching){statsTxt.textContent=DOCS.length+' documents disponibles';btnReset.classList.remove('vis');return;}
 
-  docs.forEach(doc => {
-    const dataTxt = doc.data ? new Date(doc.data + 'T12:00:00').toLocaleDateString('ca-ES', { day:'2-digit', month:'long', year:'numeric' }) : '—';
-    const badgeCls = doc.tipus === 'PNT' ? 'badge-pnt' : 'badge-ni';
-    const kwHtml = (doc.paraules_clau || []).slice(0, 8).map(k => `<span class="kw-tag">${k}</span>`).join('');
-    const fitxerUrl = doc.fitxer ? doc.fitxer : null;
+  statsTxt.textContent=docs.length+(docs.length===1?' document trobat':' documents trobats');
+  btnReset.classList.add('vis');
 
-    const card = document.createElement('div');
-    card.className = 'doc-card';
-    card.dataset.id = doc.id;
-    card.innerHTML = `
-      <div class="doc-header" onclick="toggleCard(this.parentElement)">
-        <span class="doc-badge ${badgeCls}">${doc.tipus} ${doc.numero}</span>
-        <div class="doc-info">
-          <div class="doc-title">${doc.titol}</div>
-          <div class="doc-meta">${dataTxt} · ${doc.classificacio}</div>
+  docs.forEach(doc=>{
+    const bc=doc.tipus==='PNT'?'badge-pnt':'badge-ni';
+    const kwHtml=(doc.paraules_clau||[]).slice(0,8).map(k=>`<span class="kw">${k}</span>`).join('');
+    const el=document.createElement('div');
+    el.className='card';
+    el.dataset.id=doc.id;
+    el.innerHTML=`
+      <div class="card-header" onclick="toggleCard(this.parentElement)">
+        <span class="doc-badge ${bc}">${doc.tipus} ${doc.numero}</span>
+        <div class="card-info">
+          <div class="card-title">${doc.titol}</div>
+          <div class="card-meta">${fmtData(doc.data)} · ${doc.classificacio}</div>
         </div>
-        <span class="doc-arrow">›</span>
+        <span class="card-arrow">›</span>
       </div>
-      <div class="doc-body">
+      <div class="card-body">
         <div class="doc-fields">
-          <div class="doc-field"><div class="label">Tipus</div><div class="value">${doc.tipus}</div></div>
-          <div class="doc-field"><div class="label">Número</div><div class="value">${doc.numero}</div></div>
-          <div class="doc-field"><div class="label">Data</div><div class="value">${dataTxt}</div></div>
-          <div class="doc-field"><div class="label">Classificació</div><div class="value">${doc.classificacio}</div></div>
-          ${doc.desti ? `<div class="doc-field"><div class="label">Destinatari</div><div class="value">${doc.desti}</div></div>` : ''}
-          ${doc.autor ? `<div class="doc-field"><div class="label">Autor</div><div class="value">${doc.autor}</div></div>` : ''}
+          <div class="doc-field"><div class="lbl">Tipus</div><div class="val">${doc.tipus}</div></div>
+          <div class="doc-field"><div class="lbl">Número</div><div class="val">${doc.numero}</div></div>
+          <div class="doc-field"><div class="lbl">Data</div><div class="val">${fmtData(doc.data)}</div></div>
+          <div class="doc-field"><div class="lbl">Classificació</div><div class="val">${doc.classificacio}</div></div>
+          ${doc.desti?`<div class="doc-field"><div class="lbl">Destinatari</div><div class="val">${doc.desti}</div></div>`:''}
+          ${doc.autor?`<div class="doc-field"><div class="lbl">Autor</div><div class="val">${doc.autor}</div></div>`:''}
         </div>
-        ${doc.resum ? `<div class="doc-resum"><div class="label">Resum</div><p>${doc.resum}</p></div>` : ''}
-        ${kwHtml ? `<div class="doc-keywords">${kwHtml}</div>` : ''}
-        <div class="doc-actions">
-          ${fitxerUrl ? `<a class="btn-pdf" href="${fitxerUrl}" target="_blank">📄 Obrir PDF</a>` : '<span style="font-size:12px;color:#aaa">PDF no disponible</span>'}
+        ${doc.resum?`<div class="doc-resum"><div class="lbl">Resum</div><p>${doc.resum}</p></div>`:''}
+        ${kwHtml?`<div class="kws">${kwHtml}</div>`:''}
+        <div>
+          ${doc.fitxer?`<a class="btn-pdf" href="${doc.fitxer}" target="_blank">📄 Obrir PDF</a>`:'<span style="font-size:12px;color:#aaa">PDF no disponible</span>'}
         </div>
       </div>`;
-    list.appendChild(card);
+    list.appendChild(el);
   });
 }
 
-function toggleCard(card) {
-  card.classList.toggle('open');
+function toggleCard(card){card.classList.toggle('open');}
+
+// ── CERCA ─────────────────────────────────────────────
+function doSearch(){
+  const q=document.getElementById('search-input').value.trim();
+  currentQ=q;
+  document.getElementById('btn-clear').classList.toggle('vis',!!q);
+  let pool=currentTipus==='tots'?DOCS:DOCS.filter(d=>d.tipus===currentTipus);
+  const res=q?mkFuse(pool).search(q).map(r=>r.item):pool;
+  renderCards(res);
 }
 
-// ══════════════════════════════════════════════════════
-//  CERCA
-// ══════════════════════════════════════════════════════
-function doSearch() {
-  const q = document.getElementById('search-input').value.trim();
-  currentQuery = q;
-
-  // Filtrar per tipus
-  let pool = currentTipus === 'tots' ? DOCS : DOCS.filter(d => d.tipus === currentTipus);
-
-  let results;
-  if (!q) {
-    results = pool;
-  } else {
-    const fuseLocal = buildFuse(pool);
-    results = fuseLocal.search(q).map(r => r.item);
-  }
-
-  document.getElementById('btn-clear-search').style.display = q ? 'block' : 'none';
-  renderDocs(results);
+function clearSearch(){
+  document.getElementById('search-input').value='';
+  document.getElementById('btn-clear').classList.remove('vis');
+  currentQ='';
+  renderCards([]);
 }
 
-function quickSearch(q) {
-  document.getElementById('search-input').value = q;
+function quickSearch(q){
+  document.getElementById('search-input').value=q;
   doSearch();
 }
 
+function resetAll(){
+  clearSearch();
+  currentTipus='tots';
+  document.querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));
+  document.querySelector('.chip[data-tipus="tots"]').classList.add('on');
+}
+
 // Chips filtre
-document.querySelectorAll('.chip').forEach(chip => {
-  chip.addEventListener('click', () => {
-    document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
-    chip.classList.add('active');
-    currentTipus = chip.dataset.tipus;
+document.querySelectorAll('#filters .chip').forEach(chip=>{
+  chip.addEventListener('click',()=>{
+    document.querySelectorAll('#filters .chip').forEach(c=>c.classList.remove('on'));
+    chip.classList.add('on');
+    currentTipus=chip.dataset.tipus;
     doSearch();
   });
 });
-// Activar "Tot" per defecte
-document.querySelector('.chip[data-tipus="tots"]').classList.add('active');
 
-document.getElementById('btn-search').addEventListener('click', doSearch);
-document.getElementById('search-input').addEventListener('keydown', e => { if (e.key === 'Enter') doSearch(); });
-document.getElementById('btn-clear-search').addEventListener('click', () => {
-  document.getElementById('search-input').value = '';
-  document.getElementById('btn-clear-search').style.display = 'none';
-  currentQuery = '';
-  document.getElementById('results').style.display = 'none';
-  document.getElementById('no-results').style.display = 'none';
-  document.getElementById('empty-start').style.display = 'block';
-});
+// ── PIN ───────────────────────────────────────────────
+let pinBuf='';
+function updPin(){for(let i=0;i<4;i++)document.getElementById('d'+i).classList.toggle('filled',i<pinBuf.length);}
 
-// ══════════════════════════════════════════════════════
-//  PIN ADMIN
-// ══════════════════════════════════════════════════════
-const PIN_CORRECT = '4710';
-let pinBuf = '';
-let adminOpen = false;
-
-function updatePinDisplay() {
-  for (let i = 0; i < 4; i++) {
-    const dot = document.getElementById('d' + i);
-    dot.classList.toggle('filled', i < pinBuf.length);
-  }
-}
-
-function shakeModal() {
-  const m = document.getElementById('modal');
-  m.style.animation = 'none';
-  setTimeout(() => { m.style.animation = ''; }, 10);
-  m.style.transform = 'translateX(-8px)';
-  setTimeout(() => { m.style.transform = ''; }, 50);
-  setTimeout(() => { m.style.transform = 'translateX(8px)'; }, 100);
-  setTimeout(() => { m.style.transform = ''; }, 150);
-}
-
-document.getElementById('btn-open-admin').addEventListener('click', () => {
-  if (adminOpen) return;
-  pinBuf = '';
-  updatePinDisplay();
-  document.getElementById('pin-error').textContent = '';
+document.getElementById('btn-open-admin').addEventListener('click',()=>{
+  if(adminOpen)return;
+  pinBuf='';updPin();
+  document.getElementById('pin-error').textContent='';
   document.getElementById('overlay').classList.add('show');
 });
-document.getElementById('btn-cancel-pin').addEventListener('click', () => {
+document.getElementById('btn-cancel-pin').addEventListener('click',()=>{
   document.getElementById('overlay').classList.remove('show');
-  pinBuf = '';
-  updatePinDisplay();
+  pinBuf='';updPin();
 });
-
-document.querySelectorAll('.key').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const k = btn.dataset.k;
-    if (k === 'del') {
-      pinBuf = pinBuf.slice(0, -1);
-      document.getElementById('pin-error').textContent = '';
-    } else if (pinBuf.length < 4) {
-      pinBuf += k;
-    }
-    updatePinDisplay();
-    if (pinBuf.length === 4) {
-      if (pinBuf === PIN_CORRECT) {
-        document.getElementById('overlay').classList.remove('show');
-        openAdmin();
-      } else {
-        document.getElementById('pin-error').textContent = 'PIN incorrecte. Torneu a provar.';
-        shakeModal();
-        setTimeout(() => { pinBuf = ''; updatePinDisplay(); }, 600);
+document.querySelectorAll('.key').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const k=btn.dataset.k;
+    if(k==='del'){pinBuf=pinBuf.slice(0,-1);document.getElementById('pin-error').textContent='';}
+    else if(pinBuf.length<4)pinBuf+=k;
+    updPin();
+    if(pinBuf.length===4){
+      if(pinBuf===PIN){document.getElementById('overlay').classList.remove('show');openAdmin();}
+      else{
+        document.getElementById('pin-error').textContent='PIN incorrecte. Torneu a provar.';
+        const m=document.getElementById('modal');
+        m.style.transform='translateX(-8px)';
+        setTimeout(()=>m.style.transform='translateX(8px)',50);
+        setTimeout(()=>m.style.transform='',100);
+        setTimeout(()=>{pinBuf='';updPin();},600);
       }
     }
   });
 });
 
-// ══════════════════════════════════════════════════════
-//  MODE ADMIN
-// ══════════════════════════════════════════════════════
-let adminView = 'none'; // 'form' | 'list' | 'none'
-
-function openAdmin() {
-  adminOpen = true;
-  document.getElementById('admin-panel').style.display = 'block';
-  document.getElementById('admin-toolbar').style.top = '54px';
-  document.getElementById('main').style.marginTop = '160px';
-  showAdminView('none');
-  document.getElementById('btn-open-admin').textContent = '🔓 Admin obert';
-  document.getElementById('btn-open-admin').style.background = '#7c3aed';
+// ── ADMIN ─────────────────────────────────────────────
+function openAdmin(){
+  adminOpen=true;
+  document.getElementById('admin-bar').classList.add('show');
+  document.getElementById('btn-open-admin').textContent='🔓 Admin';
+  document.getElementById('btn-open-admin').style.background='#7c3aed';
 }
-
-function closeAdmin() {
-  adminOpen = false;
-  document.getElementById('admin-panel').style.display = 'none';
-  document.getElementById('main').style.marginTop = '116px';
-  document.getElementById('btn-open-admin').textContent = '🔒 Admin';
-  document.getElementById('btn-open-admin').style.background = '#c8920a';
-  showAdminView('none');
+function closeAdmin(){
+  adminOpen=false;
+  document.getElementById('admin-bar').classList.remove('show');
+  document.getElementById('btn-open-admin').textContent='🔒 Admin';
+  document.getElementById('btn-open-admin').style.background='#c8920a';
+  setAdminView('none');
 }
+function setAdminView(v){
+  adminView=v;
+  const searchWrap=document.getElementById('search-wrap');
+  const statsBar=document.getElementById('stats-bar');
+  const results=document.getElementById('results');
+  const adminWrap=document.getElementById('admin-wrap');
+  const formWrap=document.getElementById('form-wrap');
+  const listWrap=document.getElementById('list-wrap');
 
-function showAdminView(view) {
-  adminView = view;
-  document.getElementById('admin-form-wrap').style.display = view === 'form' ? 'block' : 'none';
-  document.getElementById('admin-list-wrap').style.display = view === 'list' ? 'block' : 'none';
-  if (view === 'list') renderAdminList();
-  // Ajustar margin del main
-  const extraH = (view === 'none') ? 0 : 0;
-  document.getElementById('main').style.display = (view === 'none') ? 'block' : 'none';
-}
-
-document.getElementById('btn-close-admin').addEventListener('click', closeAdmin);
-document.getElementById('btn-new-doc').addEventListener('click', () => {
-  showAdminView(adminView === 'form' ? 'none' : 'form');
-});
-document.getElementById('btn-manage-docs').addEventListener('click', () => {
-  showAdminView(adminView === 'list' ? 'none' : 'list');
-});
-
-// ──────────────────────────────────────────────
-//  DESAR DOCUMENT (admin)
-// ──────────────────────────────────────────────
-document.getElementById('btn-submit-doc').addEventListener('click', () => {
-  const tipus   = document.getElementById('f-tipus').value.trim();
-  const numero  = document.getElementById('f-numero').value.trim();
-  const titol   = document.getElementById('f-titol').value.trim();
-  const data    = document.getElementById('f-data').value;
-  const classif = document.getElementById('f-classificacio').value;
-  const desti   = document.getElementById('f-desti').value.trim();
-  const autor   = document.getElementById('f-autor').value.trim();
-  const kwRaw   = document.getElementById('f-keywords').value.trim();
-  const resum   = document.getElementById('f-resum').value.trim();
-  const fitxer  = document.getElementById('f-fitxer').value.trim();
-
-  const fb = document.getElementById('form-feedback');
-
-  if (!tipus || !numero || !titol || !data || !kwRaw || !resum || !fitxer) {
-    fb.className = 'err';
-    fb.textContent = '⚠️ Ompliu tots els camps obligatoris (*)';
-    fb.style.display = 'block';
-    return;
+  if(v==='none'){
+    searchWrap.style.display='block';
+    statsBar.style.display='flex';
+    results.style.display='block';
+    adminWrap.classList.remove('show');
+    formWrap.style.display='none';
+    listWrap.style.display='none';
+  } else {
+    searchWrap.style.display='none';
+    statsBar.style.display='none';
+    results.style.display='none';
+    adminWrap.classList.add('show');
+    formWrap.style.display=v==='form'?'block':'none';
+    listWrap.style.display=v==='list'?'block':'none';
+    if(v==='list')renderAdminList();
   }
+}
 
-  const kws = kwRaw.split(',').map(k => k.trim()).filter(Boolean);
-  const id  = tipus + '-' + numero.replace(/[^a-zA-Z0-9]/g, '-') + '-' + Date.now();
+document.getElementById('btn-close-admin').addEventListener('click',closeAdmin);
+document.getElementById('btn-new-doc').addEventListener('click',()=>setAdminView(adminView==='form'?'none':'form'));
+document.getElementById('btn-manage-docs').addEventListener('click',()=>setAdminView(adminView==='list'?'none':'list'));
 
-  const doc = { id, tipus, numero, titol, data, classificacio: classif, desti, autor, paraules_clau: kws, resum, fitxer };
-  DOCS.push(doc);
-  fuse = buildFuse(DOCS);
+// ── DESAR DOC ─────────────────────────────────────────
+function saveDoc(){
+  const tipus=document.getElementById('f-tipus').value.trim();
+  const numero=document.getElementById('f-numero').value.trim();
+  const titol=document.getElementById('f-titol').value.trim();
+  const data=document.getElementById('f-data').value;
+  const classif=document.getElementById('f-classif').value;
+  const desti=document.getElementById('f-desti').value.trim();
+  const autor=document.getElementById('f-autor').value.trim();
+  const kwRaw=document.getElementById('f-kw').value.trim();
+  const resum=document.getElementById('f-resum').value.trim();
+  const fitxer=document.getElementById('f-fitxer').value.trim();
+  const fb=document.getElementById('form-feedback');
+  if(!numero||!titol||!data||!kwRaw||!resum||!fitxer){
+    fb.className='err';fb.textContent='⚠️ Ompliu tots els camps obligatoris (*)';fb.style.display='block';return;
+  }
+  const kws=kwRaw.split(',').map(k=>k.trim()).filter(Boolean);
+  const id=tipus+'-'+numero.replace(/[^a-zA-Z0-9]/g,'-')+'-'+Date.now();
+  DOCS.push({id,tipus,numero,titol,data,classificacio:classif,desti,autor,paraules_clau:kws,resum,fitxer});
   saveExtra();
+  fb.className='ok';fb.textContent='✅ Document desat correctament.';fb.style.display='block';
+  ['f-numero','f-titol','f-data','f-desti','f-autor','f-kw','f-resum','f-fitxer'].forEach(id=>document.getElementById(id).value='');
+  setTimeout(()=>fb.style.display='none',3000);
+}
 
-  fb.className = 'ok';
-  fb.textContent = '✅ Document desat correctament a la biblioteca.';
-  fb.style.display = 'block';
-
-  // Reset formulari
-  ['f-numero','f-titol','f-data','f-desti','f-autor','f-keywords','f-resum','f-fitxer'].forEach(id => {
-    document.getElementById(id).value = '';
-  });
-
-  setTimeout(() => { fb.style.display = 'none'; }, 3500);
-});
-
-// ──────────────────────────────────────────────
-//  LLISTA GESTIÓ (admin)
-// ──────────────────────────────────────────────
-function renderAdminList() {
-  const list = document.getElementById('admin-doc-list');
-  list.innerHTML = '';
-  if (DOCS.length === 0) {
-    list.innerHTML = '<p style="color:#aaa;font-size:13px;">Cap document.</p>';
-    return;
-  }
-  DOCS.forEach(doc => {
-    const row = document.createElement('div');
-    row.className = 'admin-doc-row';
-    row.innerHTML = `
-      <div class="info">
-        <div class="ttl">${doc.tipus} ${doc.numero} — ${doc.titol}</div>
-        <div class="sub">${doc.data || ''} · ${doc.fitxer}</div>
-      </div>
-      <button class="btn-del" data-id="${doc.id}">🗑️ Eliminar</button>`;
+// ── LLISTA ADMIN ──────────────────────────────────────
+function renderAdminList(){
+  const list=document.getElementById('admin-list');
+  list.innerHTML='';
+  if(!DOCS.length){list.innerHTML='<p style="color:#aaa;font-size:13px;">Cap document.</p>';return;}
+  DOCS.forEach(doc=>{
+    const row=document.createElement('div');
+    row.className='admin-row';
+    row.innerHTML=`<div class="info"><div class="ttl">${doc.tipus} ${doc.numero} — ${doc.titol}</div><div class="sub">${doc.data||''} · ${doc.fitxer}</div></div><button class="btn-del" data-id="${doc.id}">🗑️</button>`;
     list.appendChild(row);
   });
-  list.querySelectorAll('.btn-del').forEach(btn => {
-    btn.addEventListener('click', () => {
-      if (confirm('Eliminar aquest document de la biblioteca?')) {
-        DOCS = DOCS.filter(d => d.id !== btn.dataset.id);
-        fuse = buildFuse(DOCS);
-        saveExtra();
-        renderAdminList();
+  list.querySelectorAll('.btn-del').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      if(confirm('Eliminar aquest document?')){
+        DOCS=DOCS.filter(d=>d.id!==btn.dataset.id);
+        saveExtra();renderAdminList();
       }
     });
   });
 }
 
-// Inicial: toolbar "Tot" actiu, pantalla benvinguda
-document.getElementById('empty-start').style.display = 'block';
-document.getElementById('results').style.display = 'none';
-document.getElementById('no-results').style.display = 'none';
+// ── INIT ──────────────────────────────────────────────
+renderCards([]);
 </script>
 </body>
 </html>
