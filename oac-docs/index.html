@@ -702,8 +702,7 @@ async function publicarDoc() {
     try {
       const res = await githubGet(jsonPath);
       jsonSha   = res.sha;
-      docsJson  = JSON.parse(atob(res.content.replace(/
-/g,'')));
+      docsJson  = JSON.parse(atob(res.content.replace(/\n/g,'')));
     } catch(e) { /* fitxer nou */ }
 
     // Actualitzar o afegir
