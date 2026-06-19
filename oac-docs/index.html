@@ -420,12 +420,21 @@ function renderCards(docs) {
   const statsTxt = document.getElementById('stats-txt');
   const btnReset = document.getElementById('btn-reset');
   list.innerHTML = '';
-  const searching = queryFil || tipusFil!=='tots';
-  empty.style.display  = searching ? 'none':'block';
-  noRes.style.display  = 'none';
-  if (searching && docs.length===0) { noRes.style.display='block'; statsTxt.textContent='Cap resultat'; btnReset.classList.add('vis'); return; }
-  if (!searching) { statsTxt.textContent=DOCS.length+' documents disponibles'; btnReset.classList.remove('vis'); return; }
-  statsTxt.textContent = docs.length+(docs.length===1?' document':' documents');
+  const searching = !!(queryFil || tipusFil!=='tots');
+  empty.style.display = searching ? 'none' : 'block';
+  noRes.style.display = 'none';
+  if (!searching) {
+    statsTxt.textContent = DOCS.length + ' documents disponibles';
+    btnReset.classList.remove('vis');
+    return;
+  }
+  if (docs.length === 0) {
+    noRes.style.display = 'block';
+    statsTxt.textContent = 'Cap resultat';
+    btnReset.classList.add('vis');
+    return;
+  }
+  statsTxt.textContent = docs.length + (docs.length===1 ? ' document trobat' : ' documents trobats');
   btnReset.classList.add('vis');
   docs.forEach(doc => {
     const bc = doc.tipus==='PNT'?'bp':'bn';
@@ -463,6 +472,8 @@ function doSearch() {
   const q = document.getElementById('search-input').value.trim();
   queryFil = q;
   document.getElementById('btn-clear').classList.toggle('vis', !!q);
+  // Recargar DOCS por si han llegado nuevos desde GitHub
+  DOCS = loadDocs();
   let pool = tipusFil==='tots' ? DOCS : DOCS.filter(d=>d.tipus===tipusFil);
   const res = q ? mkFuse(pool).search(q).map(r=>r.item) : pool;
   renderCards(res);
@@ -879,8 +890,14 @@ renderCards([]);
       const data = await res.json();
       const extra = JSON.parse(atob(data.content.replace(/\n/g,'')));
       const initIds = INIT_DOCS.map(d=>d.id);
-      extra.forEach(d=>{ if(!initIds.includes(d.id)&&!DOCS.find(x=>x.id===d.id)) DOCS.push(d); });
-      saveExtra(DOCS);
+      let changed = false;
+      extra.forEach(d=>{ if(!initIds.includes(d.id)&&!DOCS.find(x=>x.id===d.id)){ DOCS.push(d); changed=true; } });
+      if(changed){
+        saveExtra(DOCS);
+        // Re-renderizar si hay búsqueda activa
+        if(queryFil || tipusFil!=='tots') doSearch();
+        else document.getElementById('stats-txt').textContent = DOCS.length + ' documents disponibles';
+      }
     }
   } catch(e) { /* silenci si no hi ha docs.json encara */ }
 })();
