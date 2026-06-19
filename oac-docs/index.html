@@ -307,7 +307,9 @@ body{background:var(--bg);display:flex;flex-direction:column;}
       </div>
     </div>
     <button class="btn-primary" style="margin-top:6px;" onclick="saveConfig()">💾 Guardar token</button>
+    <button class="btn-primary" style="margin-top:8px;background:#16a34a;" onclick="testConfig()">🔍 Verificar conexión con GitHub</button>
     <div id="cfg-feedback" style="display:none;margin-top:10px;padding:11px;border-radius:8px;font-size:13px;font-weight:bold;text-align:center;"></div>
+    <div id="cfg-log" style="display:none;margin-top:10px;padding:11px;border-radius:8px;font-size:12px;font-family:monospace;background:#1a1a2e;color:#86efac;line-height:1.8;white-space:pre-wrap;"></div>
   </div>
 </div>
 
@@ -758,6 +760,68 @@ function arrayBufferToBase64(ab) {
 }
 
 // ── HELPERS ───────────────────────────────────────────────────────────
+async function testConfig(){
+  const log = document.getElementById('cfg-log');
+  const fb  = document.getElementById('cfg-feedback');
+  log.style.display='block'; fb.style.display='none';
+  log.textContent = '';
+  const addLog = (msg) => { log.textContent += msg + '\n'; };
+
+  addLog('📍 URL actual: ' + location.href);
+  addLog('📍 pathname:   ' + location.pathname);
+  addLog('📍 GH.base:    ' + GH.base);
+  addLog('📍 Ruta PDF:   ' + GH.base + 'docs/[fichero].pdf');
+  addLog('📍 Ruta JSON:  ' + GH.base + 'docs.json');
+  addLog('');
+
+  if(!GH.token){ addLog('❌ No hay token guardado'); return; }
+  addLog('🔑 Token: ' + GH.token.slice(0,8) + '...' + GH.token.slice(-4));
+  addLog('');
+
+  // Test 1: autenticación
+  addLog('⏳ Verificando token...');
+  try {
+    const r = await fetch('https://api.github.com/user',
+      {headers:{Authorization:'token '+GH.token,Accept:'application/vnd.github.v3+json'}});
+    const d = await r.json();
+    if(r.ok) addLog('✅ Token válido — usuario: ' + d.login);
+    else     addLog('❌ Token inválido: ' + d.message);
+  } catch(e){ addLog('❌ Error red: '+e.message); return; }
+
+  // Test 2: acceso al repo
+  addLog('⏳ Verificando repo...');
+  try {
+    const r = await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}`,
+      {headers:{Authorization:'token '+GH.token,Accept:'application/vnd.github.v3+json'}});
+    const d = await r.json();
+    if(r.ok) addLog('✅ Repo accesible: ' + d.full_name);
+    else     addLog('❌ Repo error: ' + d.message);
+  } catch(e){ addLog('❌ Error: '+e.message); return; }
+
+  // Test 3: verificar ruta base
+  addLog('⏳ Verificando ruta ' + GH.base + '...');
+  try {
+    const r = await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${GH.base}?ref=${GH.branch}`,
+      {headers:{Authorization:'token '+GH.token,Accept:'application/vnd.github.v3+json'}});
+    const d = await r.json();
+    if(r.ok){
+      addLog('✅ Carpeta existe. Contenido:');
+      d.forEach(f => addLog('   ' + f.type + '  ' + f.name));
+    } else {
+      addLog('❌ Carpeta no encontrada: ' + d.message);
+      addLog('   Intentando ruta raíz del repo...');
+      const r2 = await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/?ref=${GH.branch}`,
+        {headers:{Authorization:'token '+GH.token,Accept:'application/vnd.github.v3+json'}});
+      const d2 = await r2.json();
+      addLog('   Raíz del repo:');
+      d2.forEach(f => addLog('   ' + f.type + '  ' + f.name));
+    }
+  } catch(e){ addLog('❌ Error: '+e.message); }
+
+  addLog('');
+  addLog('✅ Diagnóstico completo.');
+}
+
 function saveConfig(){
   const token = document.getElementById('cfg-token').value.trim();
   const fb = document.getElementById('cfg-feedback');
