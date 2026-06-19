@@ -646,12 +646,7 @@ const GH = {
   owner: 'jrodriguez78',
   repo:  'PLportal',
   branch:'main',
-  // Ruta base: detectada automáticamente desde la URL en producción
-  get base(){
-    const p = location.pathname; // p.ej. /PLportal/oac-docs/index.html
-    const m = p.match(/^(\/[^\/]+\/oac-docs)/);
-    return m ? m[1].slice(1)+'/' : 'PLportal/oac-docs/';
-  }
+  base: 'oac-docs/'  // ruta relativa a la raíz del repo
 };
 
 // fitxer PDF en memòria (ArrayBuffer)
