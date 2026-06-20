@@ -57,7 +57,7 @@ body{background:var(--bg);display:flex;flex-direction:column;}
 .card:hover{box-shadow:0 4px 16px rgba(26,58,107,.12);border-color:var(--blue);}
 .card-hdr{display:flex;align-items:center;gap:10px;padding:12px 14px;cursor:pointer;}
 .dbadge{font-size:10px;font-weight:bold;padding:3px 9px;border-radius:4px;flex-shrink:0;}
-.bp{background:#dbeafe;color:#1e40af;}.bn{background:#dcfce7;color:#166534;}
+.bp{background:#dbeafe;color:#1e40af;}.bn{background:#dcfce7;color:#166534;}.bf{background:#f3e8ff;color:#7e22ce;}
 .card-info{flex:1;min-width:0;}
 .card-title{font-size:13px;font-weight:bold;line-height:1.35;}
 .card-meta{font-size:11px;color:#8899aa;margin-top:2px;}
@@ -394,7 +394,7 @@ function renderCards() {
 
 function renderList(docs, list) {
   docs.forEach(function(doc) {
-    var bc = doc.tipus === 'PNT' ? 'bp' : 'bn';
+    var bc = doc.tipus === 'PNT' ? 'bp' : (doc.tipus === 'FAP' ? 'bf' : 'bn');
     var kws = (doc.paraules_clau || []).slice(0,8);
     var kwHtml = kws.map(function(k){ return '<span class="kw">' + k + '</span>'; }).join('');
     var destiHtml = doc.desti ? '<div class="df"><div class="lbl">Destinatario</div><div class="val">' + doc.desti + '</div></div>' : '';
@@ -666,6 +666,13 @@ function setPbar(show, lbl, pct) {
   if (pct !== undefined) document.getElementById('pbar').style.width = pct + '%';
 }
 
+function utf8ToB64(str) {
+  // Convierte string UTF-8 a base64 correctamente (soporta acentos y caracteres especiales)
+  return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function(match, p1) {
+    return String.fromCharCode('0x' + p1);
+  }));
+}
+
 function publicarDoc() {
   var tipus  = document.getElementById('f-tipus').value.trim();
   var numero = document.getElementById('f-numero').value.trim();
@@ -698,12 +705,12 @@ function publicarDoc() {
         var arr = JSON.parse(atob(res.content.replace(/\n/g,'')));
         var idx = arr.findIndex(function(d){ return d.tipus === tipus && d.numero === numero; });
         if (idx >= 0) arr[idx] = doc; else arr.push(doc);
-        var b64 = btoa(unescape(encodeURIComponent(JSON.stringify(arr, null, 2))));
+        var b64 = utf8ToB64(JSON.stringify(arr, null, 2));
         return githubPut(GH.base + 'docs.json', b64, 'Actualiza biblioteca', sha);
       }, function(){
         // docs.json no existe, lo creamos
         var arr = [doc];
-        var b64 = btoa(unescape(encodeURIComponent(JSON.stringify(arr, null, 2))));
+        var b64 = utf8ToB64(JSON.stringify(arr, null, 2));
         return githubPut(GH.base + 'docs.json', b64, 'Crea biblioteca', null);
       });
   }).then(function(){
@@ -785,7 +792,7 @@ function renderGestio() {
   if (!DOCS.length) { list.innerHTML = '<p style="color:#aaa;font-size:13px;">Biblioteca vacia.</p>'; return; }
   DOCS.forEach(function(doc){
     var row = document.createElement('div'); row.className = 'admin-row';
-    var bc = doc.tipus === 'PNT' ? 'bp' : 'bn';
+    var bc = doc.tipus === 'PNT' ? 'bp' : (doc.tipus === 'FAP' ? 'bf' : 'bn');
     row.innerHTML = '<div class="info">' +
       '<div class="ttl"><span class="dbadge ' + bc + '" style="margin-right:6px;">' + doc.tipus + '</span>' + doc.titol + '</div>' +
       '<div class="sub">' + doc.numero + ' - ' + (doc.data||'') + ' - ' + doc.fitxer + '</div>' +
@@ -797,7 +804,7 @@ function renderGestio() {
       if (!confirm('Eliminar este documento?')) return;
       if (!GH.token) { alert('Configura el token primero.'); return; }
       DOCS = DOCS.filter(function(d){ return d.id !== btn.dataset.id; });
-      var b64 = btoa(unescape(encodeURIComponent(JSON.stringify(DOCS, null, 2))));
+      var b64 = utf8ToB64(JSON.stringify(DOCS, null, 2));
       githubGet(GH.base + 'docs.json').then(function(res){
         return githubPut(GH.base + 'docs.json', b64, 'Elimina documento', res.sha);
       }).then(function(){ renderGestio(); renderCards(); })
