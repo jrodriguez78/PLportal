@@ -667,10 +667,14 @@ function setPbar(show, lbl, pct) {
 }
 
 function utf8ToB64(str) {
-  // Convierte string UTF-8 a base64 correctamente (soporta acentos y caracteres especiales)
   return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function(match, p1) {
     return String.fromCharCode('0x' + p1);
   }));
+}
+function b64ToUtf8(b64) {
+  return decodeURIComponent(atob(b64).split('').map(function(c) {
+    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+  }).join(''));
 }
 
 function publicarDoc() {
@@ -702,7 +706,7 @@ function publicarDoc() {
     return githubGet(GH.base + 'docs.json')
       .then(function(res){
         var sha = res.sha;
-        var arr = JSON.parse(atob(res.content.replace(/\n/g,'')));
+        var arr = JSON.parse(b64ToUtf8(res.content.replace(/\n/g,'')));
         var idx = arr.findIndex(function(d){ return d.tipus === tipus && d.numero === numero; });
         if (idx >= 0) arr[idx] = doc; else arr.push(doc);
         var b64 = utf8ToB64(JSON.stringify(arr, null, 2));
