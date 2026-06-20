@@ -3,22 +3,22 @@
     "id": "NI-07-01-2022-1781915005197",
     "tipus": "NI",
     "numero": "07-01/2022",
-    "titol": "ACTUACIÃN ADMINISTRATIVAS DERIVADA DE HECHOS INSTRUIDOS EN DILIGENCIAS POLICIALES",
+    "titol": "ACTUACIÃÂN ADMINISTRATIVAS DERIVADA DE HECHOS INSTRUIDOS EN DILIGENCIAS POLICIALES",
     "data": "2026-06-20",
     "classificacio": "Publica",
     "desti": "OAC",
     "autor": "Sgt. German Sola Garcia / Cap OAC",
     "paraules_clau": [
-      "â¢ Delito contra la salud publica (trafico de drogas). â¢ Delitos contra la seguridad vial."
+      "Ã¢ÂÂ¢ Delito contra la salud publica (trafico de drogas). Ã¢ÂÂ¢ Delitos contra la seguridad vial."
     ],
-    "resum": "Siempre que instruyamos diligencias por delitos que tienen cabida tambiÃ©n en la vÃ­a administrativa, por tanto, se podrÃ­an castigar por la jurisdicciÃ³n penal o administrativa, asÃ­ como con el objeto de no atentar contra el principio del non bis in Ã­dem, por el cual no se puede âcastigarâ un mismo hecho dos veces o en el caso que nos ocupa por dos vÃ­as diferentes.",
+    "resum": "Siempre que instruyamos diligencias por delitos que tienen cabida tambiÃÂ©n en la vÃÂ­a administrativa, por tanto, se podrÃÂ­an castigar por la jurisdicciÃÂ³n penal o administrativa, asÃÂ­ como con el objeto de no atentar contra el principio del non bis in ÃÂ­dem, por el cual no se puede Ã¢ÂÂcastigarÃ¢ÂÂ un mismo hecho dos veces o en el caso que nos ocupa por dos vÃÂ­as diferentes.",
     "fitxer": "docs/NI_ACTUACIONES_ADM_DERIVADAS_DE_UN_DSV.pdf"
   },
   {
     "id": "NI-26-01-2022-1781915746113",
     "tipus": "NI",
     "numero": "26-01/2022",
-    "titol": "ACTUACIÓN ALCOHOLEMIA CONDUCTORES ACCIDENTADOS NO PUEDEN SOPLAR",
+    "titol": "ACTUACIÃN ALCOHOLEMIA CONDUCTORES ACCIDENTADOS NO PUEDEN SOPLAR",
     "data": "2026-06-20",
     "classificacio": "Publica",
     "desti": "Totes les unitats",
@@ -29,7 +29,23 @@
       "CUAP",
       "accidentados"
     ],
-    "resum": "Esta nota informativa tiene un doble objeto, por un lado, poner en conocimiento de\nlos/las funcionarios de la Policía Local de Santa Coloma de Gramenet los\nprocedimientos legales para poder realizar el estudio del grado de impregnación\nalcohólica en un conductor que por motivos médicos le es imposible realizar las\npruebas reglamentariamente establecidas, por otro, unificar un criterio único en cuanto\nal proceder para la correcta practica de la prueba.",
-    "fitxer": "docs/NI_ACTUACIÓN ALCOHOLEMIA CONDUCTORES ACCIDENTADOS_NO PUEDEN SOPLAR.pdf"
+    "resum": "Esta nota informativa tiene un doble objeto, por un lado, poner en conocimiento de\nlos/las funcionarios de la PolicÃ­a Local de Santa Coloma de Gramenet los\nprocedimientos legales para poder realizar el estudio del grado de impregnaciÃ³n\nalcohÃ³lica en un conductor que por motivos mÃ©dicos le es imposible realizar las\npruebas reglamentariamente establecidas, por otro, unificar un criterio Ãºnico en cuanto\nal proceder para la correcta practica de la prueba.",
+    "fitxer": "docs/NI_ACTUACIÃN ALCOHOLEMIA CONDUCTORES ACCIDENTADOS_NO PUEDEN SOPLAR.pdf"
+  },
+  {
+    "id": "FAP-1-2025-1781916707476",
+    "tipus": "FAP",
+    "numero": "1/2025",
+    "titol": "FICHA DE INSTRUCCIÓN POR DELITO CONDUCIR BAJO LA INFLUENCIA DE BEBIDAS ALCOHÓLICAS",
+    "data": "2026-06-20",
+    "classificacio": "Difusio Interna",
+    "desti": "OAC",
+    "autor": "Sgt. German Sola Garcia / Cap OAC",
+    "paraules_clau": [
+      "Alcoholemia",
+      "T32"
+    ],
+    "resum": "Cuadro resumen alcoholemia",
+    "fitxer": "docs/FAP_INSTRUCCIÓN ALCOHOLEMIA.pdf"
   }
 ]
