@@ -3,18 +3,36 @@
     "id": "FAP-02-2026-1781917805407",
     "tipus": "FAP",
     "numero": "02/2026",
-    "titol": "FAP TRÁFICO DE DROGAS",
+    "titol": "FAP TRÃFICO DE DROGAS",
     "data": "2026-06-20",
     "classificacio": "Difusio Interna",
     "desti": "OAC",
     "autor": "Sgt. German Sola Garcia / Cap OAC",
     "paraules_clau": [
-      "Tráfico de drogas",
-      "salud pública",
+      "TrÃ¡fico de drogas",
+      "salud pÃºblica",
       "pesaje",
       "a20pl"
     ],
-    "resum": "Ficha de instrucción delito contra la salud pública (tráfico de drogas)",
+    "resum": "Ficha de instrucciÃ³n delito contra la salud pÃºblica (trÃ¡fico de drogas)",
     "fitxer": "docs/FAP_TRAFICO DE DROGAS.pdf"
+  },
+  {
+    "id": "NI-01-2026-1781918526928",
+    "tipus": "NI",
+    "numero": "01/2026",
+    "titol": "FAP INSTRUCCIÓN POR DELITO DE CONDUCIR BAJO INFLUENCIA DE BEBIDAS ALCOHÓLICAS",
+    "data": "2026-06-20",
+    "classificacio": "Difusio Interna",
+    "desti": "OAC",
+    "autor": "Sgt. German Sola Garcia / Cap OAC",
+    "paraules_clau": [
+      "Alcoholemia",
+      "T32",
+      "T15",
+      "A27"
+    ],
+    "resum": "FAP INSTRUCCIÓN POR DELITO DE CONDUCIR BAJO INFLUENCIA DE BEBIDAS ALCOHÓLICAS",
+    "fitxer": "docs/FAP_INSTRUCCION_ALCOHOLEMIA.pdf"
   }
 ]
