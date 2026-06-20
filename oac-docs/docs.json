@@ -16,23 +16,5 @@
     ],
     "resum": "Ficha de instrucciÃ³n delito contra la salud pÃºblica (trÃ¡fico de drogas)",
     "fitxer": "docs/FAP_TRAFICO DE DROGAS.pdf"
-  },
-  {
-    "id": "NI-01-2026-1781918526928",
-    "tipus": "NI",
-    "numero": "01/2026",
-    "titol": "FAP INSTRUCCIÓN POR DELITO DE CONDUCIR BAJO INFLUENCIA DE BEBIDAS ALCOHÓLICAS",
-    "data": "2026-06-20",
-    "classificacio": "Difusio Interna",
-    "desti": "OAC",
-    "autor": "Sgt. German Sola Garcia / Cap OAC",
-    "paraules_clau": [
-      "Alcoholemia",
-      "T32",
-      "T15",
-      "A27"
-    ],
-    "resum": "FAP INSTRUCCIÓN POR DELITO DE CONDUCIR BAJO INFLUENCIA DE BEBIDAS ALCOHÓLICAS",
-    "fitxer": "docs/FAP_INSTRUCCION_ALCOHOLEMIA.pdf"
   }
 ]
