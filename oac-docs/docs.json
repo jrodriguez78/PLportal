@@ -3,7 +3,7 @@
     "id": "NI-26-01-2022-1781915746113",
     "tipus": "NI",
     "numero": "26-01/2022",
-    "titol": "ACTUACIÃN ALCOHOLEMIA CONDUCTORES ACCIDENTADOS NO PUEDEN SOPLAR",
+    "titol": "ACTUACIÃÂN ALCOHOLEMIA CONDUCTORES ACCIDENTADOS NO PUEDEN SOPLAR",
     "data": "2026-06-20",
     "classificacio": "Publica",
     "desti": "Totes les unitats",
@@ -14,14 +14,14 @@
       "CUAP",
       "accidentados"
     ],
-    "resum": "Esta nota informativa tiene un doble objeto, por un lado, poner en conocimiento de\nlos/las funcionarios de la PolicÃ­a Local de Santa Coloma de Gramenet los\nprocedimientos legales para poder realizar el estudio del grado de impregnaciÃ³n\nalcohÃ³lica en un conductor que por motivos mÃ©dicos le es imposible realizar las\npruebas reglamentariamente establecidas, por otro, unificar un criterio Ãºnico en cuanto\nal proceder para la correcta practica de la prueba.",
-    "fitxer": "docs/NI_ACTUACIÃN ALCOHOLEMIA CONDUCTORES ACCIDENTADOS_NO PUEDEN SOPLAR.pdf"
+    "resum": "Esta nota informativa tiene un doble objeto, por un lado, poner en conocimiento de\nlos/las funcionarios de la PolicÃÂ­a Local de Santa Coloma de Gramenet los\nprocedimientos legales para poder realizar el estudio del grado de impregnaciÃÂ³n\nalcohÃÂ³lica en un conductor que por motivos mÃÂ©dicos le es imposible realizar las\npruebas reglamentariamente establecidas, por otro, unificar un criterio ÃÂºnico en cuanto\nal proceder para la correcta practica de la prueba.",
+    "fitxer": "docs/NI_ACTUACIÃÂN ALCOHOLEMIA CONDUCTORES ACCIDENTADOS_NO PUEDEN SOPLAR.pdf"
   },
   {
     "id": "FAP-1-2025-1781916707476",
     "tipus": "FAP",
     "numero": "1/2025",
-    "titol": "FICHA DE INSTRUCCIÓN POR DELITO CONDUCIR BAJO LA INFLUENCIA DE BEBIDAS ALCOHÓLICAS",
+    "titol": "FICHA DE INSTRUCCIÃN POR DELITO CONDUCIR BAJO LA INFLUENCIA DE BEBIDAS ALCOHÃLICAS",
     "data": "2026-06-20",
     "classificacio": "Difusio Interna",
     "desti": "OAC",
@@ -31,6 +31,24 @@
       "T32"
     ],
     "resum": "Cuadro resumen alcoholemia",
-    "fitxer": "docs/FAP_INSTRUCCIÓN ALCOHOLEMIA.pdf"
+    "fitxer": "docs/FAP_INSTRUCCIÃN ALCOHOLEMIA.pdf"
+  },
+  {
+    "id": "FAP-02-2026-1781917805407",
+    "tipus": "FAP",
+    "numero": "02/2026",
+    "titol": "FAP TRÁFICO DE DROGAS",
+    "data": "2026-06-20",
+    "classificacio": "Difusio Interna",
+    "desti": "OAC",
+    "autor": "Sgt. German Sola Garcia / Cap OAC",
+    "paraules_clau": [
+      "Tráfico de drogas",
+      "salud pública",
+      "pesaje",
+      "a20pl"
+    ],
+    "resum": "Ficha de instrucción delito contra la salud pública (tráfico de drogas)",
+    "fitxer": "docs/FAP_TRAFICO DE DROGAS.pdf"
   }
 ]
