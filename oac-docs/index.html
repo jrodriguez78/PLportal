@@ -38,6 +38,7 @@ body{background:var(--bg);display:flex;flex-direction:column;}
 .chip.on{background:var(--blue);border-color:var(--blue);color:#fff;}
 .chip-pnt.on{background:#2563eb;border-color:#2563eb;}
 .chip-ni.on{background:#16a34a;border-color:#16a34a;}
+.chip-fap.on{background:#9333ea;border-color:#9333ea;}
 #stats-bar{padding:5px 14px;font-size:11px;color:var(--muted);background:#f8f9fa;border-bottom:1px solid #eee;flex-shrink:0;display:flex;align-items:center;justify-content:space-between;min-height:28px;}
 #btn-reset{padding:3px 10px;font-size:11px;font-weight:bold;background:#e8f0fb;color:var(--blue);border:1.5px solid var(--blue);border-radius:12px;cursor:pointer;display:none;}
 #btn-reset.vis{display:block;}
@@ -155,7 +156,7 @@ body{background:var(--bg);display:flex;flex-direction:column;}
   <div id="filters">
     <span class="chip chip-pnt" data-t="PNT">PNT</span>
     <span class="chip chip-ni"  data-t="NI">NI</span>
-    <span class="chip chip-ni"  data-t="NI">FAP</span>
+    <span class="chip chip-fap" data-t="FAP">FAP</span>
   </div>
 </div>
 
@@ -205,7 +206,7 @@ body{background:var(--bg);display:flex;flex-direction:column;}
       <h3>Identificacion <span class="bauto">Auto-detectado</span></h3>
       <div class="form-row">
         <div class="fg"><label>Tipo *</label>
-          <select id="f-tipus"><option value="PNT">PNT</option><option value="NI">NI</option></select></div>
+          <select id="f-tipus"><option value="PNT">PNT</option><option value="NI">NI</option><option value="FAP">FAP</option></select></div>
         <div class="fg"><label>Numero *</label><input id="f-numero" type="text" placeholder="07-01/2025"></div>
       </div>
       <div class="form-row">
