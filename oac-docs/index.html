@@ -685,26 +685,27 @@ function publicarDoc() {
   showFB('warn', 'Subiendo PDF a GitHub...');
   var pdfPath = GH.base + 'docs/' + pdfFileName;
   getFileSha(pdfPath).then(function(pdfSha){
-    return githubPut(pdfPath, arrayBufferToBase64(pdfFileData), 'Añade PDF: ' + pdfFileName, pdfSha);
+    return githubPut(pdfPath, arrayBufferToBase64(pdfFileData), 'Anade PDF: ' + pdfFileName, pdfSha);
   }).then(function(){
     btn.textContent = 'Actualizando biblioteca...';
     showFB('warn', 'Actualizando docs.json...');
     var kws = kwRaw.split(',').map(function(k){ return k.trim(); }).filter(Boolean);
     var id = tipus + '-' + numero.replace(/[^a-zA-Z0-9]/g,'-') + '-' + Date.now();
     var doc = {id:id, tipus:tipus, numero:numero, titol:titol, data:data, classificacio:classif, desti:desti, autor:autor, paraules_clau:kws, resum:resum, fitxer:fitxer};
-    return githubGet(GH.base + 'docs.json').then(function(res){
-      var sha = res.sha;
-      var arr = JSON.parse(atob(res.content.replace(/\n/g,'')));
-      var idx = arr.findIndex(function(d){ return d.tipus === tipus && d.numero === numero; });
-      if (idx >= 0) arr[idx] = doc; else arr.push(doc);
-      var b64 = btoa(unescape(encodeURIComponent(JSON.stringify(arr, null, 2))));
-      return githubPut(GH.base + 'docs.json', b64, 'Actualiza biblioteca: ' + tipus + ' ' + numero, sha);
-    }).catch(function(){
-      // docs.json no existe aun
-      var arr = [doc];
-      var b64 = btoa(unescape(encodeURIComponent(JSON.stringify(arr, null, 2))));
-      return githubPut(GH.base + 'docs.json', b64, 'Crea biblioteca: ' + tipus + ' ' + numero, null);
-    });
+    return githubGet(GH.base + 'docs.json')
+      .then(function(res){
+        var sha = res.sha;
+        var arr = JSON.parse(atob(res.content.replace(/\n/g,'')));
+        var idx = arr.findIndex(function(d){ return d.tipus === tipus && d.numero === numero; });
+        if (idx >= 0) arr[idx] = doc; else arr.push(doc);
+        var b64 = btoa(unescape(encodeURIComponent(JSON.stringify(arr, null, 2))));
+        return githubPut(GH.base + 'docs.json', b64, 'Actualiza biblioteca', sha);
+      }, function(){
+        // docs.json no existe, lo creamos
+        var arr = [doc];
+        var b64 = btoa(unescape(encodeURIComponent(JSON.stringify(arr, null, 2))));
+        return githubPut(GH.base + 'docs.json', b64, 'Crea biblioteca', null);
+      });
   }).then(function(){
     btn.disabled = false; btn.textContent = 'Publicar en la biblioteca';
     showFB('ok', 'Publicado correctamente. Recargando...');
