@@ -33,5 +33,23 @@
     ],
     "resum": "Ficha de instrucción por delito contra la salud pública (tráfico de drogas)",
     "fitxer": "docs/FAP_TRAFICO_DE_DROGAS.pdf"
+  },
+  {
+    "id": "PNT-006-01-22-1781920142989",
+    "tipus": "PNT",
+    "numero": "006/01-22",
+    "titol": "ACTUACIÓN POLICIAL EN USURPACIÓN DE INMUEBLE",
+    "data": "2026-06-20",
+    "classificacio": "Publica",
+    "desti": "Totes les unitats",
+    "autor": "Sgt. German Sola Garcia / Cap OAC",
+    "paraules_clau": [
+      "Usurpación",
+      "ocupación",
+      "inmueble",
+      "A171pl"
+    ],
+    "resum": "Este Procedimiento Normalizado de Trabajo (PNT) tiene por objeto establecer un nuevo procedimiento para el enjuiciamiento de ciertas casuísticas del delito leve de usurpación de inmueble, así como establecer el proceder básico de los funcionarios/as de la Policía Local de Santa Coloma de Gramenet cuando se encuentren ante estos hechos delictivos o derivados de la usurpación no violenta de inmuebles.",
+    "fitxer": "docs/PNT_ACTUACION_POLICIAL_EN_OCUPACIONES.pdf"
   }
 ]
