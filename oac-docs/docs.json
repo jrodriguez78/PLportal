@@ -1,1 +1,20 @@
-[]
+[
+  {
+    "id": "FAP-01-2026-1781919643171",
+    "tipus": "FAP",
+    "numero": "01/2026",
+    "titol": "FAP INSTRUCCIÓN ALCOHOLEMIA",
+    "data": "2026-06-20",
+    "classificacio": "Difusio Interna",
+    "desti": "OAC",
+    "autor": "Sgt. German Sola Garcia / Cap OAC",
+    "paraules_clau": [
+      "Alcoholemia",
+      "a27",
+      "t15",
+      "bebidas alcohólicas"
+    ],
+    "resum": "Ficha de instrucción por delito de conducir bajo la influencia de bebidas alcohólicas",
+    "fitxer": "docs/FAP_INSTRUCCION_ALCOHOLEMIA.pdf"
+  }
+]
