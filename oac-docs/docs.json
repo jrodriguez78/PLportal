@@ -105,5 +105,28 @@
     ],
     "resum": "FAP permisos de conducir",
     "fitxer": "docs/FAP Permisos de conducir.pdf"
+  },
+  {
+    "id": "NI-26-01-2022-1782057091594",
+    "tipus": "NI",
+    "numero": "26-01/2022",
+    "titol": "ACTUACIÓN POLICIAL; ALCOHOLEMIAS SOBRE CONDUCTORES ACCIDENTADOS E IMPOSIBILITADOS MÉDICAMENTE",
+    "data": "2026-06-21",
+    "classificacio": "Publica",
+    "desti": "Totes les unitats",
+    "autor": "Sgt. German Sola Garcia / Cap OAC",
+    "paraules_clau": [
+      "alcoholemia",
+      "t32",
+      "ambulancia",
+      "accidente",
+      "siniestro vial",
+      "a27pl",
+      "t143",
+      "t143pl",
+      "negativa"
+    ],
+    "resum": "ACTUACIÓN POLICIAL; ALCOHOLEMIAS SOBRE CONDUCTORES ACCIDENTADOS E IMPOSIBILITADOS MÉDICAMENTE",
+    "fitxer": "docs/NI_ACTUACION_ALCOHOLEMIA_CONDUCTORES_ACCIDENTADOS_NO PUEDEN_SOPLAR.pdf"
   }
 ]
