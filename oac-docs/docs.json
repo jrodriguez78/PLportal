@@ -128,5 +128,26 @@
     ],
     "resum": "ACTUACIÓN POLICIAL; ALCOHOLEMIAS SOBRE CONDUCTORES ACCIDENTADOS E IMPOSIBILITADOS MÉDICAMENTE",
     "fitxer": "docs/NI_ACTUACION_ALCOHOLEMIA_CONDUCTORES_ACCIDENTADOS_NO PUEDEN_SOPLAR.pdf"
+  },
+  {
+    "id": "NI-07-01-2022-1782057407645",
+    "tipus": "NI",
+    "numero": "07/01-2022",
+    "titol": "ACTUACIÓN ADMINISTRATIVAS DERIVADA DE HECHOS INSTRUIDOS EN DILIGENCIAS POLICIALES",
+    "data": "2026-06-21",
+    "classificacio": "Publica",
+    "desti": "Totes les unitats",
+    "autor": "Sgt. German Sola Garcia / Cap OAC",
+    "paraules_clau": [
+      "delito seguridad vial",
+      "actuaciones administrativas",
+      "alcoholemia",
+      "d10",
+      "t15",
+      "dsv",
+      "salud pública"
+    ],
+    "resum": "Siempre que instruyamos diligencias por delitos que tienen cabida también en la vía administrativa, por tanto, se podrían castigar por la jurisdicción penal o administrativa, así como con el objeto de no atentar contra el principio del non bis in ídem, por el cual no se puede “castigar” un mismo hecho dos veces o en el caso que nos ocupa por dos vías diferentes.",
+    "fitxer": "docs/NI_ACTUACIONES_ADM_DERIVADAS_DE_UN_DSV.pdf"
   }
 ]
