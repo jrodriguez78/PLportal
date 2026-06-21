@@ -208,5 +208,26 @@
     ],
     "resum": "Es confecciona la present per tal de donar a conèixer un seguit de modificacions que s’han produït en l’operativa del servei de OAC-AT, en relació amb el tractament dels sinistres viaris, així com la consegüent modificació de l’acta T-01 sobre sinistres viaris.",
     "fitxer": "docs/NI_Comunicacio_jutjat_accident_transit_Amb_ferits_T01.pdf"
+  },
+  {
+    "id": "NI-21-03-2025-1782058694554",
+    "tipus": "NI",
+    "numero": "21/03-2025",
+    "titol": "UNIFICACIÓ CRITERIS DENÚNCIES PER ESTAFA BANCARIA (INTERNET)",
+    "data": "2026-06-21",
+    "classificacio": "Difusio Limitada",
+    "desti": "OAC",
+    "autor": "Sgt. German Sola Garcia / Cap OAC",
+    "paraules_clau": [
+      "internet",
+      "estafa",
+      "estafes",
+      "bancaria",
+      "targeta",
+      "crèdit",
+      "comerç"
+    ],
+    "resum": "Es confecciona la present per tal d’establir un criteri unificat en relació a la instrucció de procediments policials per delictes d’estafa en el àmbit d’internet o els seus derivats.",
+    "fitxer": "docs/NI_ESTAFAS_INTERNET.pdf"
   }
 ]
