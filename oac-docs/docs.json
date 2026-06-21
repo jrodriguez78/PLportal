@@ -88,5 +88,22 @@
     ],
     "resum": "Destinatarios originales actuaciones penales",
     "fitxer": "docs/FAP_Destinataris_finals.pdf"
+  },
+  {
+    "id": "FAP-04-2026-1782055774990",
+    "tipus": "FAP",
+    "numero": "04/2026",
+    "titol": "PERMISOS DE CONDUCIR",
+    "data": "2026-06-21",
+    "classificacio": "Difusio Interna",
+    "desti": "OAC",
+    "autor": "Sgt. German Sola Garcia / Cap OAC",
+    "paraules_clau": [
+      "permisos de conducir",
+      "a67",
+      "edictal"
+    ],
+    "resum": "FAP permisos de conducir",
+    "fitxer": "docs/FAP Permisos de conducir.pdf"
   }
 ]
