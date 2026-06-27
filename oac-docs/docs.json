@@ -229,5 +229,26 @@
     ],
     "resum": "Es confecciona la present per tal d’establir un criteri unificat en relació a la instrucció de procediments policials per delictes d’estafa en el àmbit d’internet o els seus derivats.",
     "fitxer": "docs/NI_ESTAFAS_INTERNET.pdf"
+  },
+  {
+    "id": "PNT-01-01-21-1782577550884",
+    "tipus": "PNT",
+    "numero": "01/01-21",
+    "titol": "SEÑALAMIENTOS EN LA AGENDA JUDICIAL",
+    "data": "2026-06-27",
+    "classificacio": "Difusio Interna",
+    "desti": "OAC",
+    "autor": "Sgt. German Sola Garcia / Cap OAC",
+    "paraules_clau": [
+      "JR",
+      "JIDL",
+      "agenda",
+      "judicial",
+      "juicio rápido",
+      "delito leve",
+      "señalamiento"
+    ],
+    "resum": "Funcionamiento de la agenda judicial.",
+    "fitxer": "docs/PNT_AGENDA_JUDICIAL.pdf"
   }
 ]
