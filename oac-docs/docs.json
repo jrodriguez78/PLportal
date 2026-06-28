@@ -324,5 +324,23 @@
     ],
     "resum": "Tipos de contenedores de la ciudad y su información",
     "fitxer": "docs/NI_QUEMA_CONTENEDORES.pdf"
+  },
+  {
+    "id": "PNT-28-06-2025-1782669525918",
+    "tipus": "PNT",
+    "numero": "28/06-2025",
+    "titol": "DROGAS EN LA CONDUCCIÓN 1",
+    "data": "2026-06-28",
+    "classificacio": "Publica",
+    "desti": "Totes les unitats",
+    "autor": "Sgt. German Sola Garcia / Cap OAC",
+    "paraules_clau": [
+      "alcoholemia",
+      "drogotest",
+      "drogues",
+      "absència"
+    ],
+    "resum": "Drogotest, model per absència",
+    "fitxer": "docs/NI_DROGOTEST_1.pdf"
   }
 ]
