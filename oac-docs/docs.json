@@ -361,5 +361,25 @@
     ],
     "resum": "Drogotest per presència de substàncies",
     "fitxer": "docs/NI_DROGOTEST_2.pdf"
+  },
+  {
+    "id": "NI-05-01-2025-1782670216757",
+    "tipus": "NI",
+    "numero": "05-01/2025",
+    "titol": "ACTUACIÓN POLICIAL EN USURPACIÓN DE INMUEBLE (nous items)",
+    "data": "2026-06-28",
+    "classificacio": "Difusio Limitada",
+    "desti": "OAC",
+    "autor": "Sgt. German Sola Garcia / Cap OAC",
+    "paraules_clau": [
+      "ocupacio",
+      "defraudació",
+      "usurpació",
+      "a171",
+      "fluid elèctric",
+      "titular"
+    ],
+    "resum": "Es confecciona la present per tal d’establir un criteri unificat quant a unes modificacions i introduccions que afecten el PNT 06/01-2022 sobre ocupacions.",
+    "fitxer": "docs/Nota Informativa 05-2025 NOUS ÍTEMS OCUPACIONS I DEFRAUDACIONS_SIGNAT.pdf"
   }
 ]
