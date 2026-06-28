@@ -342,5 +342,24 @@
     ],
     "resum": "Drogotest, model per absència",
     "fitxer": "docs/NI_DROGOTEST_1.pdf"
+  },
+  {
+    "id": "PNT-15-2021-1782669846167",
+    "tipus": "PNT",
+    "numero": "15/2021",
+    "titol": "DROGAS EN LA CONDUCCIÓN 2",
+    "data": "2026-06-28",
+    "classificacio": "Difusio Limitada",
+    "desti": "Totes les unitats",
+    "autor": "Sgt. German Sola Garcia / Cap OAC",
+    "paraules_clau": [
+      "alcoholemia",
+      "drogotest",
+      "drogues",
+      "presència",
+      "substàncies"
+    ],
+    "resum": "Drogotest per presència de substàncies",
+    "fitxer": "docs/NI_DROGOTEST_2.pdf"
   }
 ]
