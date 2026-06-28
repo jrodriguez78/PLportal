@@ -403,5 +403,24 @@
     ],
     "resum": "Notes sobre el tractament dels delictes d'odi i discriminació",
     "fitxer": "docs/NI_ODI_DISCRIMINACIO.pdf"
+  },
+  {
+    "id": "NI-13-01-2022-1782670985566",
+    "tipus": "NI",
+    "numero": "13/01-2022",
+    "titol": "ITEMS OBLIGATORIOS EN DILIGENCIAS POR OCUPACIÓN INMUEBLE",
+    "data": "2026-06-28",
+    "classificacio": "Difusio Limitada",
+    "desti": "Totes les unitats",
+    "autor": "Sgt. German Sola Garcia / Cap OAC",
+    "paraules_clau": [
+      "ocupació",
+      "usurpacio",
+      "tipus punt",
+      "habitatge",
+      "primera residència"
+    ],
+    "resum": "Se ha detectado que en alguna ocasión, se ha seleccionado el “tipus de punt” como inmueble primera residencia, lo cual sería un error, ya que si nos encontramos con un intento de “ocupación” en un inmueble que es morada, aun siendo segunda residencia, no estaríamos ante un delito leve de ocupación, sino, un delito menos grave de allanamiento de morada.",
+    "fitxer": "docs/NI_ITEMS OCUPACIONES.pdf"
   }
 ]
