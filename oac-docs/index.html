@@ -294,6 +294,17 @@ body{background:var(--bg);display:flex;flex-direction:column;}
   </div>
 </div>
 
+<!-- VISOR PDF -->
+<div id="pdf-overlay">
+  <div id="pdf-topbar" style="background:var(--blue);padding:10px 14px;display:flex;align-items:center;gap:10px;flex-shrink:0;box-shadow:0 2px 8px rgba(0,0,0,.4);">
+    <span id="pdf-title" style="flex:1;color:#fff;font-size:13px;font-weight:bold;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">Document</span>
+    <button id="pdf-close" onclick="closePDF()" style="padding:7px 14px;border:none;border-radius:5px;background:rgba(255,255,255,.2);color:#fff;font-size:12px;font-weight:bold;cursor:pointer;flex-shrink:0;">&#x2715; Tancar</button>
+  </div>
+  <div id="pdf-wrap" style="flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;background:#525659;display:flex;flex-direction:column;align-items:center;padding:8px 0 20px;">
+    <div id="pdf-loading" style="color:#c8d8f0;font-size:13px;text-align:center;padding:60px 20px;">Carregant PDF...</div>
+  </div>
+</div>
+
 <div id="overlay">
   <div id="modal">
     <h2>Acceso administrador</h2>
