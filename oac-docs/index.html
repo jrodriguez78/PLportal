@@ -402,7 +402,7 @@ function renderList(docs, list) {
     var resumHtml = doc.resum ? '<div class="dresum"><div class="lbl">Resumen</div><p>' + doc.resum + '</p></div>' : '';
     var kwsHtml   = kwHtml ? '<div class="dkws">' + kwHtml + '</div>' : '';
     var pdfHtml   = doc.fitxer
-      ? '<a class="btn-pdf" href="' + doc.fitxer + '" target="_blank">Abrir PDF</a>'
+      ? '<a class="btn-pdf" href="' + doc.fitxer + '">Abrir PDF</a>'
       : '<span style="font-size:12px;color:#aaa">PDF no disponible</span>';
 
     var el = document.createElement('div');
