@@ -414,7 +414,7 @@ function renderList(docs, list) {
     var resumHtml = doc.resum ? '<div class="dresum"><div class="lbl">Resumen</div><p>' + doc.resum + '</p></div>' : '';
     var kwsHtml   = kwHtml ? '<div class="dkws">' + kwHtml + '</div>' : '';
     var pdfHtml   = doc.fitxer
-      ? '<button class="btn-pdf" onclick="openPDF(\'' + doc.fitxer + '\', \'' + (doc.titol||'').replace(/\x27/g,'') + '\')">Abrir PDF</button>'
+      ? '<button class="btn-pdf" data-pdf="' + doc.fitxer + '" data-title="' + (doc.titol||'').replace(/"/g,'') + '" onclick="openPDF(this.dataset.pdf,this.dataset.title)">Abrir PDF</button>'
       : '<span style="font-size:12px;color:#aaa">PDF no disponible</span>';
 
     var el = document.createElement('div');
