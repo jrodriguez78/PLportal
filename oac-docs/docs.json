@@ -422,5 +422,21 @@
     ],
     "resum": "Se ha detectado que en alguna ocasión, se ha seleccionado el “tipus de punt” como inmueble primera residencia, lo cual sería un error, ya que si nos encontramos con un intento de “ocupación” en un inmueble que es morada, aun siendo segunda residencia, no estaríamos ante un delito leve de ocupación, sino, un delito menos grave de allanamiento de morada.",
     "fitxer": "docs/NI_ITEMS OCUPACIONES.pdf"
+  },
+  {
+    "id": "NI-09-01-2024-1783563349765",
+    "tipus": "NI",
+    "numero": "09/01-2024",
+    "titol": "TRAMITACIÓ POPPER",
+    "data": "2026-07-09",
+    "classificacio": "Difusio Limitada",
+    "desti": "OAC",
+    "autor": "Sgt. German Sola Garcia / Cap OAC",
+    "paraules_clau": [
+      "POPPER",
+      "D10PL"
+    ],
+    "resum": "Es confecciona la present per tal d’establir com ha de ser el procediment per a la introducció de la substància POPPER al NIP/SIP, així de com s’ha de tractar la mostra intervinguda",
+    "fitxer": "docs/NI_TRAMITACIÓ POPPER.pdf"
   }
 ]
