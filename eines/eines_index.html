@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="theme-color" content="#1a3a6b">
+<title>Eines - Policia Local SCG</title>
+<style>
+:root{--blue:#1a3a6b;--gold:#c8920a;--bg:#f0f2f5;--card:#fff;--border:#dde4f0;--text:#1a1a2e;--muted:#777;--green:#16a34a;--red:#dc2626;}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;font-family:Arial,sans-serif;color:var(--text);}
+body{background:var(--bg);display:flex;flex-direction:column;}
+#header{background:var(--blue);padding:10px 16px 8px;flex-shrink:0;box-shadow:0 2px 8px rgba(0,0,0,.3);display:flex;align-items:center;gap:10px;}
+#header-text{flex:1;min-width:0;}
+#header h1{color:#fff;font-size:14px;line-height:1.3;}
+#header p{color:#c8d8f0;font-size:10px;margin-top:2px;}
+.hbtn{padding:7px 12px;border:none;border-radius:5px;background:#4a7ab5;color:#fff;font-size:12px;font-weight:bold;cursor:pointer;text-decoration:none;white-space:nowrap;flex-shrink:0;}
+#main{flex:1;overflow-y:auto;padding:14px 14px 40px;max-width:520px;margin:0 auto;width:100%;}
+.tools-grid{display:flex;flex-direction:column;gap:10px;margin-bottom:20px;}
+.tool-btn{background:var(--card);border:1.5px solid var(--border);border-radius:10px;padding:14px 16px;display:flex;align-items:center;gap:12px;cursor:pointer;text-decoration:none;color:var(--text);}
+.tool-btn:active{background:#f0f5ff;}
+.tool-icon{font-size:28px;flex-shrink:0;}
+.tool-info h3{font-size:14px;font-weight:bold;}
+.tool-info p{font-size:12px;color:var(--muted);margin-top:2px;line-height:1.4;}
+.tool-arrow{font-size:18px;color:#c0cce0;margin-left:auto;}
+#tool-emp,#tool-termini{display:none;}
+.tool-header{display:flex;align-items:center;gap:10px;margin-bottom:16px;}
+.tool-header .back{background:none;border:none;font-size:22px;cursor:pointer;color:var(--blue);padding:0;line-height:1;}
+.tool-header h2{font-size:16px;font-weight:bold;color:var(--blue);}
+.card{background:var(--card);border:1.5px solid var(--border);border-radius:10px;padding:16px;margin-bottom:12px;}
+.card h3{font-size:12px;font-weight:bold;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px;}
+.input-wrap{display:flex;align-items:center;gap:0;margin-bottom:8px;}
+.input-wrap input[type=number]{flex:1;padding:16px;border:2px solid var(--border);border-radius:8px 0 0 8px;font-size:28px;font-weight:bold;text-align:center;color:var(--text);font-family:Arial,sans-serif;outline:none;}
+.input-wrap input[type=number]:focus{border-color:var(--gold);}
+.input-unit{padding:16px 14px;background:#f0f2f5;border:2px solid var(--border);border-left:none;border-radius:0 8px 8px 0;font-size:14px;font-weight:bold;color:var(--muted);}
+.input-hint{font-size:11px;color:var(--muted);text-align:center;}
+.input-date{width:100%;padding:14px;border:2px solid var(--border);border-radius:8px;font-size:18px;font-weight:bold;text-align:center;color:var(--text);font-family:Arial,sans-serif;outline:none;background:#fff;}
+.input-date:focus{border-color:var(--gold);}
+.result-box{background:#f0fdf4;border:2px solid #86efac;border-radius:10px;padding:18px;text-align:center;margin-bottom:12px;}
+.result-box.warning{background:#fef9c3;border-color:#fde047;}
+.result-box.danger{background:#fef2f2;border-color:#fca5a5;}
+.result-box.empty{background:#f9fafd;border-color:var(--border);}
+.result-box.info{background:#eff6ff;border-color:#93c5fd;}
+.result-label{font-size:11px;font-weight:bold;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;}
+.result-value{font-size:36px;font-weight:bold;color:var(--green);line-height:1.1;}
+.result-box.warning .result-value{color:#854d0e;}
+.result-box.danger .result-value{color:var(--red);}
+.result-box.info .result-value{color:#1d4ed8;font-size:22px;}
+.result-box.empty .result-value{color:#c0cce0;font-size:28px;}
+.result-unit{font-size:14px;font-weight:bold;margin-left:4px;opacity:.7;}
+.result-note{font-size:12px;color:var(--muted);margin-top:8px;line-height:1.5;}
+.calc-detail{display:flex;flex-direction:column;gap:8px;}
+.calc-row{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;background:#f9fafd;border-radius:7px;border:1px solid var(--border);}
+.calc-row .lbl{font-size:12px;color:var(--muted);}
+.calc-row .val{font-size:13px;font-weight:bold;color:var(--text);}
+.calc-row.total{background:#fff;border-color:#86efac;}
+.calc-row.total .lbl{color:var(--green);font-weight:bold;}
+.calc-row.total .val{color:var(--green);font-size:15px;}
+.calc-row.highlight{background:#fff;border-color:#93c5fd;}
+.calc-row.highlight .lbl{color:#1d4ed8;font-weight:bold;}
+.calc-row.highlight .val{color:#1d4ed8;font-size:15px;}
+.tramos{width:100%;border-collapse:collapse;font-size:12px;}
+.tramos th{background:#f0f2f5;padding:7px 10px;text-align:left;font-size:11px;color:var(--muted);font-weight:bold;text-transform:uppercase;letter-spacing:.5px;}
+.tramos td{padding:7px 10px;border-top:1px solid var(--border);}
+.tramos tr.active-row td{background:#fffbf0;font-weight:bold;color:#854d0e;}
+.btn-clear{width:100%;padding:12px;border:1.5px solid var(--border);border-radius:8px;background:#fff;color:var(--muted);font-size:13px;font-weight:bold;cursor:pointer;margin-top:4px;}
+.btn-clear:active{background:#f0f2f5;}
+.legal-note{font-size:11px;color:var(--muted);line-height:1.6;padding:10px 12px;background:#f9fafd;border-radius:8px;border:1px solid var(--border);}
+.legal-note strong{display:block;margin-bottom:3px;font-size:12px;}
+#footer-credits{text-align:center;font-size:10px;color:#bbb;padding:20px 0 8px;}
+</style>
+</head>
+<body>
+
+<div id="header">
+  <div id="header-text">
+    <h1>&#128296; Eines</h1>
+    <p>Policia Local &middot; Santa Coloma de Gramenet &middot; Utilitats operatives</p>
+  </div>
+  <a class="hbtn" href="../index.html">&larr; Inici</a>
+</div>
+
+<div id="main">
+
+  <!-- MENU -->
+  <div id="menu-tools">
+    <div class="tools-grid">
+      <div class="tool-btn" onclick="showTool('emp')">
+        <div class="tool-icon">&#127807;</div>
+        <div class="tool-info">
+          <h3>Calculadora EMP Etil&ograve;metre</h3>
+          <p>Aplica l'error m&agrave;xim perm&egrave;s al resultat de l'etil&ograve;metre segons l'Ordre ICT/155/2020</p>
+        </div>
+        <span class="tool-arrow">&#8250;</span>
+      </div>
+      <div class="tool-btn" onclick="showTool('termini')">
+        <div class="tool-icon">&#128197;</div>
+        <div class="tool-info">
+          <h3>Termini de pronto pago</h3>
+          <p>Calcula el dia l&iacute;mit per al pronto pago a partir de la data de notificaci&oacute;</p>
+        </div>
+        <span class="tool-arrow">&#8250;</span>
+      </div>
+      <a class="tool-btn" href="reportatge_fotografic.html">
+        <div class="tool-icon">&#128248;</div>
+        <div class="tool-info">
+          <h3>Reportatge Fotogr&agrave;fic</h3>
+          <p>Genera un PDF amb fotografies i peus de foto per a actuacions (accidents, lesions, danys...)</p>
+        </div>
+        <span class="tool-arrow">&#8250;</span>
+      </a>
+      <a class="tool-btn" href="farmacia_guardia.html">
+        <div class="tool-icon">&#128138;</div>
+        <div class="tool-info">
+          <h3>Farm&agrave;cia de gu&agrave;rdia</h3>
+          <p>Mostra directament la farm&agrave;cia de gu&agrave;rdia d'avui a Santa Coloma de Gramenet, amb tel&egrave;fon i mapa</p>
+        </div>
+        <span class="tool-arrow">&#8250;</span>
+      </a>
+    </div>
+    <div id="footer-credits">Desenvolupat per l'Agent 268 &middot; Policia Local SCG</div>
+  </div>
+
+  <!-- EMP -->
+  <div id="tool-emp">
+    <div class="tool-header">
+      <button class="back" onclick="showMenu()">&#8249;</button>
+      <h2>Calculadora EMP Etil&ograve;metre</h2>
+    </div>
+    <div class="card">
+      <h3>Resultat de l'etil&ograve;metre</h3>
+      <div class="input-wrap">
+        <input type="number" id="emp-input" placeholder="0.00" step="0.01" min="0" max="5" oninput="calcEMP()" inputmode="decimal">
+        <div class="input-unit">mg/l</div>
+      </div>
+      <div class="input-hint">Introdueix el resultat en mg/l d'aire espirat</div>
+    </div>
+    <div id="emp-result" class="result-box empty">
+      <div class="result-label">Resultat amb EMP aplicat</div>
+      <div class="result-value" id="emp-result-val">&#8212;</div>
+      <div class="result-note" id="emp-result-note">Introdueix el resultat de l'etil&ograve;metre</div>
+    </div>
+    <div class="card" id="emp-detail-card" style="display:none;">
+      <h3>Detall del c&agrave;lcul</h3>
+      <div class="calc-detail">
+        <div class="calc-row"><span class="lbl">Resultat etil&ograve;metre</span><span class="val" id="emp-det-brut">&#8212;</span></div>
+        <div class="calc-row"><span class="lbl">EMP aplicat</span><span class="val" id="emp-det-emp">&#8212;</span></div>
+        <div class="calc-row total"><span class="lbl">Resultat final (brut &minus; EMP)</span><span class="val" id="emp-det-final">&#8212;</span></div>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Taula de trams EMP (Ordre ICT/155/2020)</h3>
+      <table class="tramos">
+        <thead><tr><th>Resultat etil&ograve;metre</th><th>EMP aplicat</th></tr></thead>
+        <tbody>
+          <tr id="tram1"><td>&le; 0,40 mg/l</td><td>0,03 mg/l (fix)</td></tr>
+          <tr id="tram2"><td>0,41 &ndash; 1,00 mg/l</td><td>7,5% del resultat</td></tr>
+          <tr id="tram3"><td>&gt; 1,00 mg/l</td><td>20% del resultat</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card">
+      <h3>L&iacute;mits legals de refer&egrave;ncia</h3>
+      <div class="calc-detail">
+        <div class="calc-row"><span class="lbl">Conductors en general</span><span class="val" style="color:var(--red)">&ge; 0,25 mg/l</span></div>
+        <div class="calc-row"><span class="lbl">Novells / professionals</span><span class="val" style="color:var(--red)">&ge; 0,15 mg/l</span></div>
+        <div class="calc-row"><span class="lbl">Delicte (CP art. 379.2)</span><span class="val" style="color:var(--red)">&ge; 0,60 mg/l</span></div>
+      </div>
+    </div>
+    <button class="btn-clear" onclick="clearEMP()">&#8635; Netejar</button>
+    <div class="legal-note" style="margin-top:12px;">
+      <strong>Base legal</strong>
+      Ordre ICT/155/2020, de 7 de febrer. El resultat que consta a la denu&ncia &eacute;s sempre el resultat de l'etil&ograve;metre menys l'EMP.
+    </div>
+  </div>
+
+  <!-- TERMINI PRONTO PAGO -->
+  <div id="tool-termini">
+    <div class="tool-header">
+      <button class="back" onclick="showMenu()">&#8249;</button>
+      <h2>Termini de pronto pago</h2>
+    </div>
+    <div class="card">
+      <h3>Data de notificaci&oacute;</h3>
+      <input type="date" id="termini-input" oninput="calcTermini()" class="input-date">
+      <div class="input-hint" style="margin-top:8px;">Data en qu&egrave; es notifica la denu&ncia al conductor</div>
+    </div>
+    <div id="termini-result" class="result-box empty">
+      <div class="result-label">Data l&iacute;mit pronto pago</div>
+      <div class="result-value" id="termini-date">&#8212;</div>
+      <div class="result-note" id="termini-note">Introdueix la data de notificaci&oacute;</div>
+    </div>
+    <div class="card" id="termini-detail-card" style="display:none;">
+      <h3>Detall</h3>
+      <div class="calc-detail">
+        <div class="calc-row"><span class="lbl">Data notificaci&oacute;</span><span class="val" id="det-notif">&#8212;</span></div>
+        <div class="calc-row"><span class="lbl">Termini (dies naturals)</span><span class="val">20 dies</span></div>
+        <div class="calc-row highlight"><span class="lbl">Data l&iacute;mit</span><span class="val" id="det-limit">&#8212;</span></div>
+        <div class="calc-row"><span class="lbl">Dies restants</span><span class="val" id="det-resta">&#8212;</span></div>
+      </div>
+    </div>
+    <button class="btn-clear" onclick="clearTermini()">&#8635; Netejar</button>
+    <div class="legal-note" style="margin-top:12px;">
+      <strong>Base legal</strong>
+      Art. 80 LTSV. El pronto pago suposa una reducci&oacute; del 50% de l'import de la sanci&oacute; si es paga dins dels 20 dies naturals seg&uuml;ents a la notificaci&oacute;.
+    </div>
+  </div>
+
+</div>
+
+<script>
+function showTool(tool) {
+  document.getElementById('menu-tools').style.display = 'none';
+  document.getElementById('tool-emp').style.display = 'none';
+  document.getElementById('tool-termini').style.display = 'none';
+  document.getElementById('tool-' + tool).style.display = 'block';
+  if (tool === 'emp') document.getElementById('emp-input').focus();
+  if (tool === 'termini') document.getElementById('termini-input').focus();
+}
+function showMenu() {
+  document.getElementById('tool-emp').style.display = 'none';
+  document.getElementById('tool-termini').style.display = 'none';
+  document.getElementById('menu-tools').style.display = 'block';
+}
+
+// EMP
+function calcEMP() {
+  var raw = parseFloat(document.getElementById('emp-input').value);
+  var box = document.getElementById('emp-result');
+  var val = document.getElementById('emp-result-val');
+  var note = document.getElementById('emp-result-note');
+  var det = document.getElementById('emp-detail-card');
+  ['tram1','tram2','tram3'].forEach(function(t){ document.getElementById(t).classList.remove('active-row'); });
+  if (isNaN(raw) || document.getElementById('emp-input').value === '') {
+    box.className = 'result-box empty'; val.innerHTML = '&#8212;';
+    note.textContent = "Introdueix el resultat de l'etil\xF2metre"; det.style.display = 'none'; return;
+  }
+  var emp, tram;
+  if (raw <= 0.40) { emp = 0.03; tram = 'tram1'; }
+  else if (raw <= 1.00) { emp = raw * 0.075; tram = 'tram2'; }
+  else { emp = raw * 0.20; tram = 'tram3'; }
+  var final = Math.max(0, raw - emp);
+  document.getElementById(tram).classList.add('active-row');
+  document.getElementById('emp-det-brut').textContent = raw.toFixed(2) + ' mg/l';
+  document.getElementById('emp-det-emp').textContent = '\u2212 ' + emp.toFixed(2) + ' mg/l';
+  document.getElementById('emp-det-final').textContent = final.toFixed(2) + ' mg/l';
+  det.style.display = 'block';
+  val.innerHTML = final.toFixed(2) + '<span class="result-unit">mg/l</span>';
+  if (final >= 0.60) {
+    box.className = 'result-box danger';
+    note.textContent = 'DELICTE \u2014 art. 379.2 CP (\u2265 0,60 mg/l)';
+  } else if (final >= 0.25) {
+    box.className = 'result-box warning';
+    note.textContent = 'Infracci\xF3 molt greu \u2014 supera el l\xEDmit general (\u2265 0,25 mg/l)';
+  } else if (final >= 0.15) {
+    box.className = 'result-box warning';
+    note.textContent = 'Infracci\xF3 molt greu per a novells/professionals (\u2265 0,15 mg/l)';
+  } else {
+    box.className = 'result-box';
+    note.textContent = 'Per sota dels l\xEDmits sancionables';
+  }
+}
+function clearEMP() {
+  document.getElementById('emp-input').value = '';
+  calcEMP();
+  document.getElementById('emp-input').focus();
+}
+
+// TERMINI
+function fmtDate(d) {
+  var dies = ['diumenge','dilluns','dimarts','dimecres','dijous','divendres','dissabte'];
+  var mesos = ['gener','febrer','mar\xE7','abril','maig','juny','juliol','agost','setembre','octubre','novembre','desembre'];
+  return dies[d.getDay()] + ', ' + d.getDate() + ' de ' + mesos[d.getMonth()] + ' de ' + d.getFullYear();
+}
+function calcTermini() {
+  var val = document.getElementById('termini-input').value;
+  var box = document.getElementById('termini-result');
+  var dateEl = document.getElementById('termini-date');
+  var noteEl = document.getElementById('termini-note');
+  var det = document.getElementById('termini-detail-card');
+  if (!val) {
+    box.className = 'result-box empty'; dateEl.innerHTML = '&#8212;';
+    noteEl.textContent = 'Introdueix la data de notificaci\xF3'; det.style.display = 'none'; return;
+  }
+  var parts = val.split('-');
+  var notif = new Date(parseInt(parts[0]), parseInt(parts[1])-1, parseInt(parts[2]));
+  var limit = new Date(notif);
+  limit.setDate(limit.getDate() + 20);
+  var avui = new Date();
+  avui.setHours(0,0,0,0);
+  var diff = Math.round((limit - avui) / (1000*60*60*24));
+  document.getElementById('det-notif').textContent = fmtDate(notif);
+  document.getElementById('det-limit').textContent = fmtDate(limit);
+  det.style.display = 'block';
+  dateEl.textContent = limit.getDate() + '/' + (limit.getMonth()+1) + '/' + limit.getFullYear();
+  if (diff < 0) {
+    box.className = 'result-box danger';
+    document.getElementById('det-resta').textContent = 'Venc\xFAt fa ' + Math.abs(diff) + ' dies';
+    noteEl.textContent = 'El termini de pronto pago ha venc\xFAt';
+  } else if (diff === 0) {
+    box.className = 'result-box warning';
+    document.getElementById('det-resta').textContent = 'Avui \xE9s l\'\xFAltim dia!';
+    noteEl.textContent = 'Avui \xE9s l\'ultim dia per al pronto pago';
+  } else if (diff <= 3) {
+    box.className = 'result-box warning';
+    document.getElementById('det-resta').textContent = diff + ' dies restants';
+    noteEl.textContent = 'Termini pr\xF2xim a venc\xE8r';
+  } else {
+    box.className = 'result-box info';
+    document.getElementById('det-resta').textContent = diff + ' dies restants';
+    noteEl.textContent = 'Pronto pago v\xE0lid fins al ' + fmtDate(limit);
+  }
+}
+function clearTermini() {
+  document.getElementById('termini-input').value = '';
+  calcTermini();
+}
+</script>
+</body>
+</html>
