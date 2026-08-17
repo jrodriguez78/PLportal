@@ -83,11 +83,60 @@ button.action:disabled{opacity:.5;cursor:not-allowed;}
   <div class="tabs">
     <button id="tabAlta" class="active" onclick="showView('alta')">➕ Nou dipòsit</button>
     <button id="tabRegistre" onclick="showView('registre')">📋 Registre</button>
+    <button id="tabInventari" onclick="showView('inventari')">🔍 Inventari</button>
     <button id="tabConfig" onclick="showView('config')">⚙️ Config</button>
   </div>
 
   <!-- VISTA ALTA -->
   <div id="view-alta">
+    <div class="card">
+      <h2>Tipus de registre</h2>
+      <div class="chipset">
+        <label><input type="radio" name="tipusregistre" value="OBJECTE" checked onchange="canviarTipusRegistre()"> 📦 Objecte general</label>
+        <label><input type="radio" name="tipusregistre" value="ARMA" onchange="canviarTipusRegistre()"> 🔪 Arma</label>
+      </div>
+      <div class="hint">Les armes tenen el seu propi registre (SIP, tipus d'arma) igual que ja feu al full "ARMES 4-15".</div>
+    </div>
+
+    <div class="card" id="cardArma" style="display:none;">
+      <h2>Dades de l'arma</h2>
+      <div class="grid">
+        <div class="field">
+          <label>SIP (núm. de referència)</label>
+          <input id="f_sip" placeholder="Ex: 13181324">
+        </div>
+        <div class="field">
+          <label>Tipus d'arma</label>
+          <select id="f_tipusarma" onchange="mostrarAltresTipusArma()">
+            <option value="">— Selecciona —</option>
+            <option>Navalla</option>
+            <option>Navalla assistida</option>
+            <option>Navalla (papallona)</option>
+            <option>Ganivet -11 cm</option>
+            <option>Ganivet +11 cm</option>
+            <option>Punyal</option>
+            <option>Matxet</option>
+            <option>Puny americà</option>
+            <option>Defensa extensible</option>
+            <option>Defensa elèctrica</option>
+            <option>Esprai de defensa</option>
+            <option>Taser</option>
+            <option>Kubotan</option>
+            <option>Clau Fugi</option>
+            <option>Cutter</option>
+            <option>Arma d'aire comprimit / Subfusil airsoft</option>
+            <option>Espasa / Katana o similar</option>
+            <option value="ALTRES">Altres (especificar)</option>
+          </select>
+        </div>
+        <div class="field full" id="rowAltresTipusArma" style="display:none;">
+          <label>Especifica el tipus</label>
+          <input id="f_tipusarma_altres" placeholder="Descriu el tipus d'arma">
+        </div>
+      </div>
+      <div class="hint">La Data i el Núm. de diligències es prenen dels camps de sota, a "Informació de la intervenció".</div>
+    </div>
+
     <div class="card">
       <h2>Dades de l'objecte</h2>
       <div class="grid">
@@ -102,13 +151,13 @@ button.action:disabled{opacity:.5;cursor:not-allowed;}
             <button type="button" onclick="generarCodi()" title="Regenerar codi" style="flex-shrink:0;padding:8px 10px;border:1px solid #d1d5db;border-radius:6px;background:#fff;cursor:pointer;">🔄</button>
             <button type="button" onclick="desbloquejarCodi()" title="Editar manualment" style="flex-shrink:0;padding:8px 10px;border:1px solid #d1d5db;border-radius:6px;background:#fff;cursor:pointer;">✏️</button>
           </div>
-          <div class="hint">Any + Ubicació + Núm.de pro. + Formulari (A/D) + Secció. Es recalcula sol quan omples els altres camps.</div>
+          <div class="hint" id="hintCodi">Any + Ubicació + Núm.de pro. + Formulari (A/D) + Secció. Es recalcula sol quan omples els altres camps.</div>
         </div>
-        <div class="field">
+        <div class="field" id="fieldPrecinte">
           <label>Núm. precinte o bossa</label>
           <input id="f_precinte">
         </div>
-        <div class="field">
+        <div class="field" id="fieldMagatzem">
           <label>Magatzem</label>
           <select id="f_magatzem">
             <option value="">— Selecciona —</option>
@@ -202,11 +251,13 @@ button.action:disabled{opacity:.5;cursor:not-allowed;}
       </div>
       <div class="btnrow">
         <button class="action" onclick="guardarObjecte()">💾 Desar al registre</button>
+        <button class="action" style="background:var(--amber);" onclick="guardarObjecteRapid()">⚡ Desar ràpid (carrer)</button>
         <button class="action gold" onclick="generarPackingList()">📄 Packing list (PDF)</button>
         <button class="action green" onclick="generarEtiqueta()">🏷️ Etiqueta (PDF)</button>
         <button class="action ghost" onclick="netejarFormulari()">🧹 Netejar</button>
       </div>
-      <div class="hint">Desa primer al registre; els botons de PDF sempre agafen les dades que hi ha ara mateix al formulari. L'etiqueta inclou codi de barres i QR.</div>
+      <div class="hint">Desa primer al registre; els botons de PDF sempre agafen les dades que hi ha ara mateix al formulari. L'etiqueta inclou codi de barres i QR.<br>
+      <b>⚡ Desar ràpid</b>: només cal descripció (o tipus d'arma). Omple data/hora/codi provisional sols, i marca l'objecte com "pendent completar" perquè no s'oblidi acabar-lo després.</div>
     </div>
   </div>
 
@@ -221,6 +272,28 @@ button.action:disabled{opacity:.5;cursor:not-allowed;}
       <label><input type="checkbox" class="fEstat" value="Remès jutjat" checked> Remès jutjat</label>
     </div>
     <div id="llistaObjectes"></div>
+  </div>
+
+  <!-- VISTA INVENTARI -->
+  <div id="view-inventari" style="display:none;">
+    <div class="card">
+      <h2>🔍 Inventari físic</h2>
+      <p style="font-size:13px;color:#555;line-height:1.5;">
+        Escaneja (o teclegs i prem Enter) cada codi que tinguis físicament davant, un per un.
+        Al final, compara el que has escanejat amb el que el registre diu que hauria d'haver-hi.
+      </p>
+      <div id="inventariEstat" style="display:flex;gap:16px;margin:10px 0;flex-wrap:wrap;">
+        <div><b id="invEscanejats">0</b> escanejats</div>
+        <div><b id="invEsperats">0</b> esperats (Dipositat)</div>
+      </div>
+      <input id="inventariScanInput" type="text" placeholder="📷 Escaneja o teclegs el codi i prem Enter..." autocomplete="off" style="width:100%;padding:11px;border-radius:8px;border:2px solid var(--green);font-size:14px;background:#f0fdf4;font-weight:bold;">
+      <div id="inventariLlistaEscanejats" style="margin-top:10px;max-height:220px;overflow-y:auto;"></div>
+      <div class="btnrow">
+        <button class="action ghost" onclick="reiniciarInventari()">🔄 Reiniciar inventari</button>
+        <button class="action" style="background:var(--amber);" onclick="finalitzarInventari()">✅ Finalitzar i comparar</button>
+      </div>
+    </div>
+    <div id="inventariResultats"></div>
   </div>
 
   <!-- VISTA CONFIG -->
@@ -318,6 +391,7 @@ const BASE_URL = location.origin + location.pathname;
 
 // ---------- ESTAT ----------
 var DB = [];
+var formEditId = null;
 var sortidaTargetId = null;
 var sigDrawing = false, sigCtx = null, sigHasContent = false;
 var fotoDniB64 = null, fotoObjecteB64 = null;
@@ -325,13 +399,19 @@ var fotoDniB64 = null, fotoObjecteB64 = null;
 function showView(v){
   document.getElementById('view-alta').style.display = v==='alta' ? '' : 'none';
   document.getElementById('view-registre').style.display = v==='registre' ? '' : 'none';
+  document.getElementById('view-inventari').style.display = v==='inventari' ? '' : 'none';
   document.getElementById('view-config').style.display = v==='config' ? '' : 'none';
   document.getElementById('tabAlta').classList.toggle('active', v==='alta');
   document.getElementById('tabRegistre').classList.toggle('active', v==='registre');
+  document.getElementById('tabInventari').classList.toggle('active', v==='inventari');
   document.getElementById('tabConfig').classList.toggle('active', v==='config');
   if(v==='registre'){
     renderLlista();
     setTimeout(function(){ var s=document.getElementById('scanInput'); if(s) s.focus(); }, 50);
+  }
+  if(v==='inventari'){
+    renderInventariEstat();
+    setTimeout(function(){ var s=document.getElementById('inventariScanInput'); if(s) s.focus(); }, 50);
   }
 }
 
@@ -360,7 +440,13 @@ function dataHoraLlegible(iso){
 // ---------- FORMULARI ALTA ----------
 function llegirFormulari(){
   var tipusEl = document.querySelector('input[name="tipusproc"]:checked');
+  var tregEl = document.querySelector('input[name="tipusregistre"]:checked');
+  var tarmaSel = document.getElementById('f_tipusarma').value;
+  var tarma = tarmaSel === 'ALTRES' ? document.getElementById('f_tipusarma_altres').value.trim() : tarmaSel;
   return {
+    tipusregistre: tregEl ? tregEl.value : 'OBJECTE',
+    sip: document.getElementById('f_sip').value.trim(),
+    tipusarma: tarma,
     descripcio: document.getElementById('f_descripcio').value.trim(),
     codi: document.getElementById('f_codi').value.trim(),
     precinte: document.getElementById('f_precinte').value.trim(),
@@ -383,6 +469,23 @@ function llegirFormulari(){
   };
 }
 
+// ---------- TIPUS DE REGISTRE (Objecte / Arma) ----------
+function canviarTipusRegistre(){
+  var treg = document.querySelector('input[name="tipusregistre"]:checked').value;
+  var esArma = (treg === 'ARMA');
+  document.getElementById('cardArma').style.display = esArma ? '' : 'none';
+  document.getElementById('fieldPrecinte').style.display = esArma ? 'none' : '';
+  document.getElementById('fieldMagatzem').style.display = esArma ? 'none' : '';
+  document.getElementById('hintCodi').textContent = esArma
+    ? 'Per a armes: es genera com ARM + SIP.'
+    : 'Any + Ubicació + Núm.de pro. + Formulari (A/D) + Secció. Es recalcula sol quan omples els altres camps.';
+  if(!codiDesbloquejat) generarCodi();
+}
+function mostrarAltresTipusArma(){
+  var v = document.getElementById('f_tipusarma').value;
+  document.getElementById('rowAltresTipusArma').style.display = (v === 'ALTRES') ? '' : 'none';
+}
+
 // ---------- CODI AUTOMÀTIC ----------
 var codiDesbloquejat = false;
 
@@ -392,6 +495,13 @@ function lletraFormulari(f){
 }
 
 function generarCodi(){
+  var treg = document.querySelector('input[name="tipusregistre"]:checked');
+  if(treg && treg.value === 'ARMA'){
+    var sip = document.getElementById('f_sip').value.trim();
+    if(!sip) return; // no sobreescrivim amb un codi incomplet
+    document.getElementById('f_codi').value = 'ARM' + sip;
+    return;
+  }
   var data = document.getElementById('f_data').value; // yyyy-mm-dd
   var any = data ? data.slice(0,4) : '';
   var ubicacio = document.getElementById('f_ubicacio').value.trim().toUpperCase();
@@ -427,7 +537,7 @@ function bloquejarCodi(){
 }
 
 document.addEventListener('input', function(e){
-  var camps = ['f_data','f_ubicacio','f_numproc','f_seccio'];
+  var camps = ['f_data','f_ubicacio','f_numproc','f_seccio','f_sip'];
   if(camps.indexOf(e.target.id) !== -1 && !codiDesbloquejat){
     generarCodi();
   }
@@ -440,37 +550,95 @@ document.addEventListener('change', function(e){
 
 
 function netejarFormulari(){
+  formEditId = null;
   bloquejarCodi();
   ['f_descripcio','f_codi','f_precinte','f_ubicacio','f_data','f_hora','f_seccio',
    'f_comandament','f_agent1','f_agent2','f_numproc','f_destinatari','f_numprocjud',
-   'f_docpersona','f_nom','f_cognoms'].forEach(function(id){
+   'f_docpersona','f_nom','f_cognoms','f_sip','f_tipusarma_altres'].forEach(function(id){
     document.getElementById(id).value = '';
   });
   document.getElementById('f_magatzem').value = '';
   document.getElementById('f_formulari').value = 'Acta';
+  document.getElementById('f_tipusarma').value = '';
+  document.getElementById('rowAltresTipusArma').style.display = 'none';
+  var rObjecte = document.querySelector('input[name="tipusregistre"][value="OBJECTE"]');
+  if(rObjecte) rObjecte.checked = true;
+  canviarTipusRegistre();
 }
 
 function guardarObjecte(){
   var d = llegirFormulari();
-  if(!d.descripcio || !d.codi){
-    toast('⚠️ Cal omplir descripció i codi com a mínim.');
+  var teIdentificacio = d.descripcio || (d.tipusregistre === 'ARMA' && d.tipusarma);
+  if(!teIdentificacio || !d.codi){
+    toast('⚠️ Cal omplir descripció/tipus i codi com a mínim.');
     return;
   }
-  var existent = DB.find(function(o){ return o.codi === d.codi; });
+  var existent = formEditId ? DB.find(function(o){ return o.id === formEditId; }) : DB.find(function(o){ return o.codi === d.codi; });
   if(existent){
+    var eraTemp = !!existent.pendentCompletar;
     Object.assign(existent, d);
     existent.historial = existent.historial || [];
-    existent.historial.push({ts:ara(), tipus:'EDICIO', detall:'Dades actualitzades des del formulari'});
-    toast('✏️ Objecte actualitzat: ' + d.codi);
+    if(eraTemp && d.codi.indexOf('TMP-') !== 0){
+      existent.pendentCompletar = false;
+      existent.historial.push({ts:ara(), tipus:'EDICIO', detall:'Dades completades — codi definitiu: ' + d.codi});
+      toast('✅ Dades completades: ' + d.codi);
+    } else {
+      existent.historial.push({ts:ara(), tipus:'EDICIO', detall:'Dades actualitzades des del formulari'});
+      toast('✏️ Objecte actualitzat: ' + d.codi);
+    }
   } else {
     d.id = d.codi + '-' + Date.now();
     d.estat = 'Dipositat';
     d.sortida = null;
+    d.pendentCompletar = false;
     d.historial = [{ts:ara(), tipus:'ALTA', detall:'Objecte donat d\'alta al dipòsit'}];
     DB.push(d);
+    formEditId = d.id;
     toast('✅ Objecte desat: ' + d.codi);
   }
   guardarLocal();
+}
+
+function generarCodiTemporal(){
+  return 'TMP-' + Date.now();
+}
+
+function guardarObjecteRapid(){
+  if(!document.getElementById('f_data').value){
+    document.getElementById('f_data').value = new Date().toISOString().slice(0,10);
+  }
+  if(!document.getElementById('f_hora').value){
+    document.getElementById('f_hora').value = new Date().toTimeString().slice(0,5);
+  }
+  if(!codiDesbloquejat) generarCodi(); // intenta la fórmula normal primer, si ja hi ha prou dades
+  if(!document.getElementById('f_codi').value.trim()){
+    document.getElementById('f_codi').value = generarCodiTemporal();
+  }
+
+  var d = llegirFormulari();
+  var teIdentificacio = d.descripcio || (d.tipusregistre === 'ARMA' && d.tipusarma);
+  if(!teIdentificacio){
+    toast('⚠️ Cal almenys una descripció (o un tipus d\'arma).');
+    return;
+  }
+  var isTemp = d.codi.indexOf('TMP-') === 0;
+  var existent = formEditId ? DB.find(function(o){ return o.id === formEditId; }) : DB.find(function(o){ return o.codi === d.codi; });
+  if(existent){
+    Object.assign(existent, d);
+    existent.pendentCompletar = isTemp;
+    existent.historial = existent.historial || [];
+    existent.historial.push({ts:ara(), tipus: isTemp ? 'ALTA_RAPIDA' : 'EDICIO', detall: isTemp ? 'Alta ràpida des del carrer — pendent completar dades' : 'Dades completades des del formulari'});
+  } else {
+    d.id = d.codi + '-' + Date.now();
+    d.estat = 'Dipositat';
+    d.sortida = null;
+    d.pendentCompletar = isTemp;
+    d.historial = [{ts:ara(), tipus:'ALTA_RAPIDA', detall:'Alta ràpida des del carrer — pendent completar dades'}];
+    DB.push(d);
+    formEditId = d.id;
+  }
+  guardarLocal();
+  toast(isTemp ? '⚡ Alta ràpida desada (' + d.codi + ') — pendent completar' : '✅ Objecte desat: ' + d.codi);
 }
 
 // ---------- QR helper ----------
@@ -500,7 +668,7 @@ function generarQRDataUrl(text, size, callback){
 // ---------- PDF: PACKING LIST ----------
 function generarPackingList(){
   var d = llegirFormulari();
-  if(!d.descripcio){ toast('⚠️ Falta la descripció de l\'objecte.'); return; }
+  if(!d.descripcio && !(d.tipusregistre === 'ARMA' && d.tipusarma)){ toast('⚠️ Falta la descripció de l\'objecte (o el tipus d\'arma).'); return; }
   var jsPDFLib = window.jspdf.jsPDF;
   var doc = new jsPDFLib({unit:'mm', format:'a4'});
   var pageW = 210;
@@ -540,11 +708,16 @@ function generarPackingList(){
   row('DILIGÈNCIES/ACTA:', (d.formulari||'') + ' ' + (d.numproc||''));
   row('DESTINACIÓ:', d.destinatari);
   row('NÚM. PROC. JUDICIAL:', d.numprocjud);
+  if(d.tipusregistre === 'ARMA'){
+    row('TIPUS D\'ARMA:', d.tipusarma);
+    row('SIP:', d.sip);
+  }
   y += 2;
   doc.setFont(undefined,'bold');
   doc.text('CONTINGUT:', 14, y);
   doc.setFont(undefined,'normal');
-  var contingutLines = doc.splitTextToSize(d.descripcio || '—', 190);
+  var contingutText = d.descripcio || (d.tipusarma ? (d.tipusarma + (d.sip ? ' (SIP: '+d.sip+')' : '')) : '—');
+  var contingutLines = doc.splitTextToSize(contingutText, 190);
   doc.text(contingutLines, 14, y+7);
   y += 7 + contingutLines.length*6 + 4;
 
@@ -580,8 +753,9 @@ function generarPackingList(){
     y += 9;
   });
 
+  adjuntarPdfAObjecte(d.codi, 'packingList', doc);
   doc.save('PackingList_' + (d.codi||'objecte') + '.pdf');
-  toast('📄 Packing list generat');
+  toast('📄 Packing list generat i adjuntat al registre');
 }
 
 // ---------- PDF: ETIQUETA (codi de barres + QR) ----------
@@ -633,12 +807,18 @@ function generarEtiqueta(){
     }
     line2('PRECINTE:', d.precinte);
     line2('DATA / HORA:', (d.data||'—') + ' ' + (d.hora||''));
-    line2('DESCRIPCIÓ:', d.descripcio);
+    if(d.tipusregistre === 'ARMA'){
+      line2('TIPUS D\'ARMA:', d.tipusarma);
+      line2('SIP:', d.sip);
+    } else {
+      line2('DESCRIPCIÓ:', d.descripcio);
+    }
     line2('PROCEDIMENT:', (d.formulari||'') + ' ' + (d.numproc||''));
     line2('UBICACIÓ:', (d.magatzem||'') + ' ' + (d.ubicacio||''));
 
+    adjuntarPdfAObjecte(d.codi, 'etiqueta', doc);
     doc.save('Etiqueta_' + d.codi + '.pdf');
-    toast('🏷️ Etiqueta generada (codi de barres + QR)');
+    toast('🏷️ Etiqueta generada i adjuntada al registre');
   });
 }
 
@@ -646,7 +826,7 @@ function generarEtiqueta(){
 var fuse = null;
 function buildFuse(){
   fuse = new Fuse(DB, {
-    keys: ['codi','descripcio','nom','cognoms','numproc','numprocjud','destinatari','docpersona'],
+    keys: ['codi','descripcio','nom','cognoms','numproc','numprocjud','destinatari','docpersona','sip','tipusarma'],
     threshold: 0.35
   });
 }
@@ -691,15 +871,21 @@ function renderLlista(){
 
     return '<div class="item '+cls+'">'
       + '<div class="row1"><span class="codi">'+esc(o.codi)+'</span>'
-      + '<span><span class="estat">'+esc(o.estat)+'</span>'
+      + '<span>'
+      + (o.tipusregistre === 'ARMA' ? '<span class="estat" style="background:#fdecea;color:var(--red);">🔪 ARMA</span> ' : '')
+      + '<span class="estat">'+esc(o.estat)+'</span>'
       + (o._alerta ? '<span class="badge-alerta">⏰ '+mesosDesde(o.data)+'m sense reclamar</span>' : '')
+      + (o.pendentCompletar ? '<span class="badge-alerta" style="background:var(--gold);color:#3a2c00;">⚡ Pendent completar</span>' : '')
       + '</span></div>'
-      + '<div class="desc">'+esc(o.descripcio)+'</div>'
+      + '<div class="desc">'+esc(o.descripcio)+(o.tipusarma ? ' · <b>'+esc(o.tipusarma)+'</b>'+(o.sip ? ' (SIP: '+esc(o.sip)+')' : '') : '')+'</div>'
       + '<div class="meta">'+esc(o.magatzem||'')+' '+esc(o.ubicacio||'')+' · '+esc(o.data||'')+' · '+esc(o.seccio||'')
       + (o.nom ? ' · '+esc(o.nom)+' '+esc(o.cognoms||'') : '') + '</div>'
       + '<div class="btns">'
       + '<button onclick="carregarAFormulari(\''+o.id+'\')">✏️ Editar</button>'
       + '<button onclick="mostrarQR(\''+o.id+'\')">🔗 QR</button>'
+      + ((o.pdfs&&o.pdfs.packingList) ? '<button onclick="obrirPdfAdjunt(\''+o.id+'\',\'packingList\')">📄 Packing list</button>' : '')
+      + ((o.pdfs&&o.pdfs.etiqueta) ? '<button onclick="obrirPdfAdjunt(\''+o.id+'\',\'etiqueta\')">🏷️ Etiqueta</button>' : '')
+      + ((o.pdfs&&o.pdfs.rebut) ? '<button onclick="obrirPdfAdjunt(\''+o.id+'\',\'rebut\')">🧾 Rebut</button>' : '')
       + (o.estat !== 'Lliurat' && o.estat !== 'Remès jutjat' ? '<button onclick="obrirSortida(\''+o.id+'\')">📤 Registrar sortida</button>' : '')
       + '</div>'
       + '<details><summary>🕘 Historial ('+(o.historial||[]).length+')</summary>'+hist+'</details>'
@@ -723,6 +909,7 @@ function mostrarQR(id){
 function carregarAFormulari(id){
   var o = DB.find(function(x){ return x.id === id; });
   if(!o) return;
+  formEditId = id;
   showView('alta');
   bloquejarCodi();
   document.getElementById('f_descripcio').value = o.descripcio||'';
@@ -745,6 +932,24 @@ function carregarAFormulari(id){
   document.getElementById('f_cognoms').value = o.cognoms||'';
   var r = document.querySelector('input[name="tipusproc"][value="'+(o.tipusproc||'PENAL')+'"]');
   if(r) r.checked = true;
+
+  var treg = o.tipusregistre || 'OBJECTE';
+  var rTreg = document.querySelector('input[name="tipusregistre"][value="'+treg+'"]');
+  if(rTreg) rTreg.checked = true;
+  document.getElementById('f_sip').value = o.sip || '';
+  var opcionsArma = Array.from(document.getElementById('f_tipusarma').options).map(function(o){ return o.value; });
+  if(o.tipusarma && opcionsArma.indexOf(o.tipusarma) !== -1){
+    document.getElementById('f_tipusarma').value = o.tipusarma;
+    document.getElementById('f_tipusarma_altres').value = '';
+  } else if(o.tipusarma){
+    document.getElementById('f_tipusarma').value = 'ALTRES';
+    document.getElementById('f_tipusarma_altres').value = o.tipusarma;
+  } else {
+    document.getElementById('f_tipusarma').value = '';
+    document.getElementById('f_tipusarma_altres').value = '';
+  }
+  canviarTipusRegistre();
+  mostrarAltresTipusArma();
 }
 
 // ---------- ESCÀNER USB ----------
@@ -923,6 +1128,7 @@ function generarRebutLliurament(o){
     }catch(e){}
   }
 
+  adjuntarPdfAObjecte(o.codi, 'rebut', doc);
   doc.save('Rebut_' + o.codi + '.pdf');
 }
 
@@ -933,7 +1139,117 @@ document.addEventListener('change', function(e){
   if(e.target.classList.contains('fEstat')) renderLlista();
 });
 
+// ---------- INVENTARI FÍSIC ----------
+var inventariEscanejats = []; // llista de codis escanejats en aquesta sessió d'inventari
+
+function objectesEsperats(){
+  // objectes que, segons el registre, haurien d'estar físicament presents
+  return DB.filter(function(o){ return o.estat === 'Dipositat'; });
+}
+
+function renderInventariEstat(){
+  document.getElementById('invEscanejats').textContent = inventariEscanejats.length;
+  document.getElementById('invEsperats').textContent = objectesEsperats().length;
+  var cont = document.getElementById('inventariLlistaEscanejats');
+  if(inventariEscanejats.length === 0){
+    cont.innerHTML = '<div class="empty">Encara no has escanejat res.</div>';
+    return;
+  }
+  cont.innerHTML = inventariEscanejats.slice().reverse().map(function(c){
+    var existeix = DB.some(function(o){ return o.codi === c; });
+    return '<div class="histentry">' + (existeix ? '✅' : '❓') + ' ' + esc(c) + (existeix ? '' : ' — no existeix al registre') + '</div>';
+  }).join('');
+}
+
+document.addEventListener('keydown', function(e){
+  if(e.target && e.target.id === 'inventariScanInput' && e.key === 'Enter'){
+    var codi = e.target.value.trim();
+    e.target.value = '';
+    if(!codi) return;
+    if(inventariEscanejats.indexOf(codi) !== -1){
+      toast('ℹ️ ' + codi + ' ja estava escanejat.');
+      return;
+    }
+    inventariEscanejats.push(codi);
+    renderInventariEstat();
+  }
+});
+
+function reiniciarInventari(){
+  if(inventariEscanejats.length > 0 && !confirm('Vols reiniciar l\'inventari? Es perdrà el que portis escanejat.')) return;
+  inventariEscanejats = [];
+  document.getElementById('inventariResultats').innerHTML = '';
+  renderInventariEstat();
+  toast('🔄 Inventari reiniciat');
+}
+
+function finalitzarInventari(){
+  var esperats = objectesEsperats();
+  var noEscanejats = esperats.filter(function(o){ return inventariEscanejats.indexOf(o.codi) === -1; });
+  var codisDesconeguts = inventariEscanejats.filter(function(c){ return !DB.some(function(o){ return o.codi === c; }); });
+
+  var araData = ara();
+  noEscanejats.forEach(function(o){
+    o.historial = o.historial || [];
+    o.historial.push({ts:araData, tipus:'INVENTARI', detall:'No localitzat durant l\'inventari del ' + dataHoraLlegible(araData)});
+  });
+  if(noEscanejats.length > 0) guardarLocal();
+
+  var html = '';
+  html += '<div class="card"><h2>Resultat de l\'inventari (' + dataHoraLlegible(araData) + ')</h2>';
+
+  if(noEscanejats.length === 0 && codisDesconeguts.length === 0){
+    html += '<div class="empty">✅ Tot coincideix — cap incidència.</div>';
+  } else {
+    if(noEscanejats.length > 0){
+      html += '<h3 style="font-size:13px;color:var(--red);margin:12px 0 6px;">⚠️ Registrats com a "Dipositat" però NO escanejats (possible pèrdua) — ' + noEscanejats.length + '</h3>';
+      html += noEscanejats.map(function(o){
+        return '<div class="item alerta"><div class="codi">' + esc(o.codi) + '</div><div class="desc">' + esc(o.descripcio||o.tipusarma||'') + '</div><div class="meta">' + esc(o.ubicacio||'') + ' · ' + esc(o.data||'') + '</div></div>';
+      }).join('');
+    }
+    if(codisDesconeguts.length > 0){
+      html += '<h3 style="font-size:13px;color:var(--amber);margin:16px 0 6px;">❓ Escanejats però NO existeixen al registre — ' + codisDesconeguts.length + '</h3>';
+      html += codisDesconeguts.map(function(c){
+        return '<div class="item"><div class="codi">' + esc(c) + '</div><div class="desc">Cap objecte amb aquest codi al registre.</div></div>';
+      }).join('');
+    }
+  }
+  html += '</div>';
+  document.getElementById('inventariResultats').innerHTML = html;
+
+  if(noEscanejats.length > 0){
+    toast('⚠️ Inventari finalitzat: ' + noEscanejats.length + ' objecte(s) sense localitzar. S\'ha anotat a l\'historial de cadascun.');
+  } else {
+    toast('✅ Inventari finalitzat sense incidències');
+  }
+  renderInventariEstat();
+}
+
 // ---------- PERSISTÈNCIA LOCAL ----------
+// ---------- ADJUNTAR PDF AL REGISTRE ----------
+function adjuntarPdfAObjecte(codi, tipus, doc){
+  var o = DB.find(function(x){ return x.codi === codi; });
+  if(!o){
+    toast('⚠️ PDF descarregat, però l\'objecte encara no està desat al registre — no ha quedat adjunt.');
+    return false;
+  }
+  o.pdfs = o.pdfs || {};
+  o.pdfs[tipus] = { data: doc.output('datauristring'), ts: ara() };
+  o.historial = o.historial || [];
+  var noms = {packingList:'Packing list', etiqueta:'Etiqueta', rebut:'Rebut de lliurament'};
+  o.historial.push({ts:ara(), tipus:'PDF', detall: (noms[tipus]||tipus) + ' generat i adjuntat al registre'});
+  guardarLocal();
+  return true;
+}
+
+function obrirPdfAdjunt(id, tipus){
+  var o = DB.find(function(x){ return x.id === id; });
+  if(!o || !o.pdfs || !o.pdfs[tipus]){ toast('⚠️ Aquest PDF encara no s\'ha generat.'); return; }
+  var w = window.open();
+  if(w){ w.location.href = o.pdfs[tipus].data; }
+  else { toast('⚠️ El navegador ha bloquejat la finestra emergent.'); }
+}
+
 function guardarLocal(){ localStorage.setItem('diposit_db', JSON.stringify(DB)); }
 function carregarLocal(){
   var raw = localStorage.getItem('diposit_db');
