@@ -97,8 +97,12 @@ button.action:disabled{opacity:.5;cursor:not-allowed;}
         </div>
         <div class="field">
           <label>Codi d'emmagatzematge <span class="badge-req">*</span></label>
-          <input id="f_codi" placeholder="Ex: 2026CF628882DUSC2">
-          <div class="hint">Format lliure — el que ja useu al magatzem</div>
+          <div style="display:flex;gap:6px;">
+            <input id="f_codi" placeholder="Es genera automàticament" readonly style="background:#eef1f6;font-weight:bold;color:var(--blue);">
+            <button type="button" onclick="generarCodi()" title="Regenerar codi" style="flex-shrink:0;padding:8px 10px;border:1px solid #d1d5db;border-radius:6px;background:#fff;cursor:pointer;">🔄</button>
+            <button type="button" onclick="desbloquejarCodi()" title="Editar manualment" style="flex-shrink:0;padding:8px 10px;border:1px solid #d1d5db;border-radius:6px;background:#fff;cursor:pointer;">✏️</button>
+          </div>
+          <div class="hint">Any + Ubicació + Núm.de pro. + Formulari (A/D) + Secció. Es recalcula sol quan omples els altres camps.</div>
         </div>
         <div class="field">
           <label>Núm. precinte o bossa</label>
@@ -379,7 +383,64 @@ function llegirFormulari(){
   };
 }
 
+// ---------- CODI AUTOMÀTIC ----------
+var codiDesbloquejat = false;
+
+function lletraFormulari(f){
+  if(!f) return '';
+  return f.trim().charAt(0).toUpperCase(); // Acta -> A, Diligències -> D
+}
+
+function generarCodi(){
+  var data = document.getElementById('f_data').value; // yyyy-mm-dd
+  var any = data ? data.slice(0,4) : '';
+  var ubicacio = document.getElementById('f_ubicacio').value.trim().toUpperCase();
+  var numproRaw = document.getElementById('f_numproc').value.trim();
+  var numpro = numproRaw.split('/')[0].trim(); // treu "/2026" si hi és
+  var lletra = lletraFormulari(document.getElementById('f_formulari').value);
+  var seccio = document.getElementById('f_seccio').value.trim().toUpperCase().replace(/-/g, '');
+
+  if(!any || !ubicacio || !numpro || !lletra || !seccio){
+    // falten dades: no sobreescrivim amb un codi incomplet
+    return;
+  }
+  var codi = any + ubicacio + numpro + lletra + seccio;
+  document.getElementById('f_codi').value = codi;
+}
+
+function desbloquejarCodi(){
+  codiDesbloquejat = true;
+  var el = document.getElementById('f_codi');
+  el.readOnly = false;
+  el.style.background = '#fff';
+  el.style.color = '#111827';
+  el.focus();
+  toast('✏️ Codi desbloquejat — ara el pots editar a mà.');
+}
+
+function bloquejarCodi(){
+  codiDesbloquejat = false;
+  var el = document.getElementById('f_codi');
+  el.readOnly = true;
+  el.style.background = '#eef1f6';
+  el.style.color = 'var(--blue)';
+}
+
+document.addEventListener('input', function(e){
+  var camps = ['f_data','f_ubicacio','f_numproc','f_seccio'];
+  if(camps.indexOf(e.target.id) !== -1 && !codiDesbloquejat){
+    generarCodi();
+  }
+});
+document.addEventListener('change', function(e){
+  if(e.target.id === 'f_formulari' && !codiDesbloquejat){
+    generarCodi();
+  }
+});
+
+
 function netejarFormulari(){
+  bloquejarCodi();
   ['f_descripcio','f_codi','f_precinte','f_ubicacio','f_data','f_hora','f_seccio',
    'f_comandament','f_agent1','f_agent2','f_numproc','f_destinatari','f_numprocjud',
    'f_docpersona','f_nom','f_cognoms'].forEach(function(id){
@@ -663,6 +724,7 @@ function carregarAFormulari(id){
   var o = DB.find(function(x){ return x.id === id; });
   if(!o) return;
   showView('alta');
+  bloquejarCodi();
   document.getElementById('f_descripcio').value = o.descripcio||'';
   document.getElementById('f_codi').value = o.codi||'';
   document.getElementById('f_precinte').value = o.precinte||'';
