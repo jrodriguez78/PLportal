@@ -622,7 +622,7 @@ function render() {
     const cls = catClass(grp.cat);
     const isFirst = idx === 0;
     const openIfSearch = isSearch; // expand all when searching
-    html += `<div class="acc-section${(isFirst && !isSearch)||openIfSearch?" open":""}">
+    html += `<div class="acc-section${openIfSearch?" open":""}">
   <div class="acc-header" onclick="toggle(this)">
     <span class="acc-badge badge-${cls}">${badgeLabel(grp.cat)}</span>
     <span class="acc-title">${esc(titol)}</span>
