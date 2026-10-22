@@ -1,0 +1,363 @@
+<title>Àmbits Delictius · OAC</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/7.0.0/fuse.min.js"></script>
+
+<style>
+:root {
+  --blue:#1a3a6b; --blue2:#2d5a9e; --blue3:#e8f0fb;
+  --gold:#e8a800; --gold2:#fff8e0;
+  --bg:#f0f2f5; --card:#ffffff; --border:#dde4f0;
+  --text:#1a1a2e; --muted:#6b7280;
+  --c1:#b45309; --c1b:#fef3c7;
+  --c2:#1d4ed8; --c2b:#dbeafe;
+  --c3:#15803d; --c3b:#dcfce7;
+  --c4:#7c3aed; --c4b:#ede9fe;
+  --c5:#374151; --c5b:#f3f4f6;
+  --c6:#0f766e; --c6b:#ccfbf1;
+  --c7:#9a3412; --c7b:#ffedd5;
+  --c8:#1e40af; --c8b:#dbeafe;
+  --c9:#be123c; --c9b:#ffe4e6;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg:#0f172a; --card:#1e293b; --border:#2d3f5e;
+    --text:#e2e8f0; --muted:#94a3b8; --blue3:#1e3a5f;
+    --c1b:#431407; --c2b:#1e3a5f; --c3b:#052e16;
+    --c4b:#1e1040; --c5b:#1f2937; --c6b:#042f2e;
+    --c7b:#2d1200; --c8b:#1e3a5f; --c9b:#4c0519;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg:#0f172a; --card:#1e293b; --border:#2d3f5e;
+  --text:#e2e8f0; --muted:#94a3b8; --blue3:#1e3a5f;
+  --c1b:#431407; --c2b:#1e3a5f; --c3b:#052e16;
+  --c4b:#1e1040; --c5b:#1f2937; --c6b:#042f2e;
+  --c7b:#2d1200; --c8b:#1e3a5f; --c9b:#4c0519;
+  color-scheme: dark;
+}
+
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{min-height:100%;font-family:'Inter',Arial,sans-serif;color:var(--text);background:var(--bg)}
+
+#header{
+  background:var(--blue);
+  padding:14px max(16px,env(safe-area-inset-right,0px)) 12px max(16px,env(safe-area-inset-left,0px));
+  display:flex;align-items:center;gap:12px;
+  box-shadow:0 2px 10px rgba(0,0,0,.35);
+  position:sticky;top:0;z-index:100;
+}
+.hicon{width:36px;height:36px;border-radius:8px;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.htxt{flex:1;min-width:0}
+.htxt h1{color:#fff;font-size:15px;font-weight:700;line-height:1.2}
+.htxt p{color:#a8c4e8;font-size:10px;margin-top:2px}
+#btn-back{flex-shrink:0;padding:7px 13px;border:none;border-radius:6px;background:rgba(255,255,255,.15);color:#fff;font-size:11px;font-weight:600;cursor:pointer;text-decoration:none;white-space:nowrap;transition:background .15s}
+#btn-back:hover{background:rgba(255,255,255,.25)}
+
+#toolbar{
+  padding:12px max(16px,env(safe-area-inset-right,0px)) 8px max(16px,env(safe-area-inset-left,0px));
+  background:var(--card);border-bottom:1px solid var(--border);
+  position:sticky;top:60px;z-index:90;
+}
+.searchbox{position:relative;margin-bottom:0}
+.searchbox svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--muted);pointer-events:none}
+#q{
+  width:100%;padding:9px 14px 9px 36px;
+  border:1.5px solid var(--border);border-radius:8px;
+  background:var(--bg);color:var(--text);
+  font-size:14px;font-family:inherit;outline:none;transition:border-color .15s;
+}
+#q:focus{border-color:var(--blue2)}
+#q::placeholder{color:var(--muted)}
+
+main{padding:12px max(16px,env(safe-area-inset-right,0px)) 48px max(16px,env(safe-area-inset-left,0px))}
+#statsbar{font-size:11px;color:var(--muted);margin-bottom:8px;min-height:16px}
+
+.acc-section{margin-bottom:6px;border:1.5px solid var(--border);border-radius:10px;overflow:hidden;background:var(--card)}
+.acc-header{
+  display:flex;align-items:center;gap:10px;
+  padding:11px 14px;cursor:pointer;
+  user-select:none;-webkit-user-select:none;transition:background .12s;
+}
+.acc-header:hover{background:var(--blue3)}
+.acc-num{
+  flex-shrink:0;width:24px;height:24px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:10px;font-weight:700;
+}
+.acc-title{flex:1;font-size:13px;font-weight:700;color:var(--text);min-width:0;line-height:1.3}
+.acc-count{flex-shrink:0;font-size:11px;color:var(--muted);font-weight:500}
+.acc-chevron{flex-shrink:0;color:var(--muted);font-size:14px;transition:transform .18s;line-height:1}
+.acc-section.open .acc-chevron{transform:rotate(90deg)}
+
+.acc-body{display:none;padding:0 10px 10px}
+.acc-section.open .acc-body{display:block}
+.cards-grid{display:flex;flex-direction:column;gap:5px;padding-top:6px}
+
+.amb-card{
+  padding:9px 12px;border-radius:8px;
+  border:1px solid var(--border);background:var(--bg);
+  transition:border-color .12s,background .12s;cursor:default;
+}
+.amb-card:hover{border-color:var(--blue2);background:var(--blue3)}
+.amb-name{font-size:12px;font-weight:700;color:var(--text);margin-bottom:3px}
+.amb-desc{font-size:11px;color:var(--muted);line-height:1.4}
+mark{background:rgba(232,168,0,.35);color:inherit;border-radius:2px;padding:0 1px}
+
+#empty{display:none;text-align:center;padding:40px 16px;color:var(--muted);font-size:13px}
+footer{text-align:center;padding:0 16px 24px;font-size:10px;color:var(--muted);margin-top:8px}
+
+/* colors per grup */
+.g1 .acc-num{background:var(--c1b);color:var(--c1)}
+.g2 .acc-num{background:var(--c2b);color:var(--c2)}
+.g3 .acc-num{background:var(--c3b);color:var(--c3)}
+.g4 .acc-num{background:var(--c4b);color:var(--c4)}
+.g5 .acc-num{background:var(--c5b);color:var(--c5)}
+.g6 .acc-num{background:var(--c6b);color:var(--c6)}
+.g7 .acc-num{background:var(--c7b);color:var(--c7)}
+.g8 .acc-num{background:var(--c8b);color:var(--c8)}
+.g9 .acc-num{background:var(--c9b);color:var(--c9)}
+</style>
+
+<div id="header">
+  <div class="hicon">🗂️</div>
+  <div class="htxt">
+    <h1>Àmbits Delictius</h1>
+    <p>Aplicació Atestats i Denúncies · UCAP-ACSIP-DSIP</p>
+  </div>
+  <a id="btn-back" href="index.html">← OAC</a>
+</div>
+
+<div id="toolbar">
+  <div class="searchbox">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    <input id="q" type="search" placeholder="Cerca àmbit o descripció… (ex: grooming, phishing, gitano)" autocomplete="off" autocorrect="off" spellcheck="false">
+  </div>
+</div>
+
+<main>
+  <div id="statsbar"></div>
+  <div id="results"></div>
+  <div id="empty">Cap àmbit trobat per aquesta cerca.</div>
+</main>
+
+<footer>Font: Graella Àmbits Delictius · UCAP-ACSIP-DSIP · Ús intern PL-SCG</footer>
+
+<script>
+const GRUPS = [
+  {
+    id:1, cls:"g1", icon:"👤", nom:"Atenció a la Víctima",
+    ambits:[
+      {nom:"Altres Violències Masclistes", desc:"Fets on hagi estat víctima qualsevol dona i dona trans gènere pel fet de ser dona i el presumpte autor sigui un home (ex: violència digital, institucional, en l'àmbit públic, educatiu o qualsevol forma anàloga que lesioni o pugui lesionar la dignitat, integritat o llibertat de les dones). Queden exclosos els fets que es poden encabir en altres àmbits - Atenció a les víctimes, com per exemple \"violència de gènere\"."},
+      {nom:"Bullying (menors d'edat)", desc:"Conducta de maltractament físic i/o psicològic d'un menor o grup de menors vers un altre menor de forma reiterada, intencionada i en situació d'abús o de desequilibri de poder. Inclou el ciberbullying."},
+      {nom:"Discapacitat", desc:"Fets on la víctima té alguna alteració i/o deteriorament de les seves capacitats funcionals ja siguin de caràcter físic, psíquic i/o sensorial. No és necessari cap document que acrediti legalment el seu grau de discapacitat."},
+      {nom:"Matrimoni Forçat", desc:"Fets en els que el matrimoni es produeix sense el consentiment vàlid de, com a mínim, d'una de les persones contraents, per la intervenció de terceres persones de l'entorn familiar (sovint els progenitors) que s'atorguen la facultat de decisió i pressionen perquè aquesta pràctica es produeixi."},
+      {nom:"Mutilació Genital Femenina", desc:"Fets relacionats amb pràctiques que impliquen l'extirpació total o parcial dels genitals externs femenins o d'altres agressions als òrgans genitals de les dones per raons culturals, religioses o d'altres amb finalitat no terapèutica (art. 149.2 CP)."},
+      {nom:"Nadons Sostrets al Néixer", desc:"Denúncies efectuades pels progenitors que van donar a llum a l'hospital o altre recinte sanitari un nadó, i que se'ls hi va comunicar, per part del personal que treballava en aquests centres, que la seva filla o fill havia mort i que actualment sospiten o tenen indicis que tot allò no era cert i que tot va ser, mitjançant qualsevol tipus de compensació la sostracció del menor, amb la finalitat d'alterar la seva filiació i parentiu."},
+      {nom:"Persona Vulnerable", desc:"Qualsevol víctima vulnerable i persona amb necessitats especials de protecció, que no tingui un àmbit delictiu propi i el GAV hagi de realitzar un seguiment a l'aplicació SIAV."},
+      {nom:"Transtorns Mentals/Psíquics", desc:"Fets en el quals l'autor o la víctima presentaven un transtorn de la personalitat permanent no transitori."},
+      {nom:"Violència de Gènere", desc:"Il·lícits penals comesos sobre les dones per part de qui és o ha estat cònjuge o de qui està o ha estat lligat a elles per relacions similars d'afectivitat, amb o sense convivència."},
+      {nom:"Violència Domèstica", desc:"Fets violents (físics o psíquics) ocorreguts en l'àmbit familiar, en què l'autor i la víctima tenen un relació de parentesc o d'afinitat (persones definides a l'art. 173.2 del Codi penal)."},
+      {nom:"Violència Filio Parental", desc:"Fets on la violència s'exerceix del fill contra el seu progenitor o persona que ocupi el seu lloc (tutor o representant legal) amb independència de que convisquin o no."},
+      {nom:"Violència Sexual", desc:"Fets instruïts en motiu de qualsevol dels il·lícits penals del títol VIII de \"Delictes contra la llibertat sexual\" del Codi Penal."},
+    ]
+  },
+  {
+    id:2, cls:"g2", icon:"🌐", nom:"Internet",
+    ambits:[
+      {nom:"Afectació a Menors", desc:"Delictes contra la llibertat i indemnitat sexual en les quals les víctimes són menors d'edat i els autors són majors d'edat (pornografia infantil, grooming, sexting) sempre que el mitjà de comissió del delicte sigui internet o les noves tecnologies."},
+      {nom:"Amenaces / Coaccions / Extorsions", desc:"Amenaces, coaccions o extorsions utilitzant la xarxa internet, en especial les realitzades per xarxes socials. En especial \"sextorsion\" que consisteix en la utilització d'imatges i vídeos íntims obtinguts prèviament."},
+      {nom:"Assetjament (major d'edat)", desc:"Assetjament d'una persona de manera insistent i reiterada (art. 172 ter CP) utilitzant la xarxa internet."},
+      {nom:"Atacs Informàtics", desc:"Atac a un ordinador, sistema d'ordinadors o xarxes que causi un perjudici econòmic amb danys, pèrdua de connectivitat, bloqueig o encriptació quan s'exigeix una contraprestació econòmica per alliberar el sistema (decrypt, DDOS, atac informàtic). També l'accés il·legal a un ordinador, sistema d'ordinadors o xarxes i/o el descobriment revelació de secrets."},
+      {nom:"Continguts Nocius — Delictius o No Delictius", desc:"Continguts nocius que es poden trobar per internet, els principals són: maltractament o vexacions contra les persones, maltractament o vexacions contra animals, proanorexia, probulimia, pàgines informers o \"xafarderies\", prosuicidi, apologia de la pornografia infantil, revelació de secrets, alteració de l'ordre públic, tràfic de: drogues, animals, substàncies dopants o similars."},
+      {nom:"Incitació a l'Odi i a la Violència", desc:"Qualsevol fet que, mitjançant l'ús d'Internet i les noves tecnologies, inciti a l'odi i a la violència, tal com queda recollit en l'article 510 del Codi Penal. Antisemita, aporofòbia, discapacitat físic/sensorial, discapacitat psíquic/mental, ètnic/origen nacional/racial, homofòbia, orientació política, religiós i sexisme."},
+      {nom:"Propietat Intel·lectual", desc:"Art. 270. En perjudici d'un tercer, reprodueixi, plagiï, distribueixi una propietat intel·lectual."},
+      {nom:"Usurpació de la Identitat", desc:"Usurpació d'identitat d'una persona per utilitzar-la en la xarxa internet. Prejudici sobre la imatge personal o professional."},
+      {nom:"Estafes Ciberfacilitadores", desc:"Aquelles estafes en què s'ha utilitzat la xarxa internet i/o eines informàtiques durant el procés delictiu, principalment en el disseny i execució dels fets per garantir un frau més eficient i sofisticat. Ex: Phishing, smishing, mailers, frau comerç electrònic, frau en banca online, falsos lloguers, falses ofertes de treball, venda de productes online, lovescam, falses inversions o aquelles denúncies per càrrecs fraudulents amb targeta al compte corrent."},
+    ]
+  },
+  {
+    id:3, cls:"g3", icon:"🌿", nom:"Medi Ambient",
+    ambits:[
+      {nom:"Medi Ambient", desc:"Fets relacionats o vinculats amb el medi ambient."},
+    ]
+  },
+  {
+    id:4, cls:"g4", icon:"🏬", nom:"POE",
+    ambits:[
+      {nom:"POE — Centres Educatius", desc:"Il·lícits penals i administratius relacionats amb el món de l'educació, en especial els succeïts als centres d'educació primària, d'educació secundària, batxillerat i formació de grau mitjà o bé a les rodalies d'aquests centres sempre que hi hagi una relació directa amb l'activitat docent, el professorat o els alumnes."},
+      {nom:"POE — Comerç i Empresa", desc:"Il·lícits penals i administratius relacionats directament amb l'activitat econòmica del sector secundari i terciari, succeïts en comerços i empreses (fires, mercats, grans superfícies, establiments, hostalatge, polígons industrials, etc.), així com els comesos als clients o treballadors en el decurs de llurs activitats."},
+      {nom:"POE — Habitatge", desc:"Il.lícits penals contra el patrimoni i les persones en els quals l'objectiu principal sigui l'habitatge, i principalment els robatoris amb força i els robatoris amb violència i/o intimidació efectuats a domicilis."},
+      {nom:"POE — LCD Metall", desc:"Il·lícits penals i administratius relacionats amb la sostracció de metalls fèrrics (acer, ferro) i no fèrrics (coure, plom, alumini, crom)."},
+      {nom:"POE — Món Rural", desc:"Il.lícits penals relacionats amb el patrimoni, principalment: robatori amb violència i/o intimidació, robatori amb força, robatori/furt d'ús de vehicle, delicte i falta de danys, delicte i falta de furt efectuats a les explotacions agrícoles, ramaderes, magatzems, habitatges, maquinària o altres, que estiguin vinculats directament amb l'activitat econòmica del sector primari (agricultura, ramaderia, pesca...)."},
+      {nom:"POE — Oci Nocturn", desc:"Il·lícits penals i administratius que es produeixin entre les 22:00 i les 07:00 h. als establiments o espais de pública concurrència on es duguin a terme activitats d'oci, zones adjacents a aquests, i als mitjans de transport públic utilitzats per les persones que s'hi adrecin incloent-hi les estacions, parades, etc."},
+      {nom:"POE — Pista", desc:"Il.lícits penals relacionats amb el patrimoni, principalment: delicte i falta de furt, robatori amb força interior de vehicle, robatori amb violència i/o intimidació, robatori/furt d'ús de vehicle, així com delictes especialitzats (teloners, peruans, falsos policies...) que es produeixin a les autopistes, autovies i en general als principals corredors del transport rodat de mercaderies i viatgers (AP7, AP2, C16, C32, C58, A2, C25) i a les seves àrees de servei, de descans i les seves grans zones d'estacionament."},
+      {nom:"POE — Tràfic d'Éssers Humans", desc:"Comet el delicte de tràfic d'ésser humans qui ja en territori espanyol, en trànsit o amb destinació a Espanya, utilitzant violència, intimidació o engany, o abusant d'una situació de superioritat o necessitat o vulnerabilitat de la víctima nacional o estrangera, trafiqués amb persones, mitjançant la seva captació, transport, trasllats, acollida, recepció o allotjament amb qualsevol de les finalitats: imposar treball o serveis forçats, l'esclavitud o pràctiques similars a l'esclavitud o a la servitud, explotació sexual (inclosa la pornografia) i/o extracció dels seus òrgans corporals."},
+    ]
+  },
+  {
+    id:5, cls:"g5", icon:"❓", nom:"Sense Àmbit",
+    ambits:[
+      {nom:"Sense Àmbit", desc:"Qualsevol àmbit que no sigui inclòs en els descrits anteriorment."},
+    ]
+  },
+  {
+    id:6, cls:"g6", icon:"🎭", nom:"Diversos",
+    ambits:[
+      {nom:"Congressos/Convencions", desc:"Fets ocorreguts a persones que tenen qualsevol vinculació (expositors, visitants, congressistes, etc.) amb congressos, convencions, certàmens o mostres amb motiu de la seva presencia a l'esdeveniment. Inclou tant els fets ocorreguts dintre dels espais dedicats al congrés, convenció, certamen o mostra, com els succeïts a la via pública, llocs d'allotjament o en els desplaçaments d'aquestes persones."},
+      {nom:"Creuers", desc:"Il·lícit penal i/o administratiu en què la persona relacionada sigui viatger de creuer o personal de la seva tripulació, ocorregut en qualsevol espai públic o privat, mentre fan escala a territori català."},
+      {nom:"Esportiu", desc:"Fets que són conseqüència directa de festes, celebracions i/o actes motivats per victòries esportives i/o fets motivats per raons d'afinitat o discrepància amb els diferents equips o seleccions. Inclou tant els fets ocorreguts dintre de les instal·lacions esportives com els ocorreguts fora (via pública)."},
+      {nom:"Festes Populars", desc:"Fets relacionats amb persones que tenen qualsevol tipus de vinculació (treballadors, assistents, etc.) amb una festa popular i que de no haver-se celebrat l'esmentada festa possiblement no s'hauria produït aquest fet."},
+      {nom:"Manifestacions/Concentracions", desc:"Infraccions penal i/o administratives relacionades amb manifestacions/concentracions celebrades per motius polítics, socials, laborals i/o econòmics, excloent, en tot cas, les realitzades per celebracions esportives."},
+      {nom:"Penitenciari", desc:"Qualsevol fet en què la persona relacionada es trobi complint condemna en qualsevol de les modalitats de compliment previstes al Codi Penal, Llei Orgànica General Penitenciària i Reglament Penitenciari (presos preventius, condemnats per sentència ferma i dintre d'aquests els penats classificats en qualsevol grau de tractament, alliberats condicionals i aquells que compleixin mesures penals alternatives o estiguin gaudint de permisos penitenciaris)."},
+      {nom:"Signum", desc:"Fets relacionats amb persecucions policials fora de l'àmbit territorial de la PG-ME."},
+    ]
+  },
+  {
+    id:7, cls:"g7", icon:"💼", nom:"Entorn Laboral",
+    ambits:[
+      {nom:"Laboral/Treball", desc:"Fets relacionats amb l'àmbit laboral i de treball."},
+      {nom:"Món del Taxi i Afins", desc:"S'inclouen els fets relacionats amb el lloguer de vehicles amb conductor (VTC) mitjançant aplicacions informàtiques que permeten la contractació d'aquests serveis (Uber, Cabify, etc.)."},
+    ]
+  },
+  {
+    id:8, cls:"g8", icon:"⚠️", nom:"Activitats Delictives",
+    ambits:[
+      {nom:"Antiguitats / Obres d'Art", desc:"Qualsevol fet que afecti objectes o que tingui per motiu objectes qualificables com antiguitat, obra d'art, peça única de valor o altres similars."},
+      {nom:"Bandes Llatines Juvenils", desc:"Fets ocorreguts en els quals estan implicats (com a autors o víctimes) les diferents bandes llatines."},
+      {nom:"Grups Urbans", desc:"Fets ocorreguts en els quals estan implicats (com a autors o víctimes) les diferents tribus urbanes, en relació amb les seves ideologies i maneres anòmales d'expressar-les."},
+      {nom:"Estafes Bàsiques", desc:"Aquelles estafes en què l'ús d'internet i/o noves tecnologies no ha existit o ha estat auxiliar (internet no és essencial o necessari per la perpetració de delicte denunciat), i a més, ha hagut una interacció física (real i presencial) entre l'autor i víctima. Ex: Rip Deal, mitjans de pagament (xecs, pagarés, xecs de viatge, targetes bancàries duplicades o falsificades), alguns tipus d'estafes piramidals, pagaments a establiments on line o botiga convencional efectuats amb una targeta sostreta o perduda i aquelles comeses de manera exclusiva mitjançant trucada telefònica i/o VoIP."},
+    ]
+  },
+  {
+    id:9, cls:"g9", icon:"🏳️", nom:"Odi i Discriminació",
+    ambits:[
+      {nom:"Altres", desc:"Il·lícits administratius en què la motivació sigui la llengua/identitat cultural, l'aspecte físic o indumentària, la condició social o econòmica, la professió, la situació administrativa, la condició de privació de llibertat, l'anormalofòbia i qualsevol altra condició o circumstància personal o social."},
+      {nom:"Antigitanisme", desc:"Il·lícits penals i administratius en què la víctima ho és pel fet de pertànyer al poble gitano. Forma específica de racisme, ja sigui de forma personal, social i institucional, envers el poble gitano."},
+      {nom:"Antisemitisme", desc:"Il·lícits penals i administratius en què la víctima ho és pel fet de ser jueu, cal incloure els delictes de negació de l'Holocaust."},
+      {nom:"Aporofòbia", desc:"Il·lícits penals i administratius en els quals la víctima ho és per ser pobre, per trobar-se en situació social i/o sense llar."},
+      {nom:"Discapacitat Físic/Sensorial", desc:"Il·lícits penals i administratius en què la víctima ho és per tenir algun tipus de discapacitat física o sensorial."},
+      {nom:"Discapacitat Intel·lectual/Mental", desc:"Il·lícits penals i administratius en què la víctima ho és per tenir una discapacitat intel·lectual/mental."},
+      {nom:"Edatisme", desc:"Il·lícits penals i administratius motivats per l'estereotipació i la discriminació contra persones o grups sobre la base de l'edat."},
+      {nom:"Ètnic/Origen Nacional/Origen Racial", desc:"Il·lícits penals i administratius en els quals els fets són motivats en la diferència nacional (hispans, àrabs) i d'origen racial (blancs, negres, etc.)."},
+      {nom:"Islamofòbia", desc:"Il·lícits penals i administratius en què la víctima ho és pel fet de ser musulmà."},
+      {nom:"LGTBI-fòbia", desc:"Il·lícits penals i administratius en què la motivació sigui l'orientació sexual o la identitat de gènere de les persones: gais, lesbianes, bisexuals, transgèneres o intersexuals."},
+      {nom:"Malaltia", desc:"Il·lícits penals i administratius en què la motivació sigui la malaltia que pateix o és portadora una persona, inclou alteracions de la salut, estat serològic o característiques genètiques."},
+      {nom:"Orientació Política", desc:"Il·lícits penals i administratius en què la motivació sigui la ideologia de la víctima, opinió política o d'altra índole, pertinença a un grup polític o conviccions ètiques."},
+      {nom:"Religiós", desc:"Il·lícits penals i administratius en què la motivació sigui les creences religioses de la víctima o fets motivats per sentiments contraris a determinades religions (catòlics, protestants, testimonis de Jehovà, altres)."},
+      {nom:"Sexisme", desc:"Il·lícits penals i administratius en què la motivació sigui el sexe de la víctima (superioritat del sexe contrari, creença de l'existència de grans diferències entre home i dona o aversió al sexe contrari)."},
+      {nom:"Situació Familiar", desc:"Il·lícits penals en què la motivació sigui la discriminació per raó de la filiació, de l'estat civil o de qualsevol altra condició, activitat, expressió o creença dels familiars, tutors, adoptants, o persones encarregades de la guarda o l'acolliment."},
+    ]
+  },
+];
+
+// Aplanem per a Fuse
+const DB = [];
+GRUPS.forEach(g => {
+  g.ambits.forEach(a => {
+    DB.push({grupId: g.id, grupNom: g.nom, grupCls: g.cls, grupIcon: g.icon, nom: a.nom, desc: a.desc});
+  });
+});
+
+const fuse = new Fuse(DB, {
+  keys: ["nom","desc","grupNom"],
+  threshold: 0.35,
+  includeMatches: true,
+  minMatchCharLength: 2
+});
+
+const qEl   = document.getElementById("q");
+const res   = document.getElementById("results");
+const empty = document.getElementById("empty");
+const stats = document.getElementById("statsbar");
+let timer   = null;
+
+function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;") }
+
+function hlText(text, matches, key) {
+  if (!matches) return esc(text);
+  const m = matches.find(m => m.key === key);
+  if (!m || !m.indices || !m.indices.length) return esc(text);
+  let out = "", last = 0;
+  m.indices.forEach(([s,e]) => {
+    out += esc(text.slice(last,s)) + "<mark>" + esc(text.slice(s,e+1)) + "</mark>";
+    last = e+1;
+  });
+  out += esc(text.slice(last));
+  return out;
+}
+
+function render() {
+  const q = qEl.value.trim();
+  let data, isSearch = false;
+
+  if (q.length >= 2) {
+    isSearch = true;
+    data = fuse.search(q).map(r => ({...r.item, _matches: r.matches}));
+  } else {
+    data = DB.map(d => ({...d, _matches: null}));
+  }
+
+  if (data.length === 0) {
+    res.innerHTML = "";
+    empty.style.display = "block";
+    stats.textContent = "";
+    return;
+  }
+  empty.style.display = "none";
+
+  // Agrupar per grup
+  const groups = new Map();
+  data.forEach(d => {
+    if (!groups.has(d.grupId)) {
+      groups.set(d.grupId, {id:d.grupId, nom:d.grupNom, cls:d.grupCls, icon:d.grupIcon, items:[]});
+    }
+    groups.get(d.grupId).items.push(d);
+  });
+
+  const total = data.length;
+  if (isSearch) {
+    stats.textContent = `${total} àmbit${total===1?"":"s"} en ${groups.size} grup${groups.size===1?"":"s"}`;
+  } else {
+    stats.textContent = `${total} àmbits · ${groups.size} grups`;
+  }
+
+  let html = "";
+  let idx = 0;
+  groups.forEach(grp => {
+    const openClass = isSearch ? " open" : "";
+    html += `<div class="acc-section${openClass} ${grp.cls}">
+  <div class="acc-header" onclick="toggle(this)">
+    <span class="acc-num">${grp.id}</span>
+    <span class="acc-title">${esc(grp.icon)} ${esc(grp.nom)}</span>
+    <span class="acc-count">${grp.items.length}</span>
+    <span class="acc-chevron">›</span>
+  </div>
+  <div class="acc-body"><div class="cards-grid">`;
+    grp.items.forEach(d => {
+      const nomHtml  = isSearch ? hlText(d.nom,  d._matches, "nom")  : esc(d.nom);
+      const descHtml = isSearch ? hlText(d.desc, d._matches, "desc") : esc(d.desc);
+      html += `<div class="amb-card">
+        <div class="amb-name">${nomHtml}</div>
+        <div class="amb-desc">${descHtml}</div>
+      </div>`;
+    });
+    html += `</div></div></div>`;
+    idx++;
+  });
+
+  res.innerHTML = html;
+}
+
+function toggle(header) {
+  header.parentElement.classList.toggle("open");
+}
+
+qEl.addEventListener("input", () => {
+  clearTimeout(timer);
+  timer = setTimeout(render, 80);
+});
+
+render();
+</script>
