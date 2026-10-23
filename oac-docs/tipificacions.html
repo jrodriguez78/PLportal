@@ -1,301 +1,310 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#1a3a6b">
 <title>Tipificacions · OAC</title>
-<meta name="claude:viewport-fit-sides" content="cover">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/7.0.0/fuse.min.js"></script>
-
 <style>
 :root {
-  --blue:#1a3a6b; --blue2:#2d5a9e; --blue3:#e8f0fb;
-  --gold:#e8a800; --gold2:#fff8e0;
-  --bg:#f0f2f5; --card:#ffffff; --border:#dde4f0;
-  --text:#1a1a2e; --muted:#6b7280;
-  --green:#15803d; --green2:#dcfce7;
-  --teal:#0f766e; --teal2:#ccfbf1;
-  --purple:#5b21b6; --purple2:#ede9fe;
-  --orange:#c2410c; --orange2:#ffedd5;
+  --blue:   #1a3a6b;
+  --blue2:  #2d5a9e;
+  --blue3:  #e8f0fb;
+  --gold:   #e8a800;
+  --bg:     #f0f2f5;
+  --card:   #ffffff;
+  --border: #dde4f0;
+  --text:   #1a1a2e;
+  --muted:  #6b7280;
+
+  /* badge colours by category */
+  --cp:    #1a3a6b; --cp2:  #e8f0fb;
+  --esp:   #6d28d9; --esp2: #ede9fe;
+  --adm:   #b45309; --adm2: #fef3c7;
+  --lsc:   #0f766e; --lsc2: #ccfbf1;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg:#0f172a; --card:#1e293b; --border:#2d3f5e;
-    --text:#e2e8f0; --muted:#94a3b8; --blue3:#1e3a5f;
-    --gold2:#2a2000; --green2:#052e16; --teal2:#042f2e; --purple2:#1e1040; --orange2:#2d1200;
+    --bg:     #0f172a;
+    --card:   #1e293b;
+    --border: #2d3f5e;
+    --text:   #e2e8f0;
+    --muted:  #94a3b8;
+    --blue3:  #1e3a5f;
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --bg:#0f172a; --card:#1e293b; --border:#2d3f5e;
-  --text:#e2e8f0; --muted:#94a3b8; --blue3:#1e3a5f;
-  --gold2:#2a2000; --green2:#052e16; --teal2:#042f2e; --purple2:#1e1040; --orange2:#2d1200;
+  --bg:     #0f172a;
+  --card:   #1e293b;
+  --border: #2d3f5e;
+  --text:   #e2e8f0;
+  --muted:  #94a3b8;
+  --blue3:  #1e3a5f;
   color-scheme: dark;
 }
 
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html,body{min-height:100%;font-family:'Inter',Arial,sans-serif;color:var(--text);background:var(--bg)}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;font-family:Arial,sans-serif;color:var(--text);}
+body{background:var(--bg);display:flex;flex-direction:column;}
 
-/* Header */
+/* ── Header ── */
 #header{
   background:var(--blue);
-  padding:14px max(16px,env(safe-area-inset-right,0px)) 12px max(16px,env(safe-area-inset-left,0px));
-  display:flex;align-items:center;gap:12px;
-  box-shadow:0 2px 10px rgba(0,0,0,.35);
-  position:sticky;top:0;z-index:100;
+  padding:12px max(14px,env(safe-area-inset-right,0px)) 10px max(14px,env(safe-area-inset-left,0px));
+  display:flex;align-items:center;gap:10px;
+  box-shadow:0 2px 8px rgba(0,0,0,.3);
+  flex-shrink:0;
 }
-.hicon{width:36px;height:36px;border-radius:8px;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
-.htxt{flex:1;min-width:0}
-.htxt h1{color:#fff;font-size:15px;font-weight:700;line-height:1.2}
-.htxt p{color:#a8c4e8;font-size:10px;margin-top:2px}
-#btn-back{flex-shrink:0;padding:7px 13px;border:none;border-radius:6px;background:rgba(255,255,255,.15);color:#fff;font-size:11px;font-weight:600;cursor:pointer;text-decoration:none;white-space:nowrap;transition:background .15s}
-#btn-back:hover{background:rgba(255,255,255,.25)}
+.hdr-icon{
+  width:34px;height:34px;border-radius:8px;
+  background:rgba(255,255,255,.15);
+  display:flex;align-items:center;justify-content:center;
+  font-size:17px;flex-shrink:0;
+}
+.hdr-text{flex:1;min-width:0;}
+.hdr-text h1{color:#fff;font-size:14px;font-weight:700;line-height:1.2;}
+.hdr-text p{color:#a8c4e8;font-size:10px;margin-top:1px;}
+#btn-back{
+  flex-shrink:0;padding:6px 12px;border:none;border-radius:6px;
+  background:rgba(255,255,255,.15);color:#fff;
+  font-size:11px;font-weight:600;cursor:pointer;
+  text-decoration:none;white-space:nowrap;
+}
+#btn-back:hover{background:rgba(255,255,255,.25);}
 
-/* Search + chips */
-#toolbar{
-  padding:12px max(16px,env(safe-area-inset-right,0px)) 8px max(16px,env(safe-area-inset-left,0px));
-  background:var(--card);
+/* ── Search ── */
+#search-wrap{
+  background:#fff;
+  padding:10px 14px 8px;
+  flex-shrink:0;
   border-bottom:1px solid var(--border);
-  position:sticky;top:60px;z-index:90;
 }
-.searchbox{position:relative;margin-bottom:8px}
-.searchbox svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--muted);pointer-events:none}
-#q{
-  width:100%;padding:9px 14px 9px 36px;
+.sbox{display:flex;gap:6px;align-items:center;}
+#search-input{
+  flex:1;padding:11px 14px;
+  font-size:16px;font-family:Arial,sans-serif;
   border:1.5px solid var(--border);border-radius:8px;
   background:var(--bg);color:var(--text);
-  font-size:14px;font-family:inherit;outline:none;
-  transition:border-color .15s;
+  outline:none;min-width:0;
 }
-#q:focus{border-color:var(--blue2)}
-#q::placeholder{color:var(--muted)}
-.chips{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
-.chips::-webkit-scrollbar{display:none}
+#search-input:focus{border-color:var(--blue2);box-shadow:0 0 0 3px rgba(45,90,158,.15);}
+#btn-clear{
+  display:none;padding:10px 12px;border:none;border-radius:8px;
+  background:#f1f5f9;color:var(--muted);font-size:14px;cursor:pointer;
+  flex-shrink:0;
+}
+#btn-clear:hover{background:#e2e8f0;}
+#btn-search{
+  padding:10px 16px;border:none;border-radius:8px;
+  background:var(--blue);color:#fff;
+  font-size:13px;font-weight:700;cursor:pointer;
+  flex-shrink:0;white-space:nowrap;
+}
+#btn-search:hover{background:var(--blue2);}
+
+/* ── Chip filter ── */
+#chip-wrap{
+  background:#fff;
+  padding:0 14px 10px;
+  flex-shrink:0;
+  border-bottom:1px solid var(--border);
+  display:flex;gap:6px;flex-wrap:wrap;
+}
 .chip{
-  flex-shrink:0;padding:4px 11px;border-radius:20px;
-  border:1.5px solid var(--border);background:var(--bg);
-  color:var(--muted);font-size:11px;font-weight:600;cursor:pointer;
-  transition:all .15s;white-space:nowrap;
+  padding:5px 11px;border:1.5px solid var(--border);border-radius:20px;
+  font-size:11px;font-weight:700;cursor:pointer;
+  background:var(--bg);color:var(--muted);
+  white-space:nowrap;transition:all .15s;
 }
-.chip.active{border-color:var(--blue2);background:var(--blue3);color:var(--blue2)}
-.chip-cp.active{border-color:var(--blue2);background:var(--blue3);color:var(--blue2)}
-.chip-esp.active{border-color:var(--purple);background:var(--purple2);color:var(--purple)}
-.chip-adm.active{border-color:var(--orange);background:var(--orange2);color:var(--orange)}
-.chip-lsc.active{border-color:var(--teal);background:var(--teal2);color:var(--teal)}
+.chip.active-all  {background:var(--blue);border-color:var(--blue);color:#fff;}
+.chip.active-cp   {background:var(--cp);border-color:var(--cp);color:#fff;}
+.chip.active-esp  {background:var(--esp);border-color:var(--esp);color:#fff;}
+.chip.active-adm  {background:var(--adm);border-color:var(--adm);color:#fff;}
+.chip.active-lsc  {background:var(--lsc);border-color:var(--lsc);color:#fff;}
 
-/* Main */
-main{padding:12px max(16px,env(safe-area-inset-right,0px)) 48px max(16px,env(safe-area-inset-left,0px))}
+/* ── Stats bar ── */
+#stats-bar{
+  padding:4px 14px;
+  font-size:11px;color:var(--muted);
+  background:var(--bg);
+  flex-shrink:0;min-height:24px;
+  display:flex;align-items:center;
+}
 
-/* Stats */
-#statsbar{font-size:11px;color:var(--muted);margin-bottom:8px;min-height:16px}
+/* ── Results scrollable ── */
+#view-results{
+  flex:1;overflow-y:auto;
+  padding:10px 14px 40px;
+  -webkit-overflow-scrolling:touch;
+}
 
-/* Accordion */
-.acc-section{margin-bottom:6px;border:1.5px solid var(--border);border-radius:10px;overflow:hidden;background:var(--card)}
+/* ── No results ── */
+#no-results{
+  display:none;
+  text-align:center;padding:40px 20px;
+  color:var(--muted);font-size:14px;
+}
+
+/* ── Accordion ── */
+.acc-section{
+  background:var(--card);
+  border:1.5px solid var(--border);
+  border-radius:10px;
+  margin-bottom:8px;
+  overflow:hidden;
+}
 .acc-header{
-  display:flex;align-items:center;gap:10px;
-  padding:10px 14px;cursor:pointer;
-  user-select:none;-webkit-user-select:none;
-  transition:background .12s;
+  display:flex;align-items:center;gap:8px;
+  padding:12px 14px;
+  cursor:pointer;
+  -webkit-user-select:none;user-select:none;
 }
-.acc-header:hover{background:var(--blue3)}
+.acc-header:hover{background:rgba(0,0,0,.03);}
 .acc-badge{
-  flex-shrink:0;font-size:9px;font-weight:700;letter-spacing:.05em;
-  padding:2px 7px;border-radius:10px;white-space:nowrap;
+  flex-shrink:0;
+  font-size:9px;font-weight:700;letter-spacing:.05em;
+  padding:3px 7px;border-radius:10px;
 }
-.badge-cp{background:var(--blue3);color:var(--blue2)}
-.badge-esp{background:var(--purple2);color:var(--purple)}
-.badge-adm{background:var(--orange2);color:var(--orange)}
-.badge-lsc{background:var(--teal2);color:var(--teal)}
-.acc-title{flex:1;font-size:12px;font-weight:600;color:var(--text);min-width:0;line-height:1.3}
-.acc-count{flex-shrink:0;font-size:11px;color:var(--muted);font-weight:500}
-.acc-chevron{flex-shrink:0;color:var(--muted);font-size:14px;transition:transform .18s;line-height:1}
-.acc-section.open .acc-chevron{transform:rotate(90deg)}
+.badge-cp  {background:var(--cp2);color:var(--cp);}
+.badge-esp {background:var(--esp2);color:var(--esp);}
+.badge-adm {background:var(--adm2);color:var(--adm);}
+.badge-lsc {background:var(--lsc2);color:var(--lsc);}
 
-/* Cards grid */
-.acc-body{display:none;padding:0 10px 10px}
-.acc-section.open .acc-body{display:block}
-.cards-grid{display:flex;flex-direction:column;gap:4px;padding-top:6px}
+.acc-title{flex:1;min-width:0;font-size:12px;font-weight:700;color:var(--text);line-height:1.3;}
+.acc-count{
+  flex-shrink:0;
+  font-size:10px;font-weight:700;color:var(--muted);
+  background:var(--bg);border:1px solid var(--border);
+  border-radius:10px;padding:2px 7px;
+}
+.acc-chevron{flex-shrink:0;color:var(--muted);font-size:16px;transition:transform .2s;}
+.acc-section.open .acc-chevron{transform:rotate(90deg);}
 
+.acc-body{display:none;padding:0 12px 12px;}
+.acc-section.open .acc-body{display:block;}
+
+/* ── Cards grid ── */
+.cards-grid{display:flex;flex-direction:column;gap:6px;}
 .tip-card{
-  display:flex;align-items:center;gap:10px;
-  padding:7px 10px;border-radius:7px;
-  border:1px solid var(--border);background:var(--bg);
-  transition:border-color .12s,background .12s;
-  cursor:default;
+  display:flex;align-items:flex-start;gap:10px;
+  padding:9px 10px;
+  border-radius:7px;
+  background:var(--bg);
+  border:1px solid var(--border);
 }
-.tip-card:hover{border-color:var(--blue2);background:var(--blue3)}
 .tip-art{
-  flex-shrink:0;min-width:48px;text-align:center;
+  flex-shrink:0;
   font-size:10px;font-weight:700;letter-spacing:.03em;
-  padding:3px 7px;border-radius:6px;
+  padding:3px 8px;border-radius:8px;
+  white-space:nowrap;
+  margin-top:1px;
 }
-.art-cp{background:var(--blue3);color:var(--blue2)}
-.art-esp{background:var(--purple2);color:var(--purple)}
-.art-adm{background:var(--orange2);color:var(--orange)}
-.art-lsc{background:var(--teal2);color:var(--teal)}
-.art-empty{background:transparent;color:var(--muted);font-style:italic}
-.tip-desc{flex:1;font-size:12px;color:var(--text);line-height:1.35;min-width:0}
-mark{background:rgba(232,168,0,.35);color:inherit;border-radius:2px;padding:0 1px}
-
-/* Empty */
-#empty{display:none;text-align:center;padding:40px 16px;color:var(--muted);font-size:13px}
-
-footer{text-align:center;padding:0 16px 24px;font-size:10px;color:var(--muted);margin-top:8px}
+.art-cp   {background:var(--cp2);color:var(--cp);}
+.art-esp  {background:var(--esp2);color:var(--esp);}
+.art-adm  {background:var(--adm2);color:var(--adm);}
+.art-lsc  {background:var(--lsc2);color:var(--lsc);}
+.art-empty{background:#f1f5f9;color:var(--muted);}
+.tip-desc{font-size:13px;color:var(--text);line-height:1.4;flex:1;min-width:0;}
+mark{background:#fff176;border-radius:2px;padding:0 1px;}
 </style>
+</head>
+<body>
 
 <div id="header">
-  <div class="hicon">⚖️</div>
-  <div class="htxt">
+  <div class="hdr-icon">⚖️</div>
+  <div class="hdr-text">
     <h1>Tipificacions</h1>
-    <p>Taula de fets · Atestats i Denúncies · Actualització 15/01/2025</p>
+    <p>CP · Penal especial · LSC · Administratiu</p>
   </div>
-  <a id="btn-back" href="index.html">← OAC</a>
+  <a id="btn-back" href="index.html">← Inici</a>
 </div>
 
-<div id="toolbar">
-  <div class="searchbox">
-    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-    <input id="q" type="search" placeholder="Cerca per delicte, article, normativa…" autocomplete="off" autocorrect="off" spellcheck="false">
-  </div>
-  <div class="chips">
-    <button class="chip active" onclick="setCat(this,'ALL')">Tots</button>
-    <button class="chip chip-cp" onclick="setCat(this,'CP')">📘 Codi Penal</button>
-    <button class="chip chip-esp" onclick="setCat(this,'ESP')">⚖️ Penal Especial</button>
-    <button class="chip chip-lsc" onclick="setCat(this,'LSC')">🛡️ LSC 4/15</button>
-    <button class="chip chip-adm" onclick="setCat(this,'ADM')">📋 Administratiu</button>
+<div id="search-wrap">
+  <div class="sbox">
+    <input type="text" id="search-input" placeholder="Cerca tipificació…"
+           autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
+           oninput="onInput()" onkeydown="if(event.key==='Enter')doSearch()">
+    <button id="btn-clear" onclick="clearSearch()">✕</button>
+    <button id="btn-search" onclick="doSearch()">Cerca</button>
   </div>
 </div>
 
-<main>
-  <div id="statsbar"></div>
-  <div id="results"></div>
-  <div id="empty">Cap tipificació trobada per aquesta cerca.</div>
-</main>
+<div id="chip-wrap">
+  <span class="chip active-all" data-cat="ALL" onclick="setCat(this,'ALL')">Tots</span>
+  <span class="chip" data-cat="CP"  onclick="setCat(this,'CP')">Codi Penal</span>
+  <span class="chip" data-cat="ESP" onclick="setCat(this,'ESP')">Penal Especial</span>
+  <span class="chip" data-cat="LSC" onclick="setCat(this,'LSC')">LSC 4/15</span>
+  <span class="chip" data-cat="ADM" onclick="setCat(this,'ADM')">Administratiu</span>
+</div>
 
-<footer>Font: Aplicació Atestats i Denúncies · PG-ME · 15/01/2025 · Ús intern PL-SCG</footer>
+<div id="stats-bar"><span id="stats-txt"></span></div>
+
+<div id="view-results">
+  <div id="no-results">Cap tipificació trobada per aquesta cerca.</div>
+  <div id="cards-list"></div>
+</div>
 
 <script>
 const DB = [
-  {cat:"CP",titol:"TÍTOL I — De l'Homicidi i les seves formes",desc:"Homicidi dolós",art:"138"},
-  {cat:"CP",titol:"TÍTOL I — De l'Homicidi i les seves formes",desc:"Assassinat",art:"139-141"},
-  {cat:"CP",titol:"TÍTOL I — De l'Homicidi i les seves formes",desc:"Homicidi per imprudència greu",art:"142.1"},
-  {cat:"CP",titol:"TÍTOL I — De l'Homicidi i les seves formes",desc:"Homicidi per imprudència menys greu",art:"142.2"},
-  {cat:"CP",titol:"TÍTOL I — De l'Homicidi i les seves formes",desc:"Inducció i cooperació al suïcidi",art:"143"},
-  {cat:"CP",titol:"TÍTOL I — De l'Homicidi i les seves formes",desc:"Eutanàsia activa",art:"143.4"},
-  {cat:"CP",titol:"TÍTOL I — De l'Homicidi i les seves formes",desc:"Incitar suïcidi de menor/discapacitat per TIC",art:"143 bis"},
-  {cat:"CP",titol:"TÍTOL II — De l'Avortament",desc:"Avortament",art:"144-146"},
-  {cat:"CP",titol:"TÍTOL III — De les Lesions",desc:"Lesions",art:"147.1, 148, 151"},
-  {cat:"CP",titol:"TÍTOL III — De les Lesions",desc:"Lesions (lleu)",art:"147.2"},
-  {cat:"CP",titol:"TÍTOL III — De les Lesions",desc:"Maltractament d'obra sense lesió (lleu)",art:"147.3"},
-  {cat:"CP",titol:"TÍTOL III — De les Lesions",desc:"Lesions (pèrdua membre/òrgan no principal)",art:"150"},
-  {cat:"CP",titol:"TÍTOL III — De les Lesions",desc:"Lesions (pèrdua membre/òrgan principal)",art:"149.1"},
-  {cat:"CP",titol:"TÍTOL III — De les Lesions",desc:"Lesions (mutilació genital)",art:"149.2"},
-  {cat:"CP",titol:"TÍTOL III — De les Lesions",desc:"Lesions per imprudència greu",art:"152.1"},
-  {cat:"CP",titol:"TÍTOL III — De les Lesions",desc:"Lesions per imprudència menys greu",art:"152.2"},
-  {cat:"CP",titol:"TÍTOL III — De les Lesions",desc:"Maltractaments en l'àmbit de la llar",art:"153"},
-  {cat:"CP",titol:"TÍTOL III — De les Lesions",desc:"Lesions (baralla tumultuària)",art:"154"},
-  {cat:"CP",titol:"TÍTOL III — De les Lesions",desc:"Lesions amb consentiment",art:"155-156"},
-  {cat:"CP",titol:"TÍTOL III — De les Lesions",desc:"Tràfic il·legal d'òrgans",art:"156 bis"},
-  {cat:"CP",titol:"TÍTOL III — De les Lesions",desc:"Trasplant il·legal d'òrgans",art:"156 bis"},
-  {cat:"CP",titol:"TÍTOL III — De les Lesions",desc:"Incitar autolesió de menor/discapacitat per TIC",art:"156 ter"},
-  {cat:"CP",titol:"TÍTOL IV — De les Lesions al Fetus",desc:"Lesions al fetus",art:"157-158"},
-  {cat:"CP",titol:"TÍTOL V — Relatius a la Manipulació Genètica",desc:"Manipulació genètica",art:"159-162"},
-  {cat:"CP",titol:"TÍTOL VI — Contra la Llibertat",desc:"Detenció il·legal",art:"163.1-163.3, 165-167"},
-  {cat:"CP",titol:"TÍTOL VI — Contra la Llibertat",desc:"Detenció il·legal (lleu)",art:"163.4"},
-  {cat:"CP",titol:"TÍTOL VI — Contra la Llibertat",desc:"Segrest",art:"164-167"},
-  {cat:"CP",titol:"TÍTOL VI — Contra la Llibertat",desc:"Amenaces",art:"169-171"},
-  {cat:"CP",titol:"TÍTOL VI — Contra la Llibertat",desc:"Amenaces (lleu)",art:"171.7"},
-  {cat:"CP",titol:"TÍTOL VI — Contra la Llibertat",desc:"Coaccions",art:"172.1-172.2"},
-  {cat:"CP",titol:"TÍTOL VI — Contra la Llibertat",desc:"Coaccions (lleu)",art:"172.3"},
-  {cat:"CP",titol:"TÍTOL VI — Contra la Llibertat",desc:"Matrimonis forçats",art:"172 bis"},
-  {cat:"CP",titol:"TÍTOL VI — Contra la Llibertat",desc:"Assetjament (stalking)",art:"172 ter"},
-  {cat:"CP",titol:"TÍTOL VI — Contra la Llibertat",desc:"Assetjament per obstaculitzar l'avortament",art:"172 quàter"},
-  {cat:"CP",titol:"TÍTOL VI — Contra la Llibertat",desc:"Assetjament utilitzant imatges per difusió (XS)",art:"172 ter.5"},
-  {cat:"CP",titol:"TÍTOL VII — Tortures i contra la Integritat Moral",desc:"Hostilitat i humiliació (laboral/immobiliària)",art:"173.1"},
-  {cat:"CP",titol:"TÍTOL VII — Tortures i contra la Integritat Moral",desc:"Tortures",art:"174-176"},
-  {cat:"CP",titol:"TÍTOL VII — Tortures i contra la Integritat Moral",desc:"Tracte degradant / vexatori",art:"173.1"},
-  {cat:"CP",titol:"TÍTOL VII — Tortures i contra la Integritat Moral",desc:"Vexacions i/o injúries (lleu)",art:"173.4"},
-  {cat:"CP",titol:"TÍTOL VII — Tortures i contra la Integritat Moral",desc:"Violència física/psíquica habitual en l'àmbit familiar",art:"173.2"},
-  {cat:"CP",titol:"TÍTOL VII — Tortures i contra la Integritat Moral",desc:"Propostes sexuals humiliants/intimidatòries (lleu)",art:"173.4"},
-  {cat:"CP",titol:"TÍTOL VII — Tortures i contra la Integritat Moral",desc:"Ocultació informació sobre cadàver",art:"173.1"},
-  {cat:"CP",titol:"TÍTOL VII BIS — Tràfic d'Éssers Humans",desc:"TEH amb finalitat de matrimonis forçats",art:"177 bis"},
-  {cat:"CP",titol:"TÍTOL VII BIS — Tràfic d'Éssers Humans",desc:"TEH amb finalitat de tràfic d'òrgans",art:"177 bis"},
-  {cat:"CP",titol:"TÍTOL VII BIS — Tràfic d'Éssers Humans",desc:"TEH amb finalitat d'explotació laboral",art:"177 bis"},
-  {cat:"CP",titol:"TÍTOL VII BIS — Tràfic d'Éssers Humans",desc:"TEH amb finalitat d'explotació sexual",art:"177 bis"},
-  {cat:"CP",titol:"TÍTOL VII BIS — Tràfic d'Éssers Humans",desc:"TEH amb finalitat d'activitats delictives",art:"177 bis"},
-  {cat:"CP",titol:"TÍTOL VIII — Contra la Llibertat Sexual",desc:"Agressió sexual sense penetració (amb violència/intimidació)",art:"178.2"},
-  {cat:"CP",titol:"TÍTOL VIII — Contra la Llibertat Sexual",desc:"Agressió sexual amb penetració (amb violència/intimidació)",art:"179"},
-  {cat:"CP",titol:"TÍTOL VIII — Contra la Llibertat Sexual",desc:"Agressió sexual sense penetració (sense violència)",art:"178"},
-  {cat:"CP",titol:"TÍTOL VIII — Contra la Llibertat Sexual",desc:"Agressió sexual amb penetració (sense violència)",art:"179"},
-  {cat:"CP",titol:"TÍTOL VIII — Contra la Llibertat Sexual",desc:"Agressió sexual menor 16a sense penetració (sense violència)",art:"181.1"},
-  {cat:"CP",titol:"TÍTOL VIII — Contra la Llibertat Sexual",desc:"Agressió sexual menor 16a amb penetració (sense violència)",art:"181.4"},
-  {cat:"CP",titol:"TÍTOL VIII — Contra la Llibertat Sexual",desc:"Agressió sexual menor 16a sense penetració (amb violència)",art:"181.2"},
-  {cat:"CP",titol:"TÍTOL VIII — Contra la Llibertat Sexual",desc:"Agressió sexual menor 16a amb penetració (amb violència)",art:"181.4"},
-  {cat:"CP",titol:"TÍTOL VIII — Contra la Llibertat Sexual",desc:"Assetjament sexual",art:"184"},
-  {cat:"CP",titol:"TÍTOL VIII — Contra la Llibertat Sexual",desc:"Venda/difusió/exhibició material pornogràfic a menors",art:"186"},
-  {cat:"CP",titol:"TÍTOL VIII — Contra la Llibertat Sexual",desc:"Actes contacte amb menors de 16 per delicte sexual",art:"183 ter 1"},
-  {cat:"CP",titol:"TÍTOL VIII — Contra la Llibertat Sexual",desc:"Actes contacte amb menors de 16 per sol·licitar pornografia",art:"183 ter 2"},
-  {cat:"CP",titol:"TÍTOL VIII — Contra la Llibertat Sexual",desc:"Exhibicionisme",art:"185"},
-  {cat:"CP",titol:"TÍTOL VIII — Contra la Llibertat Sexual",desc:"Prostitució i proxenetisme de majors",art:"187"},
-  {cat:"CP",titol:"TÍTOL VIII — Contra la Llibertat Sexual",desc:"Incitar prostitució/proxenetisme menor o discapacitat",art:"188.1"},
-  {cat:"CP",titol:"TÍTOL VIII — Contra la Llibertat Sexual",desc:"Incitar prostitució/proxenetisme amb violència/intimidació",art:"188.2"},
-  {cat:"CP",titol:"TÍTOL VIII — Contra la Llibertat Sexual",desc:"Sol·licitar relació sexual amb menor a canvi de remuneració",art:"188.4"},
-  {cat:"CP",titol:"TÍTOL VIII — Contra la Llibertat Sexual",desc:"Pornografia de menors/discapacitats",art:"189"},
-  {cat:"CP",titol:"TÍTOL VIII — Contra la Llibertat Sexual",desc:"Incitar delictes sexuals contra menors per TIC",art:"189 bis"},
-  {cat:"CP",titol:"TÍTOL VIII — Contra la Llibertat Sexual",desc:"Fer presenciar actes sexuals a menors de 16 anys",art:"182"},
-  {cat:"CP",titol:"TÍTOL IX — Omissió del Deure de Socors",desc:"Omissió del deure de socors",art:"195.3, 196"},
-  {cat:"CP",titol:"TÍTOL IX — Omissió del Deure de Socors",desc:"Omissió del deure de socors (lleu)",art:"195.1-195.2"},
-  {cat:"CP",titol:"TÍTOL X — Intimitat, Pròpia Imatge i Inviolabilitat del Domicili",desc:"Descobriment i revelació de secrets",art:"197-201"},
-  {cat:"CP",titol:"TÍTOL X — Intimitat, Pròpia Imatge i Inviolabilitat del Domicili",desc:"Descobriment i revelació de secrets (lleu)",art:"197.7"},
-  {cat:"CP",titol:"TÍTOL X — Intimitat, Pròpia Imatge i Inviolabilitat del Domicili",desc:"Violació de domicili amb voluntat d'ocupació",art:"202"},
-  {cat:"CP",titol:"TÍTOL X — Intimitat, Pròpia Imatge i Inviolabilitat del Domicili",desc:"Violació de domicili sense voluntat d'ocupació",art:"202, 204"},
-  {cat:"CP",titol:"TÍTOL X — Intimitat, Pròpia Imatge i Inviolabilitat del Domicili",desc:"Intrusió en sistemes informàtics",art:"197 bis"},
-  {cat:"CP",titol:"TÍTOL X — Intimitat, Pròpia Imatge i Inviolabilitat del Domicili",desc:"Produir/adquirir contrasenyes per facilitar delictes",art:"197 ter"},
-  {cat:"CP",titol:"TÍTOL X — Intimitat, Pròpia Imatge i Inviolabilitat del Domicili",desc:"Mantenir-se en local fora hora obertura (lleu)",art:"203.2"},
-  {cat:"CP",titol:"TÍTOL X — Intimitat, Pròpia Imatge i Inviolabilitat del Domicili",desc:"Violació de domicili jurídic",art:"203.1, 204"},
-  {cat:"CP",titol:"TÍTOL XI — Contra l'Honor",desc:"Calúmnia",art:"205-206"},
-  {cat:"CP",titol:"TÍTOL XI — Contra l'Honor",desc:"Injúria",art:"208-209"},
-  {cat:"CP",titol:"TÍTOL XI — Contra l'Honor",desc:"Injúria (lleu)",art:"208-209"},
-  {cat:"CP",titol:"TÍTOL XII — Contra les Relacions Familiars",desc:"Suposició de part / substitució de nen",art:"220"},
-  {cat:"CP",titol:"TÍTOL XII — Contra les Relacions Familiars",desc:"Tràfic de nens",art:"221"},
-  {cat:"CP",titol:"TÍTOL XII — Contra les Relacions Familiars",desc:"Inducció de menors a l'abandonament de domicili",art:"224"},
-  {cat:"CP",titol:"TÍTOL XII — Contra les Relacions Familiars",desc:"Abandonament de família",art:"226"},
-  {cat:"CP",titol:"TÍTOL XII — Contra les Relacions Familiars",desc:"Impagament de prestacions",art:"227"},
-  {cat:"CP",titol:"TÍTOL XII — Contra les Relacions Familiars",desc:"Abandonament de menor d'edat o discapacitat",art:"229"},
-  {cat:"CP",titol:"TÍTOL XII — Contra les Relacions Familiars",desc:"Abandonament temporal de menor",art:"230"},
-  {cat:"CP",titol:"TÍTOL XII — Contra les Relacions Familiars",desc:"Entrega de menor a tercer sense autorització",art:"231"},
-  {cat:"CP",titol:"TÍTOL XII — Contra les Relacions Familiars",desc:"Mendicitat amb menors",art:"232"},
-  {cat:"CP",titol:"TÍTOL XII — Contra les Relacions Familiars",desc:"Matrimonis il·legals",art:"217-219"},
-  {cat:"CP",titol:"TÍTOL XII — Contra les Relacions Familiars",desc:"Trencament dels deures de custòdia",art:"223, 225"},
-  {cat:"CP",titol:"TÍTOL XII — Contra les Relacions Familiars",desc:"Sostracció de menor",art:"225 bis"},
-  {cat:"CP",titol:"TÍTOL XIII — Contra el Patrimoni i l'Ordre Socio-Econòmic",desc:"Furt",art:"234.1, 235"},
-  {cat:"CP",titol:"TÍTOL XIII — Contra el Patrimoni i l'Ordre Socio-Econòmic",desc:"Furt (lleu)",art:"234.2, 236"},
-  {cat:"CP",titol:"TÍTOL XIII — Contra el Patrimoni i l'Ordre Socio-Econòmic",desc:"Furt interior vehicle",art:""},
-  {cat:"CP",titol:"TÍTOL XIII — Contra el Patrimoni i l'Ordre Socio-Econòmic",desc:"Furt interior vehicle (lleu)",art:""},
-  {cat:"CP",titol:"TÍTOL XIII — Contra el Patrimoni i l'Ordre Socio-Econòmic",desc:"Robatori amb força",art:"237-241"},
-  {cat:"CP",titol:"TÍTOL XIII — Contra el Patrimoni i l'Ordre Socio-Econòmic",desc:"Robatori amb força interior vehicle",art:""},
-  {cat:"CP",titol:"TÍTOL XIII — Contra el Patrimoni i l'Ordre Socio-Econòmic",desc:"Robatori amb violència i/o intimidació",art:"242.1"},
+  // CP
+  {cat:"CP",titol:"TÍTOL I — Contra la Vida i la Integritat Física",desc:"Homicidi i lesions imprudents (accident trànsit)",art:"142, 152"},
+  {cat:"CP",titol:"TÍTOL I — Contra la Vida i la Integritat Física",desc:"Homicidi dolós",art:"138-139"},
+  {cat:"CP",titol:"TÍTOL I — Contra la Vida i la Integritat Física",desc:"Lesions doloses",art:"147-150"},
+  {cat:"CP",titol:"TÍTOL I — Contra la Vida i la Integritat Física",desc:"Lesions lleus",art:"147.2"},
+  {cat:"CP",titol:"TÍTOL I — Contra la Vida i la Integritat Física",desc:"Maltractament de fet (lleu)",art:"147.3"},
+  {cat:"CP",titol:"TÍTOL I — Contra la Vida i la Integritat Física",desc:"Participació en rinya",art:"154"},
+  {cat:"CP",titol:"TÍTOL II — Avortament",desc:"Avortament sense consentiment",art:"144"},
+  {cat:"CP",titol:"TÍTOL III — Lesions al Fetus",desc:"Lesions al fetus",art:"157-158"},
+  {cat:"CP",titol:"TÍTOL IV — Contra la Llibertat",desc:"Detencions il·legals",art:"163-168"},
+  {cat:"CP",titol:"TÍTOL IV — Contra la Llibertat",desc:"Amenaces",art:"169-171"},
+  {cat:"CP",titol:"TÍTOL IV — Contra la Llibertat",desc:"Amenaces lleus",art:"171.7"},
+  {cat:"CP",titol:"TÍTOL IV — Contra la Llibertat",desc:"Coaccions",art:"172"},
+  {cat:"CP",titol:"TÍTOL IV — Contra la Llibertat",desc:"Coaccions lleus",art:"172.3"},
+  {cat:"CP",titol:"TÍTOL IV — Contra la Llibertat",desc:"Assetjament",art:"172 ter"},
+  {cat:"CP",titol:"TÍTOL V — Contra la Llibertat i Indemnitat Sexuals",desc:"Agressió sexual",art:"178-180"},
+  {cat:"CP",titol:"TÍTOL V — Contra la Llibertat i Indemnitat Sexuals",desc:"Agressió sexual a menor de 16 anys",art:"181"},
+  {cat:"CP",titol:"TÍTOL V — Contra la Llibertat i Indemnitat Sexuals",desc:"Agressió sexual a menor de 16 (per internet/engany)",art:"183 ter"},
+  {cat:"CP",titol:"TÍTOL V — Contra la Llibertat i Indemnitat Sexuals",desc:"Exhibicionisme i provocació sexual",art:"185-186"},
+  {cat:"CP",titol:"TÍTOL V — Contra la Llibertat i Indemnitat Sexuals",desc:"Pornografia de menors",art:"189"},
+  {cat:"CP",titol:"TÍTOL VI — Contra la Intimitat, el Dret a la Pròpia Imatge i Inviolabilitat del Domicili",desc:"Descobriment i revelació de secrets",art:"197-201"},
+  {cat:"CP",titol:"TÍTOL VI — Contra la Intimitat, el Dret a la Pròpia Imatge i Inviolabilitat del Domicili",desc:"Allanament de morada",art:"202-204"},
+  {cat:"CP",titol:"TÍTOL VII — Contra l'Honor",desc:"Calúmnia",art:"205-207"},
+  {cat:"CP",titol:"TÍTOL VII — Contra l'Honor",desc:"Injúries",art:"208-210"},
+  {cat:"CP",titol:"TÍTOL VII — Contra l'Honor",desc:"Injúries lleus",art:"208 par.3r"},
+  {cat:"CP",titol:"TÍTOL VII bis — Tràfic d'Éssers Humans",desc:"Tràfic d'éssers humans",art:"177 bis"},
+  {cat:"CP",titol:"TÍTOL VIII — Contra les Relacions Familiars",desc:"Matrimoni forçat",art:"172 bis"},
+  {cat:"CP",titol:"TÍTOL VIII — Contra les Relacions Familiars",desc:"Sustracció de menors",art:"225 bis"},
+  {cat:"CP",titol:"TÍTOL VIII — Contra les Relacions Familiars",desc:"Incompliment deures d'assistència familiar",art:"226-228"},
+  {cat:"CP",titol:"TÍTOL IX — Contra l'Honor, el Patrimoni i Violència Domèstica i de Gènere",desc:"Violència domèstica i de gènere (lesions)",art:"153"},
+  {cat:"CP",titol:"TÍTOL IX — Contra l'Honor, el Patrimoni i Violència Domèstica i de Gènere",desc:"Violència domèstica i de gènere (amenaces)",art:"171.4-5"},
+  {cat:"CP",titol:"TÍTOL IX — Contra l'Honor, el Patrimoni i Violència Domèstica i de Gènere",desc:"Violència domèstica i de gènere (coaccions)",art:"172.2"},
+  {cat:"CP",titol:"TÍTOL IX — Contra l'Honor, el Patrimoni i Violència Domèstica i de Gènere",desc:"Violència domèstica i de gènere (maltractaments habituals)",art:"173.2"},
+  {cat:"CP",titol:"TÍTOL X — Contra la Intimitat i Integritat Moral",desc:"Delictes contra la integritat moral",art:"173-177"},
+  {cat:"CP",titol:"TÍTOL XI — Delictes Informàtics",desc:"Danys informàtics",art:"264-264 bis"},
+  {cat:"CP",titol:"TÍTOL XI — Delictes Informàtics",desc:"Accés il·lícit a sistemes informàtics",art:"197 bis"},
+  {cat:"CP",titol:"TÍTOL XII — Contra les Relacions Laborals",desc:"Delictes contra els drets laborals",art:"311-318"},
+  {cat:"CP",titol:"TÍTOL XIII — Contra el Patrimoni i l'Ordre Socio-Econòmic",desc:"Furt",art:"234"},
+  {cat:"CP",titol:"TÍTOL XIII — Contra el Patrimoni i l'Ordre Socio-Econòmic",desc:"Furt de telecomunicació",art:"255"},
+  {cat:"CP",titol:"TÍTOL XIII — Contra el Patrimoni i l'Ordre Socio-Econòmic",desc:"Furt d'ús vehicle",art:"244"},
+  {cat:"CP",titol:"TÍTOL XIII — Contra el Patrimoni i l'Ordre Socio-Econòmic",desc:"Furt ús de vehicle (lleu)",art:"244.3"},
+  {cat:"CP",titol:"TÍTOL XIII — Contra el Patrimoni i l'Ordre Socio-Econòmic",desc:"Robatori amb violència/intimidació",art:"237, 242"},
+  {cat:"CP",titol:"TÍTOL XIII — Contra el Patrimoni i l'Ordre Socio-Econòmic",desc:"Robatori amb força",art:"237, 241"},
+  {cat:"CP",titol:"TÍTOL XIII — Contra el Patrimoni i l'Ordre Socio-Econòmic",desc:"Estafa",art:"248-249"},
+  {cat:"CP",titol:"TÍTOL XIII — Contra el Patrimoni i l'Ordre Socio-Econòmic",desc:"Estafa (lleu)",art:"249 par.2n"},
+  {cat:"CP",titol:"TÍTOL XIII — Contra el Patrimoni i l'Ordre Socio-Econòmic",desc:"Estafa informàtica",art:"248.2"},
+  {cat:"CP",titol:"TÍTOL XIII — Contra el Patrimoni i l'Ordre Socio-Econòmic",desc:"Apropiació indeguda",art:"253-254"},
+  {cat:"CP",titol:"TÍTOL XIII — Contra el Patrimoni i l'Ordre Socio-Econòmic",desc:"Apropiació indeguda (lleu)",art:"253.2"},
+  {cat:"CP",titol:"TÍTOL XIII — Contra el Patrimoni i l'Ordre Socio-Econòmic",desc:"Defraudació d'energia elèctrica",art:"255"},
   {cat:"CP",titol:"TÍTOL XIII — Contra el Patrimoni i l'Ordre Socio-Econòmic",desc:"Extorsió",art:"243"},
-  {cat:"CP",titol:"TÍTOL XIII — Contra el Patrimoni i l'Ordre Socio-Econòmic",desc:"Robatori o furt d'ús de vehicle",art:"244.1-244.2"},
-  {cat:"CP",titol:"TÍTOL XIII — Contra el Patrimoni i l'Ordre Socio-Econòmic",desc:"Robatori o furt d'ús de vehicle amb intimidació",art:"244.4"},
-  {cat:"CP",titol:"TÍTOL XIII — Contra el Patrimoni i l'Ordre Socio-Econòmic",desc:"Usurpació",art:"245.1"},
-  {cat:"CP",titol:"TÍTOL XIII — Contra el Patrimoni i l'Ordre Socio-Econòmic",desc:"Usurpació (lleu)",art:"246-247"},
-  {cat:"CP",titol:"TÍTOL XIII — Contra el Patrimoni i l'Ordre Socio-Econòmic",desc:"Ocupació immobles (lleu)",art:"245.2"},
-  {cat:"CP",titol:"TÍTOL XIII — Contra el Patrimoni i l'Ordre Socio-Econòmic",desc:"Estafes informàtiques",art:"249 1a) i 2a)"},
-  {cat:"CP",titol:"TÍTOL XIII — Contra el Patrimoni i l'Ordre Socio-Econòmic",desc:"Estafes bancàries / targetes",art:"249 1b) i 2b)"},
-  {cat:"CP",titol:"TÍTOL XIII — Contra el Patrimoni i l'Ordre Socio-Econòmic",desc:"Altres estafes",art:"248-251 bis"},
-  {cat:"CP",titol:"TÍTOL XIII — Contra el Patrimoni i l'Ordre Socio-Econòmic",desc:"Altres estafes (lleu)",art:"248 par.3r"},
-  {cat:"CP",titol:"TÍTOL XIII — Contra el Patrimoni i l'Ordre Socio-Econòmic",desc:"Administració desleial",art:"252"},
-  {cat:"CP",titol:"TÍTOL XIII — Contra el Patrimoni i l'Ordre Socio-Econòmic",desc:"Administració desleial (lleu)",art:"252.2"},
-  {cat:"CP",titol:"TÍTOL XIII — Contra el Patrimoni i l'Ordre Socio-Econòmic",desc:"Apropiació indeguda",art:"253.1"},
-  {cat:"CP",titol:"TÍTOL XIII — Contra el Patrimoni i l'Ordre Socio-Econòmic",desc:"Apropiació indeguda (lleu)",art:"253.2, 254"},
-  {cat:"CP",titol:"TÍTOL XIII — Contra el Patrimoni i l'Ordre Socio-Econòmic",desc:"Apropiació indeguda de vehicle",art:"253.1"},
-  {cat:"CP",titol:"TÍTOL XIII — Contra el Patrimoni i l'Ordre Socio-Econòmic",desc:"Apropiació indeguda de vehicle (lleu)",art:"253.2"},
-  {cat:"CP",titol:"TÍTOL XIII — Contra el Patrimoni i l'Ordre Socio-Econòmic",desc:"Defraudacions de fluid elèctric i anàlogues (lleu)",art:"255-256"},
-  {cat:"CP",titol:"TÍTOL XIII — Contra el Patrimoni i l'Ordre Socio-Econòmic",desc:"Frustració de l'execució",art:"257-258 ter"},
-  {cat:"CP",titol:"TÍTOL XIII — Contra el Patrimoni i l'Ordre Socio-Econòmic",desc:"Insolvències punibles",art:"259-261 bis"},
-  {cat:"CP",titol:"TÍTOL XIII — Contra el Patrimoni i l'Ordre Socio-Econòmic",desc:"Danys",art:"263, 265-266"},
-  {cat:"CP",titol:"TÍTOL XIII — Contra el Patrimoni i l'Ordre Socio-Econòmic",desc:"Danys (lleu)",art:"263.1 par.2n"},
-  {cat:"CP",titol:"TÍTOL XIII — Contra el Patrimoni i l'Ordre Socio-Econòmic",desc:"Danys aparells informàtics i documents electrònics",art:"264 bis-quater"},
-  {cat:"CP",titol:"TÍTOL XIII — Contra el Patrimoni i l'Ordre Socio-Econòmic",desc:"Danys imprudents (lleu)",art:"267"},
-  {cat:"CP",titol:"TÍTOL XIII — Contra el Patrimoni i l'Ordre Socio-Econòmic",desc:"Contra la propietat industrial",art:"273-277"},
-  {cat:"CP",titol:"TÍTOL XIII — Contra el Patrimoni i l'Ordre Socio-Econòmic",desc:"Contra la propietat intel·lectual",art:"270-272"},
+  {cat:"CP",titol:"TÍTOL XIII — Contra el Patrimoni i l'Ordre Socio-Econòmic",desc:"Usurpació d'immobles",art:"245"},
+  {cat:"CP",titol:"TÍTOL XIII — Contra el Patrimoni i l'Ordre Socio-Econòmic",desc:"Danys",art:"263-266"},
+  {cat:"CP",titol:"TÍTOL XIII — Contra el Patrimoni i l'Ordre Socio-Econòmic",desc:"Danys (lleus)",art:"263.1 par.2n"},
+  {cat:"CP",titol:"TÍTOL XIII — Contra el Patrimoni i l'Ordre Socio-Econòmic",desc:"Delictes societaris",art:"290-297"},
+  {cat:"CP",titol:"TÍTOL XIII — Contra el Patrimoni i l'Ordre Socio-Econòmic",desc:"Insolvències punibles",art:"257-261 bis"},
+  {cat:"CP",titol:"TÍTOL XIII — Contra el Patrimoni i l'Ordre Socio-Econòmic",desc:"Propietat intel·lectual",art:"270-272"},
+  {cat:"CP",titol:"TÍTOL XIII — Contra el Patrimoni i l'Ordre Socio-Econòmic",desc:"Propietat industrial",art:"273-277"},
   {cat:"CP",titol:"TÍTOL XIII — Contra el Patrimoni i l'Ordre Socio-Econòmic",desc:"Mercat i consumidors",art:"278-285 quater"},
   {cat:"CP",titol:"TÍTOL XIII — Contra el Patrimoni i l'Ordre Socio-Econòmic",desc:"Corrupció sector privat",art:"286 bis-ter"},
   {cat:"CP",titol:"TÍTOL XIII — Contra el Patrimoni i l'Ordre Socio-Econòmic",desc:"Corrupció esportiva",art:"286 bis 4"},
@@ -442,52 +451,6 @@ const DB = [
   {cat:"ADM",titol:"Llei 11/14 · 19/20 · 4/23 — Normativa d'Odi i Discriminació",desc:"Assetjament o comportaments agressius per motius discriminatoris",art:""},
   {cat:"ADM",titol:"Llei 11/14 · 19/20 · 4/23 — Normativa d'Odi i Discriminació",desc:"Malmetre béns per causes de discriminació",art:""},
   {cat:"ADM",titol:"Llei 11/14 · 19/20 · 4/23 — Normativa d'Odi i Discriminació",desc:"Impedir accés a béns o serveis per motius discriminatoris",art:""},
-  {cat:"LSC",titol:"Llei 4/2015 — Protecció de la Seguretat Ciutadana (LSC)",desc:"Intervenció temporal armes / efectes",art:"18.2"},
-  {cat:"LSC",titol:"Llei 4/2015 — Protecció de la Seguretat Ciutadana (LSC)",desc:"Portar / utilització d'armes prohibides",art:"36.10"},
-  {cat:"LSC",titol:"Llei 4/2015 — Protecció de la Seguretat Ciutadana (LSC)",desc:"Exhibició d'objectes perillosos amb finalitat d'intimidació",art:"37.2"},
-  {cat:"LSC",titol:"Llei 4/2015 — Protecció de la Seguretat Ciutadana (LSC)",desc:"Reunions/manifestacions no comunicades en infraestructures bàsiques",art:"35.1"},
-  {cat:"LSC",titol:"Llei 4/2015 — Protecció de la Seguretat Ciutadana (LSC)",desc:"Espectacles incomplint la prohibició o suspensió ordenada",art:"35.3"},
-  {cat:"LSC",titol:"Llei 4/2015 — Protecció de la Seguretat Ciutadana (LSC)",desc:"Projecció de raigs de llum sobre pilots o conductors",art:"35.4"},
-  {cat:"LSC",titol:"Llei 4/2015 — Protecció de la Seguretat Ciutadana (LSC)",desc:"Pertorbació de la seguretat ciutadana en actes públics",art:"36.1"},
-  {cat:"LSC",titol:"Llei 4/2015 — Protecció de la Seguretat Ciutadana (LSC)",desc:"Pertorbació greu davant de Congrés, Senat o assemblees legislatives",art:"36.2"},
-  {cat:"LSC",titol:"Llei 4/2015 — Protecció de la Seguretat Ciutadana (LSC)",desc:"Aldarulls públics greus",art:"36.3"},
-  {cat:"LSC",titol:"Llei 4/2015 — Protecció de la Seguretat Ciutadana (LSC)",desc:"Obstrucció a l'autoritat en l'exercici de les seves funcions",art:"36.4"},
-  {cat:"LSC",titol:"Llei 4/2015 — Protecció de la Seguretat Ciutadana (LSC)",desc:"Obstaculitzar el funcionament dels serveis d'emergència",art:"36.5"},
-  {cat:"LSC",titol:"Llei 4/2015 — Protecció de la Seguretat Ciutadana (LSC)",desc:"Desobediència/resistència als agents en l'exercici de funcions",art:"36.6"},
-  {cat:"LSC",titol:"Llei 4/2015 — Protecció de la Seguretat Ciutadana (LSC)",desc:"Negativa a identificar-se / al·legació de dades falses",art:"36.6"},
-  {cat:"LSC",titol:"Llei 4/2015 — Protecció de la Seguretat Ciutadana (LSC)",desc:"Negativa a dissoldre reunions o manifestacions",art:"36.7"},
-  {cat:"LSC",titol:"Llei 4/2015 — Protecció de la Seguretat Ciutadana (LSC)",desc:"Pertorbar reunió o manifestació lícita",art:"36.8"},
-  {cat:"LSC",titol:"Llei 4/2015 — Protecció de la Seguretat Ciutadana (LSC)",desc:"Intrusió a infraestructures o instal·lacions de serveis bàsics",art:"36.9"},
-  {cat:"LSC",titol:"Llei 4/2015 — Protecció de la Seguretat Ciutadana (LSC)",desc:"Sol·licitar serveis sexuals a zones de trànsit públic prop de llocs per menors",art:"36.11"},
-  {cat:"LSC",titol:"Llei 4/2015 — Protecció de la Seguretat Ciutadana (LSC)",desc:"Negativa o obstrucció a l'activitat inspectora",art:"36.13"},
-  {cat:"LSC",titol:"Llei 4/2015 — Protecció de la Seguretat Ciutadana (LSC)",desc:"Ús indegut d'uniformes/insígnies de cossos policials o emergències",art:"36.14"},
-  {cat:"LSC",titol:"Llei 4/2015 — Protecció de la Seguretat Ciutadana (LSC)",desc:"Manca de col·laboració amb les Forces i Cossos de Seguretat",art:"36.15"},
-  {cat:"LSC",titol:"Llei 4/2015 — Protecció de la Seguretat Ciutadana (LSC)",desc:"Consum o tinença de drogues tòxiques o substàncies psicotròpiques",art:"36.16"},
-  {cat:"LSC",titol:"Llei 4/2015 — Protecció de la Seguretat Ciutadana (LSC)",desc:"Trasllat de persones per facilitar l'accés a drogues tòxiques",art:"36.17"},
-  {cat:"LSC",titol:"Llei 4/2015 — Protecció de la Seguretat Ciutadana (LSC)",desc:"Plantació i cultiu de drogues a llocs visibles al públic",art:"36.18"},
-  {cat:"LSC",titol:"Llei 4/2015 — Protecció de la Seguretat Ciutadana (LSC)",desc:"Tolerar/No impedir consum de drogues en locals",art:"36.19"},
-  {cat:"LSC",titol:"Llei 4/2015 — Protecció de la Seguretat Ciutadana (LSC)",desc:"Omissió de comunicacions obligatòries a la PG-ME",art:"36.20"},
-  {cat:"LSC",titol:"Llei 4/2015 — Protecció de la Seguretat Ciutadana (LSC)",desc:"Al·legació de dades falses per obtenir documentació",art:"36.21"},
-  {cat:"LSC",titol:"Llei 4/2015 — Protecció de la Seguretat Ciutadana (LSC)",desc:"Incompliment restriccions de navegació d'embarcacions d'alta velocitat",art:"36.22"},
-  {cat:"LSC",titol:"Llei 4/2015 — Protecció de la Seguretat Ciutadana (LSC)",desc:"Ús no autoritzat d'imatges o dades personals d'autoritats o FCS",art:"36.23"},
-  {cat:"LSC",titol:"Llei 4/2015 — Protecció de la Seguretat Ciutadana (LSC)",desc:"Reunions/manifestacions amb infracció LO 9/83 (comunicades)",art:"37.1"},
-  {cat:"LSC",titol:"Llei 4/2015 — Protecció de la Seguretat Ciutadana (LSC)",desc:"Reunions/manifestacions amb infracció LO 9/83 (no comunicades)",art:"37.1"},
-  {cat:"LSC",titol:"Llei 4/2015 — Protecció de la Seguretat Ciutadana (LSC)",desc:"Incompliment restriccions de circulació de vianants en acte públic",art:"37.3"},
-  {cat:"LSC",titol:"Llei 4/2015 — Protecció de la Seguretat Ciutadana (LSC)",desc:"Falta de respecte als membres de les FCS en exercici de funcions",art:"37.4"},
-  {cat:"LSC",titol:"Llei 4/2015 — Protecció de la Seguretat Ciutadana (LSC)",desc:"Realitzar o incitar actes contra la llibertat i indemnitat sexual / exhibicionisme",art:"37.5"},
-  {cat:"LSC",titol:"Llei 4/2015 — Protecció de la Seguretat Ciutadana (LSC)",desc:"Projecció de feixos de llum sobre membres de les FCS",art:"37.6"},
-  {cat:"LSC",titol:"Llei 4/2015 — Protecció de la Seguretat Ciutadana (LSC)",desc:"Ocupació d'immoble, habitatge o edifici aliè contra la voluntat del propietari",art:"37.7"},
-  {cat:"LSC",titol:"Llei 4/2015 — Protecció de la Seguretat Ciutadana (LSC)",desc:"Ocupació de la via pública",art:"37.7"},
-  {cat:"LSC",titol:"Llei 4/2015 — Protecció de la Seguretat Ciutadana (LSC)",desc:"Omissió o insuficiència en la conservació de documentacions d'armes",art:"37.8"},
-  {cat:"LSC",titol:"Llei 4/2015 — Protecció de la Seguretat Ciutadana (LSC)",desc:"Omissió de les dades obligatòries als registres / al·legació de dades falses",art:"37.9"},
-  {cat:"LSC",titol:"Llei 4/2015 — Protecció de la Seguretat Ciutadana (LSC)",desc:"Incompliment obligació d'obtenir documentació personal",art:"37.10"},
-  {cat:"LSC",titol:"Llei 4/2015 — Protecció de la Seguretat Ciutadana (LSC)",desc:"Negligència en la custòdia de documentació personal (3a pèrdua en un any)",art:"37.11"},
-  {cat:"LSC",titol:"Llei 4/2015 — Protecció de la Seguretat Ciutadana (LSC)",desc:"Negativa a lliurar documentació personal quan se n'hagi acordat la retirada",art:"37.12"},
-  {cat:"LSC",titol:"Llei 4/2015 — Protecció de la Seguretat Ciutadana (LSC)",desc:"Danys o deslluïment de béns mobles o immobles d'ús públic",art:"37.13"},
-  {cat:"LSC",titol:"Llei 4/2015 — Protecció de la Seguretat Ciutadana (LSC)",desc:"Escalada d'edificis o monuments sense autorització amb risc de danys",art:"37.14"},
-  {cat:"LSC",titol:"Llei 4/2015 — Protecció de la Seguretat Ciutadana (LSC)",desc:"Remoció de tanques, cintes o elements de perímetre de seguretat de les FCS",art:"37.15"},
-  {cat:"LSC",titol:"Llei 4/2015 — Protecció de la Seguretat Ciutadana (LSC)",desc:"Deixar solts animals ferotges / abandonar animals domèstics en perill",art:"37.16"},
-  {cat:"LSC",titol:"Llei 4/2015 — Protecció de la Seguretat Ciutadana (LSC)",desc:"Consum de begudes alcohòliques en via pública pertorbant greument la tranquil·litat",art:"37.17"},
   {cat:"ADM",titol:"Llei d'Estrangeria",desc:"Estada irregular",art:""},
   {cat:"ADM",titol:"Llei d'Estrangeria",desc:"Estada il·legal",art:""},
   {cat:"ADM",titol:"Llei d'Estrangeria",desc:"Quebrament de prohibició d'entrada",art:"58.2.a LE"},
@@ -534,9 +497,55 @@ const DB = [
   {cat:"ADM",titol:"Llei 20/1985 — Substàncies que Poden Generar Dependència",desc:"Venda d'alcohol en lloc o franja horària no autoritzada",art:""},
   {cat:"ADM",titol:"Llei 20/1985 — Substàncies que Poden Generar Dependència",desc:"Consum compartit de begudes alcohòliques a la via pública",art:""},
 
+  // LSC
+  {cat:"LSC",titol:"Llei 4/2015 — Protecció de la Seguretat Ciutadana (LSC)",desc:"Intervenció temporal armes / efectes",art:"18.2"},
+  {cat:"LSC",titol:"Llei 4/2015 — Protecció de la Seguretat Ciutadana (LSC)",desc:"Portar / utilització d'armes prohibides",art:"36.10"},
+  {cat:"LSC",titol:"Llei 4/2015 — Protecció de la Seguretat Ciutadana (LSC)",desc:"Exhibició d'objectes perillosos amb finalitat d'intimidació",art:"37.2"},
+  {cat:"LSC",titol:"Llei 4/2015 — Protecció de la Seguretat Ciutadana (LSC)",desc:"Reunions/manifestacions no comunicades en infraestructures bàsiques",art:"35.1"},
+  {cat:"LSC",titol:"Llei 4/2015 — Protecció de la Seguretat Ciutadana (LSC)",desc:"Espectacles incomplint la prohibició o suspensió ordenada",art:"35.3"},
+  {cat:"LSC",titol:"Llei 4/2015 — Protecció de la Seguretat Ciutadana (LSC)",desc:"Projecció de raigs de llum sobre pilots o conductors",art:"35.4"},
+  {cat:"LSC",titol:"Llei 4/2015 — Protecció de la Seguretat Ciutadana (LSC)",desc:"Pertorbació de la seguretat ciutadana en actes públics",art:"36.1"},
+  {cat:"LSC",titol:"Llei 4/2015 — Protecció de la Seguretat Ciutadana (LSC)",desc:"Pertorbació greu davant de Congrés, Senat o assemblees legislatives",art:"36.2"},
+  {cat:"LSC",titol:"Llei 4/2015 — Protecció de la Seguretat Ciutadana (LSC)",desc:"Aldarulls públics greus",art:"36.3"},
+  {cat:"LSC",titol:"Llei 4/2015 — Protecció de la Seguretat Ciutadana (LSC)",desc:"Obstrucció a l'autoritat en l'exercici de les seves funcions",art:"36.4"},
+  {cat:"LSC",titol:"Llei 4/2015 — Protecció de la Seguretat Ciutadana (LSC)",desc:"Obstaculitzar el funcionament dels serveis d'emergència",art:"36.5"},
+  {cat:"LSC",titol:"Llei 4/2015 — Protecció de la Seguretat Ciutadana (LSC)",desc:"Desobediència/resistència als agents en l'exercici de funcions",art:"36.6"},
+  {cat:"LSC",titol:"Llei 4/2015 — Protecció de la Seguretat Ciutadana (LSC)",desc:"Negativa a identificar-se / al·legació de dades falses",art:"36.6"},
+  {cat:"LSC",titol:"Llei 4/2015 — Protecció de la Seguretat Ciutadana (LSC)",desc:"Negativa a dissoldre reunions o manifestacions",art:"36.7"},
+  {cat:"LSC",titol:"Llei 4/2015 — Protecció de la Seguretat Ciutadana (LSC)",desc:"Pertorbar reunió o manifestació lícita",art:"36.8"},
+  {cat:"LSC",titol:"Llei 4/2015 — Protecció de la Seguretat Ciutadana (LSC)",desc:"Intrusió a infraestructures o instal·lacions de serveis bàsics",art:"36.9"},
+  {cat:"LSC",titol:"Llei 4/2015 — Protecció de la Seguretat Ciutadana (LSC)",desc:"Sol·licitar serveis sexuals a zones de trànsit públic prop de llocs per menors",art:"36.11"},
+  {cat:"LSC",titol:"Llei 4/2015 — Protecció de la Seguretat Ciutadana (LSC)",desc:"Negativa o obstrucció a l'activitat inspectora",art:"36.13"},
+  {cat:"LSC",titol:"Llei 4/2015 — Protecció de la Seguretat Ciutadana (LSC)",desc:"Ús indegut d'uniformes/insígnies de cossos policials o emergències",art:"36.14"},
+  {cat:"LSC",titol:"Llei 4/2015 — Protecció de la Seguretat Ciutadana (LSC)",desc:"Manca de col·laboració amb les Forces i Cossos de Seguretat",art:"36.15"},
+  {cat:"LSC",titol:"Llei 4/2015 — Protecció de la Seguretat Ciutadana (LSC)",desc:"Consum o tinença de drogues tòxiques o substàncies psicotròpiques",art:"36.16"},
+  {cat:"LSC",titol:"Llei 4/2015 — Protecció de la Seguretat Ciutadana (LSC)",desc:"Trasllat de persones per facilitar l'accés a drogues tòxiques",art:"36.17"},
+  {cat:"LSC",titol:"Llei 4/2015 — Protecció de la Seguretat Ciutadana (LSC)",desc:"Plantació i cultiu de drogues a llocs visibles al públic",art:"36.18"},
+  {cat:"LSC",titol:"Llei 4/2015 — Protecció de la Seguretat Ciutadana (LSC)",desc:"Tolerar/No impedir consum de drogues en locals",art:"36.19"},
+  {cat:"LSC",titol:"Llei 4/2015 — Protecció de la Seguretat Ciutadana (LSC)",desc:"Omissió de comunicacions obligatòries a la PG-ME",art:"36.20"},
+  {cat:"LSC",titol:"Llei 4/2015 — Protecció de la Seguretat Ciutadana (LSC)",desc:"Al·legació de dades falses per obtenir documentació",art:"36.21"},
+  {cat:"LSC",titol:"Llei 4/2015 — Protecció de la Seguretat Ciutadana (LSC)",desc:"Incompliment restriccions de navegació d'embarcacions d'alta velocitat",art:"36.22"},
+  {cat:"LSC",titol:"Llei 4/2015 — Protecció de la Seguretat Ciutadana (LSC)",desc:"Ús no autoritzat d'imatges o dades personals d'autoritats o FCS",art:"36.23"},
+  {cat:"LSC",titol:"Llei 4/2015 — Protecció de la Seguretat Ciutadana (LSC)",desc:"Reunions/manifestacions amb infracció LO 9/83 (comunicades)",art:"37.1"},
+  {cat:"LSC",titol:"Llei 4/2015 — Protecció de la Seguretat Ciutadana (LSC)",desc:"Reunions/manifestacions amb infracció LO 9/83 (no comunicades)",art:"37.1"},
+  {cat:"LSC",titol:"Llei 4/2015 — Protecció de la Seguretat Ciutadana (LSC)",desc:"Incompliment restriccions de circulació de vianants en acte públic",art:"37.3"},
+  {cat:"LSC",titol:"Llei 4/2015 — Protecció de la Seguretat Ciutadana (LSC)",desc:"Falta de respecte als membres de les FCS en exercici de funcions",art:"37.4"},
+  {cat:"LSC",titol:"Llei 4/2015 — Protecció de la Seguretat Ciutadana (LSC)",desc:"Realitzar o incitar actes contra la llibertat i indemnitat sexual / exhibicionisme",art:"37.5"},
+  {cat:"LSC",titol:"Llei 4/2015 — Protecció de la Seguretat Ciutadana (LSC)",desc:"Projecció de feixos de llum sobre membres de les FCS",art:"37.6"},
+  {cat:"LSC",titol:"Llei 4/2015 — Protecció de la Seguretat Ciutadana (LSC)",desc:"Ocupació d'immoble, habitatge o edifici aliè contra la voluntat del propietari",art:"37.7"},
+  {cat:"LSC",titol:"Llei 4/2015 — Protecció de la Seguretat Ciutadana (LSC)",desc:"Ocupació de la via pública",art:"37.7"},
+  {cat:"LSC",titol:"Llei 4/2015 — Protecció de la Seguretat Ciutadana (LSC)",desc:"Omissió o insuficiència en la conservació de documentacions d'armes",art:"37.8"},
+  {cat:"LSC",titol:"Llei 4/2015 — Protecció de la Seguretat Ciutadana (LSC)",desc:"Omissió de les dades obligatòries als registres / al·legació de dades falses",art:"37.9"},
+  {cat:"LSC",titol:"Llei 4/2015 — Protecció de la Seguretat Ciutadana (LSC)",desc:"Incompliment obligació d'obtenir documentació personal",art:"37.10"},
+  {cat:"LSC",titol:"Llei 4/2015 — Protecció de la Seguretat Ciutadana (LSC)",desc:"Negligència en la custòdia de documentació personal (3a pèrdua en un any)",art:"37.11"},
+  {cat:"LSC",titol:"Llei 4/2015 — Protecció de la Seguretat Ciutadana (LSC)",desc:"Negativa a lliurar documentació personal quan se n'hagi acordat la retirada",art:"37.12"},
+  {cat:"LSC",titol:"Llei 4/2015 — Protecció de la Seguretat Ciutadana (LSC)",desc:"Danys o deslluïment de béns mobles o immobles d'ús públic",art:"37.13"},
+  {cat:"LSC",titol:"Llei 4/2015 — Protecció de la Seguretat Ciutadana (LSC)",desc:"Escalada d'edificis o monuments sense autorització amb risc de danys",art:"37.14"},
+  {cat:"LSC",titol:"Llei 4/2015 — Protecció de la Seguretat Ciutadana (LSC)",desc:"Remoció de tanques, cintes o elements de perímetre de seguretat de les FCS",art:"37.15"},
+  {cat:"LSC",titol:"Llei 4/2015 — Protecció de la Seguretat Ciutadana (LSC)",desc:"Deixar solts animals ferotges / abandonar animals domèstics en perill",art:"37.16"},
+  {cat:"LSC",titol:"Llei 4/2015 — Protecció de la Seguretat Ciutadana (LSC)",desc:"Consum de begudes alcohòliques en via pública pertorbant greument la tranquil·litat",art:"37.17"},
 ];
 
-// Fuse setup
 const fuse = new Fuse(DB, {
   keys: ["desc","art","titol"],
   threshold: 0.35,
@@ -545,52 +554,71 @@ const fuse = new Fuse(DB, {
 });
 
 let currentCat = "ALL";
-let timer = null;
-const qEl   = document.getElementById("q");
-const res   = document.getElementById("results");
-const empty = document.getElementById("empty");
-const stats = document.getElementById("statsbar");
+let pendingSearch = false;
 
-function catClass(c){
-  return {CP:"cp",ESP:"esp",LSC:"lsc",ADM:"adm"}[c]||"cp";
-}
-function badgeLabel(c){
-  return {CP:"CP",ESP:"ESP",LSC:"LSC",ADM:"ADM"}[c]||c;
-}
+function catClass(c){ return {CP:"cp",ESP:"esp",LSC:"lsc",ADM:"adm"}[c]||"cp"; }
+function badgeLabel(c){ return {CP:"CP",ESP:"ESP",LSC:"LSC",ADM:"ADM"}[c]||c; }
 
 function setCat(el, cat) {
-  document.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
-  el.classList.add("active");
+  document.querySelectorAll(".chip").forEach(c => {
+    c.className = "chip";
+  });
+  el.classList.add("active-" + (cat==="ALL"?"all":cat.toLowerCase()));
   currentCat = cat;
   render();
 }
+
+function esc(s){ return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
 
 function hlText(text, matches, key) {
   if (!matches) return esc(text);
   const m = matches.find(m => m.key === key);
   if (!m || !m.indices || !m.indices.length) return esc(text);
   let out = "", last = 0;
-  m.indices.forEach(([s,e]) => {
-    out += esc(text.slice(last,s)) + "<mark>" + esc(text.slice(s,e+1)) + "</mark>";
-    last = e+1;
+  const sorted = [...m.indices].sort((a,b) => a[0]-b[0]);
+  sorted.forEach(([s,e]) => {
+    if (s >= last) {
+      out += esc(text.slice(last,s)) + "<mark>" + esc(text.slice(s,e+1)) + "</mark>";
+      last = e+1;
+    }
   });
   out += esc(text.slice(last));
   return out;
 }
-function esc(s){ return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;") }
+
+function onInput() {
+  const q = document.getElementById("search-input").value;
+  document.getElementById("btn-clear").style.display = q ? "block" : "none";
+  pendingSearch = true;
+}
+
+function doSearch() {
+  pendingSearch = false;
+  render();
+}
+
+function clearSearch() {
+  document.getElementById("search-input").value = "";
+  document.getElementById("btn-clear").style.display = "none";
+  pendingSearch = false;
+  render();
+}
+
+function toggle(header) {
+  header.parentElement.classList.toggle("open");
+}
 
 function render() {
-  const q = qEl.value.trim();
-  let data, isSearch = false;
+  const q = document.getElementById("search-input").value.trim();
+  const isSearch = q.length >= 2;
+  let data;
 
-  if (q.length >= 2) {
-    isSearch = true;
+  if (isSearch) {
     data = fuse.search(q).map(r => ({...r.item, _matches: r.matches}));
   } else {
     data = DB.map(d => ({...d, _matches: null}));
   }
 
-  // filter by cat
   if (currentCat !== "ALL") data = data.filter(d => d.cat === currentCat);
 
   // group by titol
@@ -600,62 +628,53 @@ function render() {
     groups.get(d.titol).items.push(d);
   });
 
+  const noRes = document.getElementById("no-results");
+  const cardsList = document.getElementById("cards-list");
+  const statsTxt = document.getElementById("stats-txt");
+
   if (groups.size === 0) {
-    res.innerHTML = "";
-    empty.style.display = "block";
-    stats.textContent = "";
+    cardsList.innerHTML = "";
+    noRes.style.display = "block";
+    statsTxt.textContent = "";
     return;
   }
-  empty.style.display = "none";
+  noRes.style.display = "none";
 
   const total = data.length;
   const sectCount = groups.size;
-  if (q.length >= 2) {
-    stats.textContent = `${total} tipificació${total===1?"":"ns"} en ${sectCount} secció${sectCount===1?"":"ns"}`;
+  if (isSearch) {
+    statsTxt.textContent = `${total} tipificació${total===1?"":"ns"} en ${sectCount} secció${sectCount===1?"":"ns"}`;
   } else {
-    stats.textContent = `${total} tipificacions · ${sectCount} seccions`;
+    statsTxt.textContent = `${total} tipificacions · ${sectCount} seccions`;
   }
 
   let html = "";
-  let idx = 0;
   groups.forEach((grp, titol) => {
     const cls = catClass(grp.cat);
-    const isFirst = idx === 0;
-    const openIfSearch = isSearch; // expand all when searching
-    html += `<div class="acc-section${openIfSearch?" open":""}">
+    html += `<div class="acc-section${isSearch?" open":""}">
   <div class="acc-header" onclick="toggle(this)">
     <span class="acc-badge badge-${cls}">${badgeLabel(grp.cat)}</span>
     <span class="acc-title">${esc(titol)}</span>
     <span class="acc-count">${grp.items.length}</span>
     <span class="acc-chevron">›</span>
   </div>
-  <div class="acc-body">
-    <div class="cards-grid">`;
+  <div class="acc-body"><div class="cards-grid">`;
     grp.items.forEach(d => {
       const artLabel = d.art || "—";
       const artCls   = d.art ? `art-${cls}` : "art-empty";
       const descHtml = isSearch ? hlText(d.desc, d._matches, "desc") : esc(d.desc);
       html += `<div class="tip-card">
-        <span class="tip-art ${artCls}">${esc(artLabel)}</span>
-        <span class="tip-desc">${descHtml}</span>
-      </div>`;
+      <span class="tip-art ${artCls}">${esc(artLabel)}</span>
+      <span class="tip-desc">${descHtml}</span>
+    </div>`;
     });
     html += `</div></div></div>`;
-    idx++;
   });
 
-  res.innerHTML = html;
+  cardsList.innerHTML = html;
 }
-
-function toggle(header) {
-  const section = header.parentElement;
-  section.classList.toggle("open");
-}
-
-qEl.addEventListener("input", () => {
-  clearTimeout(timer);
-  timer = setTimeout(render, 80);
-});
 
 render();
 </script>
+</body>
+</html>

@@ -1,124 +1,133 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#1a3a6b">
 <title>Àmbits Delictius · OAC</title>
-<meta name="claude:viewport-fit-sides" content="cover">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/7.0.0/fuse.min.js"></script>
-
 <style>
-:root {
-  --blue:#1a3a6b; --blue2:#2d5a9e; --blue3:#e8f0fb;
-  --gold:#e8a800; --gold2:#fff8e0;
-  --bg:#f0f2f5; --card:#ffffff; --border:#dde4f0;
-  --text:#1a1a2e; --muted:#6b7280;
-  --c1:#b45309; --c1b:#fef3c7;
-  --c2:#1d4ed8; --c2b:#dbeafe;
-  --c3:#15803d; --c3b:#dcfce7;
-  --c4:#7c3aed; --c4b:#ede9fe;
-  --c5:#374151; --c5b:#f3f4f6;
-  --c6:#0f766e; --c6b:#ccfbf1;
-  --c7:#9a3412; --c7b:#ffedd5;
-  --c8:#1e40af; --c8b:#dbeafe;
-  --c9:#be123c; --c9b:#ffe4e6;
+:root{
+  --blue:#1a3a6b;--blue2:#2d5a9e;--blue3:#e8f0fb;
+  --bg:#f0f2f5;--card:#fff;--border:#dde4f0;
+  --text:#1a1a2e;--muted:#777;
+  --c1:#b45309;--c1b:#fef3c7;
+  --c2:#1d4ed8;--c2b:#dbeafe;
+  --c3:#15803d;--c3b:#dcfce7;
+  --c4:#7c3aed;--c4b:#ede9fe;
+  --c5:#374151;--c5b:#f3f4f6;
+  --c6:#0f766e;--c6b:#ccfbf1;
+  --c7:#9a3412;--c7b:#ffedd5;
+  --c8:#1e40af;--c8b:#dbeafe;
+  --c9:#be123c;--c9b:#ffe4e6;
 }
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --bg:#0f172a; --card:#1e293b; --border:#2d3f5e;
-    --text:#e2e8f0; --muted:#94a3b8; --blue3:#1e3a5f;
-    --c1b:#431407; --c2b:#1e3a5f; --c3b:#052e16;
-    --c4b:#1e1040; --c5b:#1f2937; --c6b:#042f2e;
-    --c7b:#2d1200; --c8b:#1e3a5f; --c9b:#4c0519;
-    color-scheme: dark;
-  }
-}
-:root[data-theme="dark"] {
-  --bg:#0f172a; --card:#1e293b; --border:#2d3f5e;
-  --text:#e2e8f0; --muted:#94a3b8; --blue3:#1e3a5f;
-  --c1b:#431407; --c2b:#1e3a5f; --c3b:#052e16;
-  --c4b:#1e1040; --c5b:#1f2937; --c6b:#042f2e;
-  --c7b:#2d1200; --c8b:#1e3a5f; --c9b:#4c0519;
-  color-scheme: dark;
-}
-
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html,body{min-height:100%;font-family:'Inter',Arial,sans-serif;color:var(--text);background:var(--bg)}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;font-family:Arial,sans-serif;color:var(--text);}
+body{background:var(--bg);display:flex;flex-direction:column;}
 
 #header{
   background:var(--blue);
-  padding:14px max(16px,env(safe-area-inset-right,0px)) 12px max(16px,env(safe-area-inset-left,0px));
-  display:flex;align-items:center;gap:12px;
-  box-shadow:0 2px 10px rgba(0,0,0,.35);
-  position:sticky;top:0;z-index:100;
+  padding:10px 16px 8px;
+  display:flex;align-items:center;gap:10px;
+  flex-shrink:0;
+  box-shadow:0 2px 8px rgba(0,0,0,.3);
 }
-.hicon{width:36px;height:36px;border-radius:8px;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
-.htxt{flex:1;min-width:0}
-.htxt h1{color:#fff;font-size:15px;font-weight:700;line-height:1.2}
-.htxt p{color:#a8c4e8;font-size:10px;margin-top:2px}
-#btn-back{flex-shrink:0;padding:7px 13px;border:none;border-radius:6px;background:rgba(255,255,255,.15);color:#fff;font-size:11px;font-weight:600;cursor:pointer;text-decoration:none;white-space:nowrap;transition:background .15s}
-#btn-back:hover{background:rgba(255,255,255,.25)}
+.hicon{width:34px;height:34px;border-radius:8px;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;}
+.htxt{flex:1;min-width:0;}
+.htxt h1{color:#fff;font-size:14px;font-weight:700;line-height:1.2;}
+.htxt p{color:#a8c4e8;font-size:10px;margin-top:1px;}
+#btn-back{flex-shrink:0;padding:6px 12px;border:none;border-radius:6px;background:rgba(255,255,255,.15);color:#fff;font-size:11px;font-weight:700;cursor:pointer;text-decoration:none;white-space:nowrap;}
+#btn-back:hover{background:rgba(255,255,255,.25);}
 
-#toolbar{
-  padding:12px max(16px,env(safe-area-inset-right,0px)) 8px max(16px,env(safe-area-inset-left,0px));
-  background:var(--card);border-bottom:1px solid var(--border);
-  position:sticky;top:60px;z-index:90;
+#search-wrap{
+  background:#fff;
+  padding:10px 14px 8px;
+  flex-shrink:0;
+  border-bottom:1px solid var(--border);
 }
-.searchbox{position:relative;margin-bottom:0}
-.searchbox svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--muted);pointer-events:none}
-#q{
-  width:100%;padding:9px 14px 9px 36px;
-  border:1.5px solid var(--border);border-radius:8px;
-  background:var(--bg);color:var(--text);
-  font-size:14px;font-family:inherit;outline:none;transition:border-color .15s;
+.sbox{display:flex;gap:6px;align-items:center;}
+#search-input{
+  flex:1;padding:11px 14px;
+  border:2px solid var(--border);border-radius:8px;
+  font-size:16px;font-family:Arial,sans-serif;
+  color:var(--text);background:#fff;outline:none;
+  transition:border-color .15s;
 }
-#q:focus{border-color:var(--blue2)}
-#q::placeholder{color:var(--muted)}
+#search-input:focus{border-color:var(--blue2);}
+#search-input::placeholder{color:var(--muted);}
+#btn-clear{
+  padding:10px 12px;border:none;border-radius:8px;
+  background:var(--bg);color:var(--muted);
+  font-size:14px;cursor:pointer;flex-shrink:0;display:none;
+}
+#btn-search{
+  padding:10px 14px;border:none;border-radius:8px;
+  background:var(--blue);color:#fff;
+  font-size:13px;font-weight:700;cursor:pointer;flex-shrink:0;
+}
+#btn-search:hover{background:var(--blue2);}
 
-main{padding:12px max(16px,env(safe-area-inset-right,0px)) 48px max(16px,env(safe-area-inset-left,0px))}
-#statsbar{font-size:11px;color:var(--muted);margin-bottom:8px;min-height:16px}
+#stats-bar{
+  padding:5px 14px;
+  font-size:11px;color:var(--muted);
+  background:#fff;border-bottom:1px solid var(--border);
+  flex-shrink:0;min-height:26px;
+  display:flex;align-items:center;
+}
 
-.acc-section{margin-bottom:6px;border:1.5px solid var(--border);border-radius:10px;overflow:hidden;background:var(--card)}
+#view-results{
+  flex:1;overflow-y:auto;
+  padding:10px 14px 40px;
+  -webkit-overflow-scrolling:touch;
+}
+
+.acc-section{margin-bottom:6px;border:1.5px solid var(--border);border-radius:10px;overflow:hidden;background:var(--card);}
 .acc-header{
   display:flex;align-items:center;gap:10px;
   padding:11px 14px;cursor:pointer;
-  user-select:none;-webkit-user-select:none;transition:background .12s;
+  user-select:none;-webkit-user-select:none;
+  transition:background .12s;
 }
-.acc-header:hover{background:var(--blue3)}
+.acc-header:hover{background:var(--blue3);}
 .acc-num{
   flex-shrink:0;width:24px;height:24px;border-radius:50%;
   display:flex;align-items:center;justify-content:center;
   font-size:10px;font-weight:700;
 }
-.acc-title{flex:1;font-size:13px;font-weight:700;color:var(--text);min-width:0;line-height:1.3}
-.acc-count{flex-shrink:0;font-size:11px;color:var(--muted);font-weight:500}
-.acc-chevron{flex-shrink:0;color:var(--muted);font-size:14px;transition:transform .18s;line-height:1}
-.acc-section.open .acc-chevron{transform:rotate(90deg)}
+.acc-title{flex:1;font-size:13px;font-weight:700;color:var(--text);min-width:0;line-height:1.3;}
+.acc-count{flex-shrink:0;font-size:11px;color:var(--muted);font-weight:500;}
+.acc-chevron{flex-shrink:0;color:var(--muted);font-size:14px;transition:transform .18s;}
+.acc-section.open .acc-chevron{transform:rotate(90deg);}
 
-.acc-body{display:none;padding:0 10px 10px}
-.acc-section.open .acc-body{display:block}
-.cards-grid{display:flex;flex-direction:column;gap:5px;padding-top:6px}
+.acc-body{display:none;padding:0 10px 10px;}
+.acc-section.open .acc-body{display:block;}
+.cards-grid{display:flex;flex-direction:column;gap:5px;padding-top:6px;}
 
 .amb-card{
   padding:9px 12px;border-radius:8px;
   border:1px solid var(--border);background:var(--bg);
-  transition:border-color .12s,background .12s;cursor:default;
+  cursor:default;
 }
-.amb-card:hover{border-color:var(--blue2);background:var(--blue3)}
-.amb-name{font-size:12px;font-weight:700;color:var(--text);margin-bottom:3px}
-.amb-desc{font-size:11px;color:var(--muted);line-height:1.4}
-mark{background:rgba(232,168,0,.35);color:inherit;border-radius:2px;padding:0 1px}
+.amb-card:hover{border-color:var(--blue2);}
+.amb-name{font-size:12px;font-weight:700;color:var(--text);margin-bottom:3px;}
+.amb-desc{font-size:11px;color:var(--muted);line-height:1.4;}
+mark{background:rgba(232,168,0,.35);color:inherit;border-radius:2px;padding:0 1px;}
 
-#empty{display:none;text-align:center;padding:40px 16px;color:var(--muted);font-size:13px}
-footer{text-align:center;padding:0 16px 24px;font-size:10px;color:var(--muted);margin-top:8px}
+#no-results{display:none;text-align:center;padding:40px 16px;color:var(--muted);font-size:13px;}
 
-/* colors per grup */
-.g1 .acc-num{background:var(--c1b);color:var(--c1)}
-.g2 .acc-num{background:var(--c2b);color:var(--c2)}
-.g3 .acc-num{background:var(--c3b);color:var(--c3)}
-.g4 .acc-num{background:var(--c4b);color:var(--c4)}
-.g5 .acc-num{background:var(--c5b);color:var(--c5)}
-.g6 .acc-num{background:var(--c6b);color:var(--c6)}
-.g7 .acc-num{background:var(--c7b);color:var(--c7)}
-.g8 .acc-num{background:var(--c8b);color:var(--c8)}
-.g9 .acc-num{background:var(--c9b);color:var(--c9)}
+/* Colors per grup */
+.g1 .acc-num{background:var(--c1b);color:var(--c1);}
+.g2 .acc-num{background:var(--c2b);color:var(--c2);}
+.g3 .acc-num{background:var(--c3b);color:var(--c3);}
+.g4 .acc-num{background:var(--c4b);color:var(--c4);}
+.g5 .acc-num{background:var(--c5b);color:var(--c5);}
+.g6 .acc-num{background:var(--c6b);color:var(--c6);}
+.g7 .acc-num{background:var(--c7b);color:var(--c7);}
+.g8 .acc-num{background:var(--c8b);color:var(--c8);}
+.g9 .acc-num{background:var(--c9b);color:var(--c9);}
 </style>
+</head>
+<body>
 
 <div id="header">
   <div class="hicon">🗂️</div>
@@ -129,20 +138,20 @@ footer{text-align:center;padding:0 16px 24px;font-size:10px;color:var(--muted);m
   <a id="btn-back" href="index.html">← OAC</a>
 </div>
 
-<div id="toolbar">
-  <div class="searchbox">
-    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-    <input id="q" type="search" placeholder="Cerca àmbit o descripció… (ex: grooming, phishing, gitano)" autocomplete="off" autocorrect="off" spellcheck="false">
+<div id="search-wrap">
+  <div class="sbox">
+    <input type="text" id="search-input" placeholder="Cerca àmbit… (ex: grooming, phishing, gitano)" autocomplete="off" autocorrect="off" spellcheck="false">
+    <button id="btn-clear" onclick="clearSearch()">✕</button>
+    <button id="btn-search" onclick="doSearch()">Cerca</button>
   </div>
 </div>
 
-<main>
-  <div id="statsbar"></div>
-  <div id="results"></div>
-  <div id="empty">Cap àmbit trobat per aquesta cerca.</div>
-</main>
+<div id="stats-bar"><span id="stats-txt"></span></div>
 
-<footer>Font: Graella Àmbits Delictius · UCAP-ACSIP-DSIP · Ús intern PL-SCG</footer>
+<div id="view-results">
+  <div id="no-results">Cap àmbit trobat per aquesta cerca.</div>
+  <div id="cards-list"></div>
+</div>
 
 <script>
 const GRUPS = [
@@ -252,28 +261,28 @@ const GRUPS = [
   },
 ];
 
-// Aplanem per a Fuse
 const DB = [];
 GRUPS.forEach(g => {
   g.ambits.forEach(a => {
-    DB.push({grupId: g.id, grupNom: g.nom, grupCls: g.cls, grupIcon: g.icon, nom: a.nom, desc: a.desc});
+    DB.push({grupId:g.id, grupNom:g.nom, grupCls:g.cls, grupIcon:g.icon, nom:a.nom, desc:a.desc});
   });
 });
 
 const fuse = new Fuse(DB, {
-  keys: ["nom","desc","grupNom"],
-  threshold: 0.35,
-  includeMatches: true,
-  minMatchCharLength: 2
+  keys:["nom","desc","grupNom"],
+  threshold:0.35,
+  includeMatches:true,
+  minMatchCharLength:2
 });
 
-const qEl   = document.getElementById("q");
-const res   = document.getElementById("results");
-const empty = document.getElementById("empty");
-const stats = document.getElementById("statsbar");
-let timer   = null;
+const inp    = document.getElementById("search-input");
+const btnClr = document.getElementById("btn-clear");
+const statsTxt = document.getElementById("stats-txt");
+const noRes  = document.getElementById("no-results");
+const list   = document.getElementById("cards-list");
+let timer = null;
 
-function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;") }
+function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
 
 function hlText(text, matches, key) {
   if (!matches) return esc(text);
@@ -284,30 +293,29 @@ function hlText(text, matches, key) {
     out += esc(text.slice(last,s)) + "<mark>" + esc(text.slice(s,e+1)) + "</mark>";
     last = e+1;
   });
-  out += esc(text.slice(last));
-  return out;
+  return out + esc(text.slice(last));
 }
 
 function render() {
-  const q = qEl.value.trim();
-  let data, isSearch = false;
+  const q = inp.value.trim();
+  btnClr.style.display = q ? "block" : "none";
 
+  let data, isSearch = false;
   if (q.length >= 2) {
     isSearch = true;
-    data = fuse.search(q).map(r => ({...r.item, _matches: r.matches}));
+    data = fuse.search(q).map(r => ({...r.item, _matches:r.matches}));
   } else {
-    data = DB.map(d => ({...d, _matches: null}));
+    data = DB.map(d => ({...d, _matches:null}));
   }
 
   if (data.length === 0) {
-    res.innerHTML = "";
-    empty.style.display = "block";
-    stats.textContent = "";
+    list.innerHTML = "";
+    noRes.style.display = "block";
+    statsTxt.textContent = "";
     return;
   }
-  empty.style.display = "none";
+  noRes.style.display = "none";
 
-  // Agrupar per grup
   const groups = new Map();
   data.forEach(d => {
     if (!groups.has(d.grupId)) {
@@ -317,14 +325,11 @@ function render() {
   });
 
   const total = data.length;
-  if (isSearch) {
-    stats.textContent = `${total} àmbit${total===1?"":"s"} en ${groups.size} grup${groups.size===1?"":"s"}`;
-  } else {
-    stats.textContent = `${total} àmbits · ${groups.size} grups`;
-  }
+  statsTxt.textContent = isSearch
+    ? `${total} àmbit${total===1?"":"s"} en ${groups.size} grup${groups.size===1?"":"s"}`
+    : `${total} àmbits · ${groups.size} grups`;
 
   let html = "";
-  let idx = 0;
   groups.forEach(grp => {
     const openClass = isSearch ? " open" : "";
     html += `<div class="acc-section${openClass} ${grp.cls}">
@@ -336,28 +341,35 @@ function render() {
   </div>
   <div class="acc-body"><div class="cards-grid">`;
     grp.items.forEach(d => {
-      const nomHtml  = isSearch ? hlText(d.nom,  d._matches, "nom")  : esc(d.nom);
-      const descHtml = isSearch ? hlText(d.desc, d._matches, "desc") : esc(d.desc);
       html += `<div class="amb-card">
-        <div class="amb-name">${nomHtml}</div>
-        <div class="amb-desc">${descHtml}</div>
+        <div class="amb-name">${hlText(d.nom, d._matches, "nom")}</div>
+        <div class="amb-desc">${hlText(d.desc, d._matches, "desc")}</div>
       </div>`;
     });
     html += `</div></div></div>`;
-    idx++;
   });
+  list.innerHTML = html;
+}
 
-  res.innerHTML = html;
+function doSearch() { render(); }
+
+function clearSearch() {
+  inp.value = "";
+  btnClr.style.display = "none";
+  render();
 }
 
 function toggle(header) {
   header.parentElement.classList.toggle("open");
 }
 
-qEl.addEventListener("input", () => {
+inp.addEventListener("input", () => {
   clearTimeout(timer);
   timer = setTimeout(render, 80);
 });
+inp.addEventListener("keydown", e => { if (e.key === "Enter") render(); });
 
 render();
 </script>
+</body>
+</html>
