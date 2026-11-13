@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#1a3a6b">
+<title>Registre d'Actes · OAC</title>
+<style>
+:root {
+  --blue:   #1a3a6b;
+  --blue2:  #2d5a9e;
+  --blue3:  #e8f0fb;
+  --gold:   #e8a800;
+  --gold2:  #fff8e0;
+  --bg:     #f0f2f5;
+  --card:   #ffffff;
+  --border: #dde4f0;
+  --text:   #1a1a2e;
+  --muted:  #6b7280;
+  --green:  #15803d;
+  --green2: #dcfce7;
+  --red:    #dc2626;
+  --red2:   #fee2e2;
+  --input-bg: #f8faff;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f172a; --card: #1e293b; --border: #2d3f5e;
+    --text: #e2e8f0; --muted: #94a3b8; --blue3: #1e3a5f;
+    --gold2: #2a2000; --green2: #052e16; --red2: #3b0a0a;
+    --input-bg: #162032; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0f172a; --card: #1e293b; --border: #2d3f5e;
+  --text: #e2e8f0; --muted: #94a3b8; --blue3: #1e3a5f;
+  --gold2: #2a2000; --green2: #052e16; --red2: #3b0a0a;
+  --input-bg: #162032; color-scheme: dark;
+}
+
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;font-family:Arial,sans-serif;color:var(--text);background:var(--bg);}
+body{display:flex;flex-direction:column;}
+
+/* ── Header ── */
+#header{
+  background:var(--blue);
+  padding:14px max(16px,env(safe-area-inset-right,0px)) 12px max(16px,env(safe-area-inset-left,0px));
+  display:flex;align-items:center;gap:12px;
+  box-shadow:0 2px 10px rgba(0,0,0,.35);
+  flex-shrink:0;
+}
+.header-icon{width:38px;height:38px;border-radius:9px;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0;}
+.header-text{flex:1;min-width:0;}
+.header-text h1{color:#fff;font-size:15px;font-weight:700;line-height:1.2;}
+.header-text p{color:#a8c4e8;font-size:11px;margin-top:2px;}
+#btn-back{flex-shrink:0;padding:7px 13px;border:none;border-radius:6px;background:rgba(255,255,255,.15);color:#fff;font-size:11px;font-weight:600;cursor:pointer;text-decoration:none;white-space:nowrap;}
+#btn-back:hover{background:rgba(255,255,255,.25);}
+
+/* ── Tabs ── */
+#tabs{
+  display:flex;background:var(--blue);
+  border-top:1px solid rgba(255,255,255,.1);
+  flex-shrink:0;
+}
+.tab{
+  flex:1;padding:11px 8px;text-align:center;
+  color:rgba(255,255,255,.6);font-size:12px;font-weight:600;
+  cursor:pointer;border-bottom:3px solid transparent;
+  transition:color .15s,border-color .15s;
+  -webkit-tap-highlight-color:transparent;
+}
+.tab.active{color:#fff;border-bottom-color:var(--gold);}
+
+/* ── Scroll area ── */
+#main{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;}
+
+/* ── Formulari ── */
+#view-form{padding:16px max(16px,env(safe-area-inset-right,0px)) 40px max(16px,env(safe-area-inset-left,0px));}
+
+.num-acta-banner{
+  background:var(--blue);color:#fff;
+  border-radius:12px;padding:14px 18px;
+  margin-bottom:16px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.num-acta-banner .label{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;opacity:.7;}
+.num-acta-banner .num{font-size:28px;font-weight:900;letter-spacing:-.02em;color:var(--gold);}
+.num-acta-banner .sub{font-size:11px;opacity:.6;margin-top:2px;}
+
+.form-section{margin-bottom:20px;}
+.form-section-title{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;padding-left:2px;}
+
+.field{margin-bottom:12px;}
+.field label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:5px;letter-spacing:.02em;}
+.field input,.field select,.field textarea{
+  width:100%;padding:12px 14px;
+  border:1.5px solid var(--border);border-radius:10px;
+  background:var(--input-bg);color:var(--text);
+  font-size:16px;font-family:Arial,sans-serif;
+  transition:border-color .15s,box-shadow .15s;
+  -webkit-appearance:none;
+}
+.field input:focus,.field select:focus,.field textarea:focus{
+  outline:none;border-color:var(--blue2);
+  box-shadow:0 0 0 3px rgba(45,90,158,.15);
+}
+.field textarea{resize:vertical;min-height:80px;}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+
+.btn-submit{
+  width:100%;padding:16px;
+  background:var(--blue);color:#fff;
+  border:none;border-radius:12px;
+  font-size:16px;font-weight:700;
+  cursor:pointer;font-family:Arial,sans-serif;
+  transition:background .15s,transform .1s;
+  margin-top:8px;
+}
+.btn-submit:hover{background:var(--blue2);}
+.btn-submit:active{transform:scale(.98);}
+.btn-submit:disabled{background:var(--muted);cursor:not-allowed;}
+
+/* Toast */
+#toast{
+  position:fixed;bottom:max(24px,env(safe-area-inset-bottom,24px));
+  left:50%;transform:translateX(-50%) translateY(80px);
+  background:#1a1a2e;color:#fff;
+  padding:12px 20px;border-radius:10px;
+  font-size:13px;font-weight:600;
+  box-shadow:0 4px 20px rgba(0,0,0,.3);
+  transition:transform .3s;
+  z-index:100;white-space:nowrap;
+}
+#toast.show{transform:translateX(-50%) translateY(0);}
+#toast.ok{background:var(--green);}
+#toast.err{background:var(--red);}
+
+/* ── Vista consulta ── */
+#view-list{padding:12px max(16px,env(safe-area-inset-right,0px)) 40px max(16px,env(safe-area-inset-left,0px));}
+
+.search-wrap{
+  display:flex;gap:8px;margin-bottom:12px;
+  position:relative;
+}
+.search-wrap input{
+  flex:1;padding:11px 14px;
+  border:1.5px solid var(--border);border-radius:10px;
+  background:var(--input-bg);color:var(--text);
+  font-size:16px;font-family:Arial,sans-serif;
+}
+.search-wrap input:focus{outline:none;border-color:var(--blue2);}
+.btn-refresh{
+  padding:11px 14px;border:1.5px solid var(--border);border-radius:10px;
+  background:var(--card);color:var(--text);font-size:16px;cursor:pointer;
+  flex-shrink:0;
+}
+
+.stats-bar{
+  font-size:12px;color:var(--muted);
+  margin-bottom:10px;padding-left:2px;
+}
+
+.acta-card{
+  background:var(--card);border:1.5px solid var(--border);
+  border-radius:12px;padding:14px 16px;
+  margin-bottom:10px;
+  transition:border-color .15s;
+}
+.acta-card:hover{border-color:var(--blue2);}
+.acta-top{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+.acta-num{
+  font-size:18px;font-weight:900;color:var(--blue);
+  min-width:48px;
+}
+.acta-datetime{font-size:12px;color:var(--muted);flex:1;}
+.acta-patrulla{
+  font-size:11px;font-weight:700;padding:3px 9px;
+  border-radius:8px;background:var(--blue3);color:var(--blue2);
+}
+.acta-agents{font-size:12px;color:var(--muted);margin-bottom:5px;}
+.acta-lloc{font-size:13px;font-weight:600;color:var(--text);margin-bottom:3px;}
+.acta-motiu{font-size:12px;color:var(--muted);line-height:1.4;}
+
+.empty-state{text-align:center;padding:48px 20px;color:var(--muted);}
+.empty-state .icon{font-size:40px;margin-bottom:12px;}
+.empty-state p{font-size:14px;}
+
+.loading{text-align:center;padding:32px;color:var(--muted);font-size:14px;}
+
+[hidden]{display:none!important;}
+</style>
+</head>
+<body>
+
+<div id="header">
+  <div class="header-icon">📋</div>
+  <div class="header-text">
+    <h1>Registre d'Actes</h1>
+    <p>OAC · Policia Local SCG · 2026</p>
+  </div>
+  <a id="btn-back" href="index.html">← OAC</a>
+</div>
+
+<div id="tabs">
+  <div class="tab active" onclick="switchTab('form')" id="tab-form">✏️ Nou registre</div>
+  <div class="tab" onclick="switchTab('list')" id="tab-list">🔍 Consultar</div>
+</div>
+
+<div id="main">
+
+  <!-- ══ FORMULARI ══ -->
+  <div id="view-form">
+
+    <div class="num-acta-banner">
+      <div>
+        <div class="label">Núm. d'acta</div>
+        <div class="num" id="next-num">···</div>
+        <div class="sub">S'assigna automàticament</div>
+      </div>
+      <div style="font-size:28px;opacity:.4">📋</div>
+    </div>
+
+    <form id="form-acta" onsubmit="submitActa(event)">
+
+      <div class="form-section">
+        <div class="form-section-title">Data i hora</div>
+        <div class="field-row">
+          <div class="field">
+            <label>Data</label>
+            <input type="date" id="f-data" required>
+          </div>
+          <div class="field">
+            <label>Hora</label>
+            <input type="time" id="f-hora" required>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <div class="form-section-title">Agents</div>
+        <div class="field-row">
+          <div class="field">
+            <label>Agent 1 (núm.)</label>
+            <input type="number" id="f-agent1" placeholder="268" min="1" max="999" required>
+          </div>
+          <div class="field">
+            <label>Agent 2 (núm.)</label>
+            <input type="number" id="f-agent2" placeholder="opcional" min="1" max="999">
+          </div>
+        </div>
+        <div class="field">
+          <label>Patrulla / Mòdul</label>
+          <select id="f-patrulla" required>
+            <option value="">— Selecciona —</option>
+            <option>A10 PL</option>
+            <option>A13 PL</option>
+            <option>A14 PL</option>
+            <option>A15 PL</option>
+            <option>A16 PL</option>
+            <option>A60 PL</option>
+            <option>A124 PL</option>
+            <option>OAC</option>
+            <option>ALTRES</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <div class="form-section-title">Intervenció</div>
+        <div class="field">
+          <label>Lloc (adreça)</label>
+          <input type="text" id="f-lloc" placeholder="C/ Cultura, 88" required autocomplete="off">
+        </div>
+        <div class="field">
+          <label>Motiu / Descripció</label>
+          <textarea id="f-motiu" placeholder="Descripció breu de l'acta..." required></textarea>
+        </div>
+      </div>
+
+      <button type="submit" class="btn-submit" id="btn-submit">
+        📋 Registrar acta
+      </button>
+
+    </form>
+  </div>
+
+  <!-- ══ LLISTA / CONSULTA ══ -->
+  <div id="view-list" hidden>
+    <div class="search-wrap">
+      <input type="search" id="search-input" placeholder="Cerca per núm, agent, lloc, motiu..." oninput="filterActes()" autocomplete="off">
+      <button class="btn-refresh" onclick="loadActes()" title="Actualitzar">↻</button>
+    </div>
+    <div class="stats-bar" id="stats-bar"></div>
+    <div id="list-container">
+      <div class="loading">Carregant registres...</div>
+    </div>
+  </div>
+
+</div>
+
+<div id="toast"></div>
+
+<script>
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwyabhAiRsvu8UAoFE3pvVrcl0YHlLrrQ7EPSMDhVrf5YTuqf85Yldf6Z_nZll0jFeKBw/exec';
+
+let allActes = [];
+let nextNum = null;
+
+// ── Tabs ──
+function switchTab(tab) {
+  document.getElementById('tab-form').classList.toggle('active', tab === 'form');
+  document.getElementById('tab-list').classList.toggle('active', tab === 'list');
+  document.getElementById('view-form').hidden = tab !== 'form';
+  document.getElementById('view-list').hidden = tab !== 'list';
+  if (tab === 'list') loadActes();
+}
+
+// ── Toast ──
+function toast(msg, type = '') {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = 'show ' + type;
+  clearTimeout(el._t);
+  el._t = setTimeout(() => el.className = '', 3000);
+}
+
+// ── Inicialitza data/hora actuals ──
+function initDateTime() {
+  const now = new Date();
+  const pad = n => String(n).padStart(2, '0');
+  const dataVal = `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}`;
+  const horaVal = `${pad(now.getHours())}:${pad(now.getMinutes())}`;
+  document.getElementById('f-data').value = dataVal;
+  document.getElementById('f-hora').value = horaVal;
+}
+
+// ── Fetch via JSONP (evita CORS) ──
+function fetchJSONP(url) {
+  return new Promise((resolve, reject) => {
+    const cb = 'cb_' + Date.now();
+    const script = document.createElement('script');
+    script.src = url + (url.includes('?') ? '&' : '?') + 'callback=' + cb;
+    window[cb] = data => { delete window[cb]; script.remove(); resolve(data); };
+    script.onerror = () => { delete window[cb]; script.remove(); reject(new Error('JSONP error')); };
+    document.head.appendChild(script);
+    setTimeout(() => { delete window[cb]; script.remove(); reject(new Error('timeout')); }, 10000);
+  });
+}
+
+// ── Carrega pròxim número d'acta ──
+async function loadNextNum() {
+  try {
+    const d = await fetchJSONP(SCRIPT_URL);
+    const rows = d.rows || [];
+    nextNum = rows.length > 0 ? (parseInt(rows[0].NUM_ACTA) + 1) : 1;
+    document.getElementById('next-num').textContent = String(nextNum).padStart(4, '0');
+  } catch(e) {
+    document.getElementById('next-num').textContent = '???';
+    nextNum = null;
+  }
+}
+
+// ── Enviar nova acta ──
+async function submitActa(e) {
+  e.preventDefault();
+  const btn = document.getElementById('btn-submit');
+  btn.disabled = true;
+  btn.textContent = '⏳ Registrant...';
+
+  const data = {
+    data: document.getElementById('f-data').value,
+    hora: document.getElementById('f-hora').value,
+    agent1: document.getElementById('f-agent1').value,
+    agent2: document.getElementById('f-agent2').value,
+    patrulla: document.getElementById('f-patrulla').value,
+    lloc: document.getElementById('f-lloc').value,
+    motiu: document.getElementById('f-motiu').value,
+  };
+
+  try {
+    // POST via form-encode + no-cors; resposta via JSONP GET a continuació
+    const form = new FormData();
+    form.append('payload', JSON.stringify(data));
+    await fetch(SCRIPT_URL, { method: 'POST', body: form, mode: 'no-cors' });
+    // Espera breu i rellegeix per obtenir el num assignat
+    await new Promise(r => setTimeout(r, 1200));
+    const check = await fetchJSONP(SCRIPT_URL);
+    const rows = check.rows || [];
+    const lastNum = rows.length > 0 ? parseInt(rows[0].NUM_ACTA) : 0;
+    const result = { ok: true, numActa: lastNum };
+    if (result.ok) {
+      const numFormatat = String(result.numActa).padStart(4, '0');
+      toast(`✅ Acta ${numFormatat} registrada!`, 'ok');
+      // Reset form, mantenir data/hora i agent1
+      const agent1 = document.getElementById('f-agent1').value;
+      document.getElementById('form-acta').reset();
+      initDateTime();
+      document.getElementById('f-agent1').value = agent1;
+      nextNum = result.numActa + 1;
+      document.getElementById('next-num').textContent = String(nextNum).padStart(4, '0');
+    } else {
+      throw new Error('Error del servidor');
+    }
+  } catch(err) {
+    toast('❌ Error en registrar. Comprova la connexió.', 'err');
+  }
+
+  btn.disabled = false;
+  btn.textContent = '📋 Registrar acta';
+}
+
+// ── Carrega totes les actes ──
+async function loadActes() {
+  document.getElementById('list-container').innerHTML = '<div class="loading">⏳ Carregant registres...</div>';
+  document.getElementById('stats-bar').textContent = '';
+  try {
+    const d = await fetchJSONP(SCRIPT_URL);
+    allActes = d.rows || [];
+    renderActes(allActes);
+  } catch(e) {
+    document.getElementById('list-container').innerHTML = '<div class="empty-state"><div class="icon">⚠️</div><p>Error en carregar. Comprova la connexió.</p></div>';
+  }
+}
+
+// ── Filtra les actes ──
+function filterActes() {
+  const q = document.getElementById('search-input').value.toLowerCase().trim();
+  if (!q) { renderActes(allActes); return; }
+  const filtered = allActes.filter(a =>
+    String(a.NUM_ACTA).includes(q) ||
+    (a.AGENT1||'').toLowerCase().includes(q) ||
+    (a.AGENT2||'').toLowerCase().includes(q) ||
+    (a.PATRULLA||'').toLowerCase().includes(q) ||
+    (a.LLOC||'').toLowerCase().includes(q) ||
+    (a.MOTIU||'').toLowerCase().includes(q) ||
+    (a.DATA||'').includes(q)
+  );
+  renderActes(filtered);
+}
+
+// ── Renderitza llista d'actes ──
+function renderActes(actes) {
+  const bar = document.getElementById('stats-bar');
+  const container = document.getElementById('list-container');
+
+  if (!actes.length) {
+    bar.textContent = '0 registres';
+    container.innerHTML = '<div class="empty-state"><div class="icon">📋</div><p>No s\'han trobat registres.</p></div>';
+    return;
+  }
+
+  bar.textContent = `${actes.length} registre${actes.length !== 1 ? 's' : ''}`;
+
+  container.innerHTML = actes.map(a => {
+    const num = String(a.NUM_ACTA || '').padStart(4, '0');
+    const agent2 = a.AGENT2 ? ` · ${a.AGENT2}` : '';
+    return `
+    <div class="acta-card">
+      <div class="acta-top">
+        <div class="acta-num">#${num}</div>
+        <div class="acta-datetime">${formatData(a.DATA)}<br>${a.HORA || ''}</div>
+        <div class="acta-patrulla">${a.PATRULLA || ''}</div>
+      </div>
+      <div class="acta-agents">👮 ${a.AGENT1 || '—'}${agent2}</div>
+      <div class="acta-lloc">📍 ${a.LLOC || '—'}</div>
+      <div class="acta-motiu">${a.MOTIU || '—'}</div>
+    </div>`;
+  }).join('');
+}
+
+function formatData(d) {
+  if (!d) return '';
+  // d pot ser "2026-10-29" o un objecte Date del Sheets
+  const str = typeof d === 'string' ? d : new Date(d).toISOString().slice(0,10);
+  const parts = str.slice(0,10).split('-');
+  if (parts.length === 3) return `${parts[2]}/${parts[1]}/${parts[0]}`;
+  return str;
+}
+
+// ── Init ──
+initDateTime();
+loadNextNum();
+</script>
+</body>
+</html>
